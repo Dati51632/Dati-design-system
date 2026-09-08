@@ -4,12 +4,17 @@ Além de logo/cor/tipografia, três recursos visuais aparecem de forma consisten
 
 ## 1. Crop do símbolo ("vibração")
 
-O recurso mais usado e mais reconhecível: uma versão **gigante e recortada** do símbolo da marca (a seta bicolor + os dois quadrados), posicionada sangrando para fora da peça — quase sempre no canto direito, ocupando 30-45% da largura.
+O recurso mais usado e mais reconhecível: uma versão **gigante** do símbolo da marca — nunca o lockup com a palavra "dati", só a seta + os dois quadrados —, posicionada sangrando para fora da peça — quase sempre no canto direito.
 
-- Confirmado em: capa de **todas as 4 apresentações reais** analisadas (fundo navy, símbolo em tons de roxo sobre roxo mais escuro, com leve variação de opacidade para dar profundidade).
-- Arquivos de referência: `assets/logo/dati-symbol-crop-purple.png`, `dati-symbol-crop-color.png`.
-- **Quando usar**: capas de apresentação, capas de proposta comercial, banners de post de abertura/fechamento de carrossel.
-- **Como usar**: símbolo ampliado várias vezes o tamanho do lockup normal, cortado pela borda da peça, em tom sobre tom (mesma cor de fundo, alguns tons mais clara/escura) — nunca compete com o texto porque fica no lado oposto ao bloco de texto principal.
+- Confirmado em: capa de **todas as 4 apresentações reais** analisadas (fundo navy, símbolo sólido em roxo `#6838E8` sobre o navy do fundo).
+- **Arquivo a usar: `assets/logo/dati-symbol-purple.png`** (o PNG do símbolo isolado, não recortado) — redimensione e posicione você mesmo conforme a especificação abaixo. Os arquivos `dati-symbol-crop-*.png` trazem o símbolo já reduzido dentro de uma tela larga com muita margem transparente; **não** os use para capas de apresentação, pois resultam num símbolo pequeno demais e fora do padrão confirmado — mantenha-os só para inserção rápida em ferramentas sem controle de escala/corte.
+- **Quando usar**: capas e slides de fechamento de apresentação, capas de proposta comercial, banners de post de abertura/fechamento de carrossel.
+- **Como usar, especificação exata (validada por amostragem de pixel na capa real "DataFrete Summit 2026"):**
+  - Redimensione `dati-symbol-purple.png` para que sua altura ocupe **≈68% da altura da peça**, mantendo a proporção original (não distorcer).
+  - Posicione pela borda esquerda do símbolo redimensionado a **≈61-62% da largura da peça**, centralizado verticalmente.
+  - O símbolo deve tocar ou sangrar (extrapolar) levemente a borda direita da peça — nunca sobrar fundo visível entre o símbolo e a borda.
+  - Cor sólida, sem opacidade reduzida e sem gradiente extra — o efeito "tom sobre tom" vem só do contraste natural entre o roxo do símbolo e o navy do fundo.
+  - Nunca compete com o texto porque fica no lado oposto ao bloco de texto principal.
 
 ## 2. Formas 3D "glossy" (só em redes sociais)
 

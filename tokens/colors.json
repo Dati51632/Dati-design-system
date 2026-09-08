@@ -57,8 +57,18 @@
     },
     "textMuted": {
       "hex": "#5B5570",
-      "role": "Texto secundário/legendas sobre fundo claro ou escuro.",
+      "role": "Texto secundário/legendas sobre fundo claro.",
       "usage": ["captions", "secondary-text"]
+    },
+    "textOnDarkSubtitle": {
+      "hex": "#CFC9E6",
+      "role": "Subtítulo/linha de apoio sobre fundo escuro (ex.: abaixo do título de capa). Amostrado pixel a pixel de capa de apresentação real confirmada.",
+      "usage": ["subtitle-on-dark"]
+    },
+    "textOnDarkMuted": {
+      "hex": "#9891AB",
+      "role": "Texto secundário/rodapé sobre fundo escuro (ex.: nome do apresentador na capa). Amostrado pixel a pixel de capa de apresentação real confirmada.",
+      "usage": ["captions-on-dark", "footer-on-dark"]
     }
   },
   "gradients": {

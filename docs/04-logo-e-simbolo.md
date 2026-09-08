@@ -17,8 +17,16 @@ Arquivos disponíveis em [`assets/logo/`](../assets/logo/):
 | `dati-symbol-color.png` | Só o símbolo, bicolor | Favicon, avatar, marca d'água, ícone de app |
 | `dati-symbol-purple.png` / `dati-symbol-cyan.png` | Só o símbolo, monocromático | Uso decorativo, ícone monocromático |
 | `dati-symbol-crop-*.png` | Símbolo recortado/ampliado ("crop do símbolo") | Elemento gráfico de fundo — ver abaixo |
+| `dati-logo-white.png` | Lockup completo monocromático branco | Fundo escuro/navy — versão padrão (capa e fechamento de apresentação, capa de proposta) |
 
-Para fundo escuro, use a versão branca do wordmark (gere a partir do navy invertendo para branco, ou solicite ao time o arquivo `dati-logo-white.png` que ainda não está neste pacote).
+## Regra explícita: lockup completo vs. símbolo isolado (causa mais comum de capa fora do padrão)
+
+O lockup completo (qualquer arquivo `dati-logo-*.png`, que inclui a palavra "dati") e o símbolo isolado (qualquer arquivo `dati-symbol-*.png`, só a seta/quadrados) **não são intercambiáveis**:
+
+- **Lockup completo (`dati-logo-*.png`)**: uso exclusivo como identificação da marca, sempre pequeno — canto superior esquerdo (capas, slides de conteúdo) ou centralizado em rodapé. Nunca ampliado como elemento decorativo, nunca cortado/sangrando pela borda.
+- **Símbolo isolado (`dati-symbol-*.png`)**: uso exclusivo como elemento gráfico grande de composição — "crop do símbolo" (ver `05-elementos-graficos.md`), ampliado e sangrando pela lateral de capas/fechamentos. Nunca leva a palavra "dati" junto.
+
+Se uma capa está usando o logo completo como o elemento grande ao lado direito, ou o símbolo isolado no canto superior esquerdo, a peça está fora do padrão de marca — corrija trocando o arquivo pelo correto da categoria certa.
 
 ## Regras de uso
 

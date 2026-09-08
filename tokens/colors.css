@@ -18,6 +18,8 @@
   --dati-white: #FFFFFF;
   --dati-bg-light: #EDF0F2;
   --dati-text-muted: #5B5570;
+  --dati-text-on-dark-subtitle: #CFC9E6;
+  --dati-text-on-dark-muted: #9891AB;
 
   /* Gradientes */
   --dati-gradient-hero-dark: linear-gradient(135deg, #0D0824 0%, #1A0F3D 55%, #2B1B5C 100%);

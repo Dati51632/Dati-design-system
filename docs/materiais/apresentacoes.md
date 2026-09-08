@@ -14,13 +14,25 @@ Padrão extraído de 4 apresentações reais da Dati (*DataFrete Summit*, *Vibe 
 
 ## Slide de capa (padrão fixo, confirmado nas 4 apresentações)
 
-- Fundo: gradiente navy diagonal (`--dati-gradient-hero-dark`).
-- Logo `dati` branco, canto superior esquerdo.
-- Símbolo da marca em "crop" gigante (ver `05-elementos-graficos.md`), sangrando pela lateral direita, tom sobre tom em roxo.
-- Rótulo eyebrow pequeno, Bold, roxo claro (ex. "DATAFRETE SUMMIT 2026", "Vibe to Production", "FIRST CALL DECK").
-- Título em 2 linhas: 1ª linha branca regular/bold, 2ª linha Bold Roxo (padrão de ênfase — ver `03-tipografia.md`).
-- Subtítulo em cinza claro, uma frase.
-- Rodapé esquerdo: nome do apresentador + cargo + "Dati", ou tag da oferta (pill outline).
+**Referência exata (validada pelo time em 2026-09):** capa do "DataFrete Summit 2026". Todo slide de capa gerado deve reproduzir esta estrutura — não é livre-interpretação, é um contrato fixo. Valores abaixo são percentuais de um slide widescreen 1920×1080 (escale proporcionalmente para outros tamanhos).
+
+| Elemento | Especificação |
+|---|---|
+| Fundo | Gradiente `--dati-gradient-hero-dark`, diagonal 135° (canto superior esquerdo → inferior direito). |
+| Logo | `assets/logo/dati-logo-white.png` (lockup completo branco). Canto superior esquerdo, margem ~5,9% da largura / ~10% da altura a partir da borda. Altura do logo ≈ 7,8% da altura do slide. **Nunca** redesenhe o logo — use sempre o PNG. |
+| Elemento gráfico grande | `assets/logo/dati-symbol-purple.png` — **o símbolo isolado**, nunca o lockup com a palavra "dati" (ver regra explícita abaixo). Redimensionar para altura ≈ 68% da altura do slide, mantendo a proporção original do PNG. Posicionar pela borda esquerda do símbolo em ≈ 61-62% da largura do slide, centralizado verticalmente (pode ficar levemente abaixo do centro). O lado direito do símbolo deve tocar ou sangrar levemente para fora da borda direita do slide — nunca deixar uma margem visível de fundo à direita do símbolo. |
+| Rótulo eyebrow | Bold, caixa alta, cor `--dati-purple-light` (`#8C7DFF`), tamanho pequeno (~24px/1080). Ex.: "DATAFRETE SUMMIT 2026", "Vibe to Production", "FIRST CALL DECK". |
+| Título | 2 linhas, Extrabold/Bold, ~66px/1080. 1ª linha branca (`#FFFFFF`), 2ª linha `--dati-purple-light` (`#8C7DFF`) — padrão de ênfase, ver `03-tipografia.md`. |
+| Subtítulo | Uma frase, Regular, cor `--dati-text-on-dark-subtitle` (`#CFC9E6`) — **não** usar branco nem cinza genérico. |
+| Rodapé esquerdo | Nome do apresentador + cargo + "Dati" (ou tag da oferta em pill outline), cor `--dati-text-on-dark-muted` (`#9891AB`). |
+
+### Erros a nunca repetir (causas raiz de capas já geradas fora do padrão)
+
+- ❌ Usar `dati-logo-color.png`, `dati-logo-navy.png` ou qualquer `dati-logo-*.png` (lockup completo, com a palavra "dati") como o elemento gráfico grande à direita. O lockup completo **só** aparece pequeno, no canto superior esquerdo. O elemento grande é **sempre** um arquivo `dati-symbol-*` (símbolo isolado, sem a palavra "dati").
+- ❌ Centralizar o símbolo no meio do slide ou deixar espaço de fundo visível entre ele e a borda direita — ele sempre ocupa o canto direito e sangra/toca a borda.
+- ❌ Redimensionar o símbolo para menos de ~50% ou mais de ~80% da altura do slide — a proporção confirmada é ~68%.
+- ❌ Usar branco puro ou um cinza qualquer no subtítulo/rodapé sobre fundo escuro — usar exatamente os tokens `--dati-text-on-dark-subtitle` e `--dati-text-on-dark-muted`.
+- ❌ Inventar um gradiente novo para o fundo — usar sempre `--dati-gradient-hero-dark`.
 
 ## Slide de conteúdo (padrão fixo)
 
@@ -40,7 +52,7 @@ Dois padrões confirmados, conforme a oferta:
 
 ## Slide de fechamento
 
-Fundo navy (mesmo gradiente da capa). Título de 3 linhas repetindo/reforçando a tese da capa, com a mesma regra de ênfase (regular → bold roxo). Abaixo, 2-3 "chips" (pills com contorno) resumindo os pontos de ação, sem preencher o slide inteiro — bastante espaço negativo.
+Fundo navy (mesmo gradiente da capa) e mesmo elemento gráfico grande (`dati-symbol-purple.png`, mesma escala/posição da capa — ver tabela acima). Título de 3 linhas repetindo/reforçando a tese da capa, com a mesma regra de ênfase (regular → bold roxo). Abaixo, 2-3 "chips" (pills com contorno) resumindo os pontos de ação, sem preencher o slide inteiro — bastante espaço negativo.
 
 ## Ao gerar uma apresentação nova
 
