@@ -1,0 +1,25 @@
+/* Dati — Design Tokens: Cores
+   Gerado a partir de tokens/colors.json — ver esse arquivo para papéis de uso e regras. */
+
+:root {
+  /* Marca primária */
+  --dati-navy: #1A0F3D;
+  --dati-purple: #6838E8;
+  --dati-purple-light: #8C7DFF;
+  --dati-purple-lighter: #8C52FF;
+  --dati-purple-pale: #E8E1FF;
+
+  /* Marca secundária */
+  --dati-cyan: #5BBEED;
+  --dati-green: #A4DF64;
+  --dati-orange: #F59D01;
+
+  /* Neutros */
+  --dati-white: #FFFFFF;
+  --dati-bg-light: #EDF0F2;
+  --dati-text-muted: #5B5570;
+
+  /* Gradientes */
+  --dati-gradient-hero-dark: linear-gradient(135deg, #0D0824 0%, #1A0F3D 55%, #2B1B5C 100%);
+  --dati-gradient-cta: linear-gradient(135deg, #3B2A8C 0%, #6838E8 100%);
+}

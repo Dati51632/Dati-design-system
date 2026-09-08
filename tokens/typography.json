@@ -1,0 +1,43 @@
+{
+  "meta": {
+    "source": "Guia de marca Dati + fontes reais fornecidas (assets/fonts) + amostragem em decks/posts reais"
+  },
+  "fontFamily": {
+    "name": "Manrope",
+    "type": "Google Font (gratuita, open source)",
+    "files": [
+      "assets/fonts/Manrope-ExtraLight.ttf",
+      "assets/fonts/Manrope-Light.ttf",
+      "assets/fonts/Manrope-Regular.ttf",
+      "assets/fonts/Manrope-Medium.ttf",
+      "assets/fonts/Manrope-SemiBold.ttf",
+      "assets/fonts/Manrope-Bold.ttf",
+      "assets/fonts/Manrope-ExtraBold.ttf"
+    ],
+    "googleFontsImport": "https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap",
+    "fallbackStack": "'Manrope', 'Segoe UI', Helvetica, Arial, sans-serif"
+  },
+  "weights": {
+    "extralight": 200,
+    "light": 300,
+    "regular": 400,
+    "medium": 500,
+    "semibold": 600,
+    "bold": 700,
+    "extrabold": 800
+  },
+  "scale": {
+    "display": { "weight": "bold", "size": "60-72pt (impressos/slides) ou 40-56px (digital)", "usage": "Título de capa de apresentação, headline de post" },
+    "h1": { "weight": "bold", "size": "36-44pt / 28-36px", "usage": "Título de slide de conteúdo, título de one-pager" },
+    "h2": { "weight": "semibold", "size": "24-28pt / 20-24px", "usage": "Subtítulo, nome de seção" },
+    "eyebrow": { "weight": "bold", "size": "11-13pt / 11-13px", "usage": "Rótulo curto em caixa alta acima do título (ex.: 'DIAGNÓSTICO', 'INVESTIMENTO')", "letterSpacing": "wide", "case": "uppercase" },
+    "subtitle": { "weight": "medium", "size": "18-20pt / 16-18px", "usage": "Linha de apoio abaixo do título" },
+    "body": { "weight": "regular", "size": "16-20pt / 14-16px", "lineHeight": 1.5, "usage": "Parágrafo corrido, descrição" },
+    "caption": { "weight": "medium", "size": "11-13pt / 11-13px", "usage": "Legendas, rodapés, notas de rodapé" },
+    "cta": { "weight": "semibold", "size": "14-16pt / 14-16px", "usage": "Texto de botão/pill" }
+  },
+  "emphasisPattern": {
+    "description": "Padrão recorrente observado em todos os materiais reais: dentro de um título de duas ou mais linhas, a cláusula regular fica na cor de texto padrão (branco sobre fundo escuro, navy sobre fundo claro) e a cláusula ou palavra-chave final fica em Bold na cor Roxo (#6838E8) ou Roxo claro (#8C7DFF) sobre fundo escuro.",
+    "example": "\"Antes da IA, a\" (regular, branco) + \"verdade operacional\" (bold, roxo)"
+  }
+}

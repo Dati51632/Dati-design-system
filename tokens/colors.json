@@ -1,0 +1,82 @@
+{
+  "$schema": "https://dati.com.br/design-system/tokens/colors.schema.json",
+  "meta": {
+    "source": "Guia de marca Dati (Firmorama) + amostragem de pixel em assets de produção reais (logo, decks, one-pagers)",
+    "lastVerified": "2026-09-08"
+  },
+  "colors": {
+    "navy": {
+      "hex": "#1A0F3D",
+      "pantone": "4147 CP",
+      "rgb": [26, 15, 61],
+      "role": "Cor de marca primária. Fundo institucional escuro, texto sobre fundo claro, wordmark 'dati'.",
+      "usage": ["backgrounds-dark", "headlines-on-light", "footers"]
+    },
+    "purple": {
+      "hex": "#6838E8",
+      "pantone": "2725 C (ambientes digitais)",
+      "rgb": [104, 56, 232],
+      "role": "Cor de marca primária para ambientes digitais. Destaque, CTAs, ênfase de texto, símbolo.",
+      "usage": ["accent-primary", "cta", "bold-emphasis-inline", "icon-badges"],
+      "tints": {
+        "light": "#8C7DFF",
+        "lighter": "#8C52FF",
+        "pale": "#E8E1FF"
+      }
+    },
+    "cyan": {
+      "hex": "#5BBEED",
+      "pantone": "2190 CP",
+      "rgb": [91, 190, 237],
+      "role": "Cor de marca secundária. Metade superior do símbolo, acentos digitais leves.",
+      "usage": ["accent-secondary", "symbol-highlight"]
+    },
+    "green": {
+      "hex": "#A4DF64",
+      "pantone": "2283 C",
+      "rgb": [164, 223, 100],
+      "role": "Cor de destaque positivo. Preços, benefícios, confirmações, badges de sucesso.",
+      "usage": ["positive-highlight", "pricing", "success-badges"]
+    },
+    "orange": {
+      "hex": "#F59D01",
+      "pantone": "3588 CP",
+      "rgb": [245, 157, 1],
+      "role": "Cor de destaque de atenção/decisão. Uso pontual, nunca como cor dominante.",
+      "usage": ["attention-accent", "decision-highlight"]
+    },
+    "white": {
+      "hex": "#FFFFFF",
+      "role": "Fundo claro puro, texto sobre fundo escuro.",
+      "usage": ["backgrounds-light", "text-on-dark"]
+    },
+    "neutralLight": {
+      "hex": "#EDF0F2",
+      "role": "Fundo neutro claro usado em slides de conteúdo, one-pagers e cards (alternativa ao branco puro).",
+      "usage": ["backgrounds-content", "cards-light"]
+    },
+    "textMuted": {
+      "hex": "#5B5570",
+      "role": "Texto secundário/legendas sobre fundo claro ou escuro.",
+      "usage": ["captions", "secondary-text"]
+    }
+  },
+  "gradients": {
+    "heroDark": {
+      "description": "Gradiente diagonal usado em capas de deck e posts escuros: navy profundo para um navy levemente mais claro/arroxeado, canto superior esquerdo para inferior direito.",
+      "stops": ["#0D0824", "#1A0F3D", "#2B1B5C"]
+    },
+    "ctaPurple": {
+      "description": "Gradiente usado em banners de CTA e cards de preço (one-pager, posts).",
+      "stops": ["#3B2A8C", "#6838E8"]
+    }
+  },
+  "usageRules": [
+    "Navy e branco são a base estrutural (fundo/texto) em praticamente toda peça.",
+    "Roxo é a cor de ênfase padrão: usar em uma palavra ou frase-chave do título, nunca no texto inteiro.",
+    "Verde só aparece em contexto positivo: preço, benefício, confirmação, selo de sucesso — nunca como cor decorativa neutra.",
+    "Laranja é o mais raro dos cinco: reservar para um único ponto de atenção/decisão por peça (ex.: um ícone entre vários).",
+    "Ciano aparece quase sempre como a metade superior do símbolo/seta da marca, raramente como bloco de cor isolado.",
+    "Nunca usar cores fora desta paleta (regra explícita do guia de marca — ver docs/04-logo-e-simbolo.md)."
+  ]
+}
