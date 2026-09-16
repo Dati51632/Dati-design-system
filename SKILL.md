@@ -37,4 +37,4 @@ Se faltar uma referência real para um tipo de material novo (como aconteceu com
 
 ## Manter atualizado
 
-Este skill vive em [github.com/GabWagen/design-system-dati](https://github.com/GabWagen/design-system-dati). Quando a marca evoluir (nova cor, novo padrão de material, novos exemplos reais), atualize os arquivos correspondentes e suba uma nova versão — ver `README.md` para o fluxo de atualização e `CHANGELOG.md` para o histórico.
+Este skill vive em [github.com/Dati51632/Dati-design-system](https://github.com/Dati51632/Dati-design-system). Quando a marca evoluir (nova cor, novo padrão de material, novos exemplos reais), atualize os arquivos correspondentes e suba uma nova versão — ver `README.md` para o fluxo de atualização e `CHANGELOG.md` para o histórico.
