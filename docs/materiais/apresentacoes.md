@@ -4,6 +4,141 @@ Padrão extraído da apresentação primária de referência **"Acelerando a Jor
 
 ---
 
+## Referências obrigatórias
+
+| Arquivo | Papel |
+|---|---|
+| **MAP** ("Acelerando a Jornada de adoção da nuvem") | Referência primária de identidade visual — cores, branding, tipografia, logo, cards, elementos gráficos, capas, divisórias |
+| **SeniorTec 2026** | Referência primária de linguagem de apresentação — cards, timelines, fluxos, diagramas, comparações, blocos numerados, alternância de fundos, ritmo visual, storytelling |
+
+Toda decisão de design deve responder: **este slide poderia existir em uma dessas duas referências?** Se não, redesenhe.
+
+---
+
+## REGRA ABSOLUTA — Bloco Institucional Fixo
+
+**Toda apresentação Dati começa com os 6 primeiros slides do MAP, copiados exatamente do arquivo original.**
+
+Esses seis slides formam o bloco institucional fixo da Dati. A geração do conteúdo novo começa **somente depois** deles.
+
+**Nunca:**
+- redesenhar ou reinterpretar esses slides
+- resumir, reescrever ou adaptar os textos
+- trocar imagens, ícones ou logos
+- modificar posições, tamanhos, cores ou proporções
+
+Eles permanecem visualmente idênticos aos originais. Esta regra tem prioridade sobre qualquer outra instrução de design.
+
+---
+
+## Princípio central — o slide não é uma página de documento
+
+**Antes de criar cada slide, pergunte: qual é a melhor representação visual desta informação?**
+
+O texto original é matéria-prima para design — não uma instrução de layout.
+
+**Nunca usar como padrão:**
+- título + parágrafo + lista de bullets ocupando o canto esquerdo
+- quatro ou cinco linhas pequenas abaixo de um título
+- conteúdo ocupando menos de 40% da área útil sem justificativa visual
+- grandes espaços vazios resultantes de falta de diagramação
+
+Sempre que houver mais de três informações relacionadas, avalie transformá-las em cards, etapas, colunas ou elementos conectados.
+
+---
+
+## Mapa de transformação — conteúdo → estrutura visual
+
+Escolha automaticamente a estrutura mais adequada para cada tipo de informação.
+
+| Natureza da informação | Estrutura visual adequada |
+|---|---|
+| **Processo / Etapas** | Timeline horizontal ou vertical, fluxo numerado, stepper, pipeline |
+| **Comparação** | Duas colunas, before × after, Tradicional × Novo, Permitido × Proibido |
+| **Componentes de solução** | Cards conectados, diagrama, ecossistema |
+| **Arquitetura técnica** | Fluxograma visual, boxes com setas, camadas, inputs → processamento → outputs |
+| **Indicadores / dados** | Números grandes, KPIs, estatística com destaque visual |
+| **Benefícios** | Cards com ícone + título + microdescrição, grid de 3 ou 4 elementos |
+| **Regras / Guardrails** | Comparação visual (permitido × bloqueado), checklist, matriz de decisão |
+| **Papéis / Responsabilidades** | Cards por persona, swimlanes, fluxo entre atores |
+| **Conclusão / Síntese** | 3–5 pilares, framework visual, afirmação principal com destaque |
+| **Frase de impacto** | Slide de respiro — tipografia grande, fundo escuro, poucos elementos |
+
+---
+
+## Exemplos de transformação (antes × depois)
+
+### Repositórios e PR
+
+**Não apresentar como lista:**
+- Repo de frontend — gerado pelo Lovable
+- Repo de infraestrutura — gerenciado pela Dati
+- PR obrigatório antes de deploy
+- Nenhum modelo escreve direto em main
+
+**Transformar em diagrama:**
+```
+[REPO FRONTEND]          [REPO INFRA]
+       ↓                       ↓
+      PR                      PR
+       ↓                       ↓
+[FRONTEIRA HUMANA]     [FRONTEIRA HUMANA]
+       ↓
+   PIPELINE → AWS
+
+Destaque: "Nenhum modelo escreve direto em MAIN."
+```
+
+---
+
+### Regras de IA (permitido × proibido)
+
+**Não apresentar como lista mista.** Criar comparação visual em duas áreas distintas:
+
+```
+IA PODE ENTRAR              IA NÃO PODE ENTRAR
+✓ geração de UI             × migration SQL
+✓ sugestão de componentes   × configuração IAM
+✓ rascunho de lógica        × escrita direta em main
+
+Base: TESTES + CI/CD = VEREDITO
+```
+
+---
+
+### Pipeline técnico (schema → merge)
+
+**Não apresentar como lista vertical.** Criar pipeline horizontal:
+
+```
+SCHEMA → GERADOR → MIGRATION → TESTE → [BLOQUEIO] → MERGE
+```
+
+---
+
+## Slides de arquitetura técnica
+
+Slides técnicos **não são listas de componentes**. Transforme em arquitetura visual.
+
+Mostre conexões, responsabilidades e fronteiras entre camadas. Use boxes, setas e separação visual clara entre:
+- quem gera (ex.: Lovable, modelo)
+- quem valida (ex.: PR, CI/CD, ferramenta de teste)
+- quem executa (ex.: pipeline, AWS)
+
+---
+
+## Densidade de texto
+
+Reduza significativamente o texto visível no slide. Priorize:
+
+- títulos fortes e frases curtas
+- labels, microdescrições, palavras-chave
+- números e elementos visuais
+
+Detalhes explicativos vão para as **notas do apresentador** — não elimine informação estratégica, reorganize onde ela aparece.
+
+---
+
 ## Dois registros visuais
 
 Toda apresentação Dati alterna entre dois registros, nunca misturando os dois no mesmo slide:
@@ -12,6 +147,16 @@ Toda apresentação Dati alterna entre dois registros, nunca misturando os dois 
 |---|---|---|
 | **Escuro** | Capa, divisores de seção, slides de declaração de impacto, fechamento | Gradiente escuro (ver specs abaixo) |
 | **Claro** | Todos os slides de conteúdo do miolo | `#EDF0F2` |
+
+---
+
+## Ritmo de layout
+
+Não reutilize o mesmo layout em slides consecutivos. Construa variação dentro do sistema:
+
+- impacto → cards → fluxo → comparação → diagrama → estatística → frase → síntese
+
+A apresentação deve parecer uma narrativa visual, não uma coleção de templates repetidos.
 
 ---
 
@@ -119,6 +264,8 @@ Usado para conceito-chave ou estatística de impacto.
 | white | `#FFFFFF` | Todo texto sobre fundos escuros |
 | cover-gray | `#C0C0C0` | Subtítulo da capa |
 
+Cores secundárias (cyan, green, orange) apenas para diferenciação semântica, indicadores ou status — nunca decorativas. Nunca introduzir cor fora desta lista.
+
 ---
 
 ## Tipografia
@@ -138,23 +285,78 @@ Fonte única: **Manrope**. Nunca usar Arial, Calibri ou outra família.
 | Corpo | 12–14pt | Regular | `#5B5570` |
 | Rodapé | 12pt | Regular | `#9891AB` |
 
+Destaque tipográfico: apenas a palavra ou expressão-chave recebe cor em roxo — nunca frases inteiras. Use pesos diferentes para construir hierarquia.
+
+---
+
+## Cards
+
+Cards são usados com intenção — máximo de 2 a 4 por slide.
+
+- Cantos suavemente arredondados
+- Proporções consistentes entre todos os cards do slide
+- Padding generoso
+- Títulos curtos + microdescrição
+- Ícones apenas quando agregarem significado semântico
+- Sombra ou glow muito discretos, se necessário
+
+---
+
+## Processo de criação — slide a slide
+
+Para cada slide:
+
+1. Entenda a mensagem principal
+2. Identifique a natureza da informação (processo, comparação, arquitetura, dado, regra…)
+3. Escolha a estrutura visual adequada (ver mapa de transformação acima)
+4. Resuma o texto visível ao mínimo necessário
+5. Construa a composição
+6. Aplique a identidade Dati (cores, tipografia, logo)
+7. Verifique legibilidade
+8. Verifique equilíbrio e alinhamento
+9. Verifique se existe narrativa visual
+10. Finalize o slide
+
 ---
 
 ## Estrutura de slides recomendada
 
-1. **Capa** — gradiente radial, logo, título bold + subtítulo gray.
-2. **Quem somos / apresentação** — slide claro com foto, cargo, diferenciais.
-3. **Diagnóstico / provocação** — 1–3 slides claros ou um divisor escuro + slide claro.
-4. **Conteúdo / desenvolvimento** — slides claros com eyebrow + H1 + corpo.
-5. **Divisores de seção** — um slide escuro antes de cada bloco temático novo.
-6. **Prova / case** — slide claro ou declaração de impacto escura.
-7. **Próximo passo / CTA** — slide claro com instrução concreta.
-8. **Fechamento** — gradiente heroDark + "Obrigado!" + rodapé.
+1. **6 slides do MAP** — bloco institucional fixo, copiados exatamente
+2. **Capa** — gradiente radial, logo, título bold + subtítulo gray
+3. **Quem somos / apresentação** — slide claro com foto, cargo, diferenciais
+4. **Diagnóstico / provocação** — 1–3 slides claros ou um divisor escuro + slide claro
+5. **Conteúdo / desenvolvimento** — slides claros com eyebrow + H1 + estrutura visual
+6. **Divisores de seção** — um slide escuro antes de cada bloco temático novo
+7. **Prova / case** — slide claro ou declaração de impacto escura
+8. **Próximo passo / CTA** — slide claro com instrução concreta
+9. **Fechamento** — gradiente heroDark + "Obrigado!" + rodapé
 
 **Regras de alternância:**
-- Fundo escuro apenas na capa, divisores, slides de declaração de impacto e fechamento.
-- O miolo é quase todo em `#EDF0F2` — nunca empilhe mais de 2 slides escuros seguidos fora da capa.
-- Logo aparece na capa (branco) e em todos os slides claros (navy, canto superior direito).
+- Fundo escuro apenas na capa, divisores, slides de declaração de impacto e fechamento
+- O miolo é quase todo em `#EDF0F2` — nunca empilhe mais de 2 slides escuros seguidos fora da capa
+- Logo aparece na capa (branco) e em todos os slides claros (navy, canto superior direito)
+
+---
+
+## Checklist final obrigatório
+
+Antes de entregar qualquer apresentação:
+
+- [ ] Os 6 primeiros slides do MAP foram copiados exatamente?
+- [ ] Nenhum deles foi alterado?
+- [ ] O conteúdo específico começou após o bloco institucional?
+- [ ] Há slides excessivamente textuais? (Se sim, redesenhe)
+- [ ] Algum conteúdo que deveria ser diagrama está como lista?
+- [ ] Existem grandes espaços vazios sem intenção visual?
+- [ ] Há alternância de ritmo entre os layouts?
+- [ ] Os fundos claros e escuros estão equilibrados?
+- [ ] Os cards estão com proporções consistentes?
+- [ ] Os títulos possuem boa hierarquia (eyebrow + H1 + subtítulo)?
+- [ ] As palavras-chave estão destacadas em roxo (só as palavras, não a frase inteira)?
+- [ ] O conteúdo está legível em apresentação presencial?
+- [ ] Cada slide possui uma ideia principal clara?
+- [ ] A identidade visual está consistente com a Dati?
+- [ ] Este slide poderia existir nas referências MAP ou SeniorTec 2026?
 
 ---
 
@@ -162,6 +364,7 @@ Fonte única: **Manrope**. Nunca usar Arial, Calibri ou outra família.
 
 1. Defina a tese em uma frase de duas cláusulas — vira o título da capa e do fechamento.
 2. Mapeie os blocos temáticos: cada bloco começa com um divisor de seção escuro.
-3. Use o registro escuro só na capa, nos divisores e no fechamento — tudo mais em `#EDF0F2`.
-4. Um dado ou prova concreta por slide de diagnóstico; máximo 5 pontos por slide.
-5. Gere como `.pptx` (skill `pptx`) ou artefato **Slides** seguindo esta paleta e tipografia.
+3. Para cada slide, aplique o mapa de transformação antes de escolher o layout.
+4. Use o registro escuro só na capa, nos divisores e no fechamento — tudo mais em `#EDF0F2`.
+5. Um dado ou prova concreta por slide de diagnóstico; máximo 5 pontos por slide.
+6. Gere como `.pptx` (skill `pptx`) ou artefato **Slides** seguindo esta paleta e tipografia.
