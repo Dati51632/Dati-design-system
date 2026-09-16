@@ -239,6 +239,7 @@ Usado para conceito-chave ou estatística de impacto.
 - **Título**: Manrope Regular, **66pt**, **branco**. Ex.: "Obrigado!".
 - **Linha divisória**: gradiente horizontal `#6838E8` → `#6838E8` (roxo sólido ou mínimo degradê).
 - **Rodapé**: nome completo do deck/empresa em caixa alta, `#9891AB`, 12pt, Manrope. Ex.: "DATI | MIGRAÇÃO E MODERNIZAÇÃO NA AWS".
+- **Elemento decorativo**: símbolo/seta da marca aparece aqui também, mas **numa escala bem menor que a da capa** (não os ≈68% de altura do símbolo de capa) — um lockup ou símbolo de tamanho médio, posicionado à direita, próximo ao título. Confirmado nos slides finais de "Obrigado!" do MAP e do SeniorTec 2026.
 
 ---
 
@@ -301,6 +302,15 @@ Cards são usados com intenção — máximo de 2 a 4 por slide.
 - Sombra ou glow muito discretos, se necessário
 
 ---
+
+## Elementos adicionais confirmados (releitura completa de MAP + SeniorTec 2026, set/2026)
+
+Uma releitura integral dos dois decks de referência, slide a slide, confirma quatro recursos que ainda não estavam descritos neste guia — nenhum contradiz o que já existe acima, são complementos:
+
+- **Trio de cards de estatística** (SeniorTec, slide 15): 3 cards lado a lado sobre fundo escuro, cada um com ícone em selo + número/dado grande + legenda curta abaixo — uma variação específica de "Indicadores / dados" no mapa de transformação, quando há exatamente 3 estatísticas para justificar urgência ou oportunidade (ex. "60% dos projetos de IA seriam abandonados até 2026").
+- **Números-fantasma gigantes** (MAP, slide 13, "A gente não começa do zero em cada projeto"): numerais grandes em contorno/outline, num cinza muito claro sobre fundo `#EDF0F2` (quase invisíveis), um atrás de cada item de uma lista curta (3-5 itens) com ícone em selo — dão escala e ritmo sem competir com o texto. Use só com listas curtas, nunca mais que 5 números.
+- **Faixa de parceiros/logos** (MAP, slide 6, "Parceiros"): logos de parceiros (ex. AWS, outros fornecedores) dentro de pills roxos sólidos, empilhados ou em linha, sobre fundo claro — usado em slides "quem somos"/parceiros/ecossistema.
+- **Slide de equipe** (SeniorTec, slide 12, "O time do Dati Labs"): fundo escuro, grade de fotos (redondas ou em cards de cantos arredondados) com o primeiro nome de cada pessoa abaixo — usado para dar crédito ao time que entregou o projeto. Só inclua se houver fotos reais da equipe; nunca use avatares genéricos ou placeholders.
 
 ## Processo de criação — slide a slide
 
