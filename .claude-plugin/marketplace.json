@@ -1,0 +1,26 @@
+{
+  "name": "dati-design-system",
+  "owner": {
+    "name": "Dati"
+  },
+  "plugins": [
+    {
+      "name": "dati-design-system",
+      "source": "./",
+      "description": "Design system e gerador de apresentações PPTX da Dati — paleta de cores, tipografia, layouts e engine de templates com 16 tipos de slide",
+      "author": {
+        "name": "Dati"
+      },
+      "repository": "https://github.com/Dati51632/Dati-design-system",
+      "keywords": [
+        "dati",
+        "design-system",
+        "apresentacoes",
+        "pptx",
+        "slides",
+        "aws",
+        "cloud"
+      ]
+    }
+  ]
+}
