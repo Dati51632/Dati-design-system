@@ -21,6 +21,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import AdmZip from "adm-zip";
+import { buildVisualSlide, VISUAL_TYPES } from "./pptx-visual-engine.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_PPTX = path.resolve(__dirname, "../assets/template-source/MAP.pptx");
@@ -581,6 +582,16 @@ async function main() {
   let pageNum = INSTITUTIONAL_COUNT + 1;
 
   for (const s of slides) {
+    // Visual slide types (generated from scratch, not from MAP.pptx templates)
+    if (VISUAL_TYPES[s.tipo]) {
+      const result = buildVisualSlide(s.tipo, s, { deckName, pageNum });
+      if (result) {
+        if (s.tipo !== "encerramento") pageNum++;
+        outputSlides.push(result);
+        continue;
+      }
+    }
+
     const tmpl = TEMPLATE_MAP[s.tipo];
     if (!tmpl) {
       console.warn(`⚠️  Tipo desconhecido: "${s.tipo}" — slide ignorado`);
