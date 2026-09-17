@@ -926,6 +926,65 @@ const TEMPLATE_MAP = {
     },
   },
 
+  // ── KPI (scratch) ─────────────────────────────────────────────────────────────
+  kpi: {
+    build(s, { deckName, pageNum }) {
+      const metricas = Array.isArray(s.metricas) ? s.metricas.slice(0, 4) : [];
+      const dark = !!s.dark;
+      const n = metricas.length || 1;
+      const bg = buildBackground(dark ? "dark" : "light");
+
+      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, dark);
+      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, dark);
+      const logo    = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+
+      const CARD_H   = 2400000;
+      const CARD_Y   = 2600000;
+      const GAP      = 300000;
+      const USABLE_W = W - 2 * MARGIN;
+      const CARD_W   = Math.floor((USABLE_W - (n - 1) * GAP) / n);
+      const BAR_H    = 200000;
+
+      const cardBodyFill = dark
+        ? buildGradientFill([{ pos: 0, hex: "1A0F3D" }, { pos: 100000, hex: "2B1B5C" }], 180)
+        : buildSolidFill("FFFFFF");
+
+      let idCounter = 30;
+      let cardsXml = "";
+
+      metricas.forEach((m, i) => {
+        const cx = MARGIN + i * (CARD_W + GAP);
+
+        // Card body
+        cardsXml += buildRoundedRect(idCounter++, cx, CARD_Y, CARD_W, CARD_H, 8000, cardBodyFill);
+
+        // Barra gradiente no topo
+        const barFill = buildGradientFill([
+          { pos: 0,      hex: C.purpleMid },
+          { pos: 100000, hex: C.purpleDark },
+        ], 0);
+        cardsXml += buildPlainRect(idCounter++, cx, CARD_Y, CARD_W, BAR_H, barFill);
+
+        // Valor grande
+        const vColor = dark ? C.white : C.navy;
+        const vRun = buildRun(m.valor || "", { color: vColor, sz: 4800, bold: true, typeface: "Manrope" });
+        cardsXml += buildTextShape(idCounter++, cx + 200000, CARD_Y + BAR_H + 200000, CARD_W - 400000, 1200000,
+          [{ runs: vRun, algn: "ctr" }], 'anchor="ctr"');
+
+        // Label
+        const lColor = dark ? C.purpleTint : C.textMuted;
+        const lRun = buildRun(m.label || "", { color: lColor, sz: 1300, typeface: "Manrope" });
+        cardsXml += buildTextShape(idCounter++, cx + 200000, CARD_Y + BAR_H + 1500000, CARD_W - 400000, 700000,
+          [{ runs: lRun, algn: "ctr", lnSpc: "110000" }]);
+      });
+
+      const footer = buildFooterShapes(deckName, pageNum, dark);
+      const xml = buildScratchSlide(bg, eyebrow + title + logo + cardsXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
   // ── ENCERRAMENTO (slide18) ─────────────────────────────────────────────────
   encerramento: {
     sourceSlide: 18,
