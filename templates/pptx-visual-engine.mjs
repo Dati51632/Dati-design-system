@@ -1,53 +1,115 @@
 /**
- * PPTX VISUAL ENGINE — DATI
+ * PPTX VISUAL ENGINE — DATI  (v2 — redesign completo)
  * ─────────────────────────────────────────────────────────────────────────────
  * Gera slides PPTX a partir de XML puro, sem depender do MAP.pptx.
- * Exporta buildVisualSlide(tipo, slideData, ctx) → { xml, relsXml }
- * e VISUAL_TYPES (objeto de nomes dos tipos visuais).
+ * Gradientes reais (nunca cores sólidas onde o design system pede gradiente).
+ * Ícones semânticos via preset geometries PPTX.
+ * Layouts variados — nunca repete o mesmo template em sequência.
  *
- * Tipos suportados: cards, pipeline, comparacao, timeline, kpi, tres-pilares
+ * Tipos: cards, lista-icone, diagrama-fluxo, grid-icone,
+ *        pipeline, comparacao, timeline, kpi, tres-pilares
  */
 
-// ─── Constantes de layout (EMU) ───────────────────────────────────────────────
+// ─── Constantes de layout (EMU — 1 inch = 914400) ────────────────────────────
 
-const W = 12192000;
-const H = 6858000;
-const ML = 457200; // margin left/right
-const CONTENT_W = W - 2 * ML; // 11277600
-const EYEBROW_Y = 380000;
-const TITLE_Y = 820000;
-const CONTENT_Y = 1750000;
-const FOOTER_Y = 6267450;
+const W          = 12192000;   // slide width
+const H          = 6858000;    // slide height
+const ML         = 457200;     // margin left/right
+const CONTENT_W  = W - 2 * ML; // 11277600
+const EYEBROW_Y  = 380000;
+const TITLE_Y    = 820000;
+const CONTENT_Y  = 1750000;    // content starts after header
+const FOOTER_Y   = 6267450;
 
-// ─── Brand colors ─────────────────────────────────────────────────────────────
+// ─── Paleta de cores ──────────────────────────────────────────────────────────
 
 const C = {
-  navy: "1A0F3D",
-  purple: "6838E8",
+  navy:           "1A0F3D",
+  purple:         "6838E8",
   purpleEmphasis: "8F65FE",
-  purpleLight: "8C7DFF",
-  purplePale: "E8E1FF",
-  purpleBorder: "D4CEF0",
-  cyan: "5BBEED",
-  green: "A4DF64",
-  orange: "F59D01",
-  white: "FFFFFF",
-  bgLight: "EDF0F2",
-  textMuted: "5B5570",
-  textDark: "CFC9E6",
-  darkCard: "261752",
-  darkNavy: "0D0824",
-  navyMid: "2B1B5C",
-  cardBg: "F5F2FF",
-  orangeBg: "FFF8F0",
+  purpleMid:      "6F62FF",
+  purpleDark:     "3629D1",
+  purpleDarker:   "3503BB",
+  purpleDeep:     "240872",
+  purpleSubtle:   "655CC6",
+  purplePale:     "E8E1FF",
+  purpleBorder:   "D4CEF0",
+  purpleGhost:    "6838E8",    // used with alpha for ghost elements
+  cyan:           "5BBEED",
+  green:          "A4DF64",
+  orange:         "F59D01",
+  white:          "FFFFFF",
+  bgLight:        "EDF0F2",
+  textMuted:      "5B5570",
+  footerMuted:    "9891AB",
+  darkCard:       "261752",
+  darkNavy:       "0D0824",
+  navyMid:        "2B1B5C",
 };
 
-// Cycling accent colors for cards/bars
-const ACCENT_COLORS = [C.purple, C.cyan, C.green, C.orange];
+// ─── Presets de gradiente (stops = [[pos0-100, hex], ...], ang = 60000ths/deg) ─
+// ang=10800000 → 180° → top-to-bottom
+// ang=8100000  → 135° → top-left to bottom-right
+// ang=5400000  → 90°  → left-to-right
 
-// ─── XML helpers ──────────────────────────────────────────────────────────────
+const GRAD = {
+  sidebar:  { stops: [[0, "6F62FF"], [100, "3629D1"]], ang: 10800000 },
+  purple:   { stops: [[0, "6F62FF"], [100, "3629D1"]], ang: 10800000 },
+  impact:   { stops: [[0, "6838E8"], [100, "3503BB"]], ang: 10800000 },
+  badge:    { stops: [[0, "8F65FE"], [100, "4B1FD4"]], ang: 8100000  },
+  cyan:     { stops: [[0, "4AACED"], [100, "1E7AAD"]], ang: 10800000 },
+  green:    { stops: [[0, "6DB038"], [100, "3A6E1A"]], ang: 10800000 },
+  orange:   { stops: [[0, "D88800"], [100, "9B5500"]], ang: 10800000 },
+  navy:     { stops: [[0, "261752"], [100, "0D0824"]], ang: 10800000 },
+  heroDark: { stops: [[0, "0D0824"], [55, "1A0F3D"], [100, "2B1B5C"]], ang: 8100000 },
+};
 
-function xmlEsc(s) {
+// cor semântica → preset de gradiente + cor de texto
+const COLOR_NODE = {
+  purple: { grad: GRAD.purple, text: C.white, sub: "D4CEF0" },
+  cyan:   { grad: GRAD.cyan,   text: C.white, sub: "C8E8F5" },
+  green:  { grad: GRAD.green,  text: C.white, sub: "C0E8A0" },
+  orange: { grad: GRAD.orange, text: C.white, sub: "F5D5A0" },
+  navy:   { grad: GRAD.navy,   text: C.white, sub: "9891AB" },
+};
+
+// ─── Mapa de ícones (nome → PPTX preset geometry) ────────────────────────────
+
+const ICON_MAP = {
+  gear:      "gear6",
+  lightning: "lightningBolt",
+  layers:    "cube",
+  loop:      "uturnArrow",
+  code:      "bracketPair",
+  database:  "can",
+  shield:    "pentagon",
+  diff:      "mathNotEqual",
+  check:     "flowChartPreparation",
+  audit:     "ribbon",
+  arrow:     "rightArrow",
+  star:      "star5",
+  diamond:   "flowChartDecision",
+  cloud:     "cloud",
+  funnel:    "funnel",
+  merge:     "flowChartMerge",
+  branch:    "curvedRightArrow",
+  lock:      "flowChartProcess",
+  chart:     "star4",
+  default:   "star5",
+};
+
+// Cores de acento que ciclam (para cards e grids)
+const ACCENT_GRADS = [GRAD.purple, GRAD.cyan, GRAD.green, GRAD.orange];
+
+// ─── ID counter ────────────────────────────────────────────────────────────────
+
+let _shapeId = 2;
+function nextId()   { return _shapeId++; }
+function resetIds() { _shapeId = 2; }
+
+// ─── Escape XML ───────────────────────────────────────────────────────────────
+
+function xe(s) {
   return String(s)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -55,47 +117,56 @@ function xmlEsc(s) {
     .replace(/"/g, "&quot;");
 }
 
-// Shape ID counter — reset per slide
-let _shapeId = 2;
-function nextId() {
-  return _shapeId++;
-}
-function resetIds() {
-  _shapeId = 2;
-}
-
-// ─── Shape builders ───────────────────────────────────────────────────────────
+// ─── Construtores de forma ───────────────────────────────────────────────────
 
 /**
- * Non-text rectangle/shape (background, bar, etc.)
+ * Shape retangular/geométrico.
+ * opts: { fill, noFill, gradStops, gradAngle, fillAlpha,
+ *         border, geom, roundAdj, id, name }
  */
-function sp(x, y, cx, cy, { fill = null, noFill = false, border = null, geom = "rect", roundAdj = 20000, id = null, name = null } = {}) {
-  const sid = id ?? nextId();
+function sp(x, y, cx, cy, opts = {}) {
+  const {
+    fill = null, noFill = false, gradStops = null, gradAngle = 10800000, fillAlpha = null,
+    border = null, geom = "rect", roundAdj = 20000, id = null, name = null,
+  } = opts;
+  const sid   = id   ?? nextId();
   const sname = name ?? `s${sid}`;
 
+  // Fill XML
   let fillXml;
   if (noFill) {
     fillXml = "<a:noFill/>";
+  } else if (gradStops) {
+    const stopsXml = gradStops.map(([pos, color]) =>
+      `<a:gs pos="${Math.round(pos * 1000)}"><a:srgbClr val="${color}"/></a:gs>`
+    ).join("");
+    fillXml = `<a:gradFill><a:gsLst>${stopsXml}</a:gsLst><a:lin ang="${gradAngle}" scaled="0"/></a:gradFill>`;
   } else if (fill) {
-    fillXml = `<a:solidFill><a:srgbClr val="${fill}"/></a:solidFill>`;
+    if (fillAlpha !== null) {
+      fillXml = `<a:solidFill><a:srgbClr val="${fill}"><a:alpha val="${fillAlpha}"/></a:srgbClr></a:solidFill>`;
+    } else {
+      fillXml = `<a:solidFill><a:srgbClr val="${fill}"/></a:solidFill>`;
+    }
   } else {
     fillXml = "<a:noFill/>";
   }
 
-  let borderXml;
-  if (border) {
-    borderXml = `<a:ln w="${border.w ?? 9525}"><a:solidFill><a:srgbClr val="${border.color}"/></a:solidFill></a:ln>`;
-  } else {
-    borderXml = "<a:ln><a:noFill/></a:ln>";
-  }
+  // Border XML
+  const borderXml = border
+    ? `<a:ln w="${border.w ?? 9525}"><a:solidFill><a:srgbClr val="${border.color}"/></a:solidFill></a:ln>`
+    : "<a:ln><a:noFill/></a:ln>";
 
+  // Geom XML
   let geomXml;
   if (geom === "roundRect") {
     geomXml = `<a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val ${roundAdj}"/></a:avLst></a:prstGeom>`;
   } else if (geom === "ellipse") {
     geomXml = `<a:prstGeom prst="ellipse"><a:avLst/></a:prstGeom>`;
-  } else {
+  } else if (geom === "rect") {
     geomXml = `<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>`;
+  } else {
+    // Any other PPTX preset geometry name
+    geomXml = `<a:prstGeom prst="${geom}"><a:avLst/></a:prstGeom>`;
   }
 
   return `<p:sp>
@@ -111,50 +182,48 @@ function sp(x, y, cx, cy, { fill = null, noFill = false, border = null, geom = "
 
 /**
  * Text shape
- * runs: array of { text, bold, sz, color, italic }
- * or a raw runs XML string
+ * runsOrXml: array de runs { text, bold, sz, color, alpha } ou XML string
+ * multiPara: true → runsOrXml já é um conjunto de <a:p>
  */
-function tsp(x, y, cx, cy, runsOrXml, {
-  fill = null,
-  noFill = true,
-  anchor = "t",
-  algn = "l",
-  bold = false,
-  sz = 1200,
-  color = C.navy,
-  wrap = "square",
-  lIns = 91440,
-  rIns = 91440,
-  tIns = 0,
-  bIns = 0,
-  id = null,
-  name = null,
-  multiPara = false,
-} = {}) {
-  const sid = id ?? nextId();
+function tsp(x, y, cx, cy, runsOrXml, opts = {}) {
+  const {
+    fill       = null,
+    noFill     = true,
+    anchor     = "t",
+    algn       = "l",
+    bold       = false,
+    sz         = 1200,
+    color      = C.navy,
+    wrap       = "square",
+    lIns       = 91440,
+    rIns       = 91440,
+    tIns       = 0,
+    bIns       = 0,
+    id         = null,
+    name       = null,
+    multiPara  = false,
+  } = opts;
+
+  const sid   = id   ?? nextId();
   const sname = name ?? `t${sid}`;
+  const fillXml = fill ? `<a:solidFill><a:srgbClr val="${fill}"/></a:solidFill>` : "<a:noFill/>";
 
-  const fillXml = fill
-    ? `<a:solidFill><a:srgbClr val="${fill}"/></a:solidFill>`
-    : "<a:noFill/>";
-
-  // Build runs XML
   let runsXml;
   if (typeof runsOrXml === "string") {
     runsXml = runsOrXml;
   } else if (Array.isArray(runsOrXml)) {
     runsXml = runsOrXml.map(r => run(r.text, {
-      bold: r.bold ?? bold,
-      sz: r.sz ?? sz,
+      bold:  r.bold  ?? bold,
+      sz:    r.sz    ?? sz,
       color: r.color ?? color,
-      italic: r.italic ?? false,
+      alpha: r.alpha ?? null,
     })).join("");
   } else {
     runsXml = "";
   }
 
   const paraXml = multiPara
-    ? runsXml // already full paragraphs
+    ? runsXml
     : `<a:p><a:pPr algn="${algn}"><a:buNone/></a:pPr>${runsXml}</a:p>`;
 
   return `<p:sp>
@@ -174,78 +243,113 @@ function tsp(x, y, cx, cy, runsOrXml, {
 }
 
 /**
- * Single text run
+ * Single text run com suporte a alpha.
  */
-function run(text, { bold = false, sz = 1200, color = C.navy, italic = false } = {}) {
+function run(text, { bold = false, sz = 1200, color = C.navy, italic = false, alpha = null } = {}) {
   const b = bold ? "1" : "0";
   const i = italic ? "1" : "0";
-  return `<a:r><a:rPr b="${b}" i="${i}" lang="pt-BR" sz="${sz}" u="none" dirty="0"><a:solidFill><a:srgbClr val="${color}"/></a:solidFill><a:latin typeface="Manrope"/></a:rPr><a:t>${xmlEsc(text)}</a:t></a:r>`;
+  const colorInner = alpha !== null
+    ? `<a:srgbClr val="${color}"><a:alpha val="${alpha}"/></a:srgbClr>`
+    : `<a:srgbClr val="${color}"/>`;
+  return `<a:r><a:rPr b="${b}" i="${i}" lang="pt-BR" sz="${sz}" u="none" dirty="0"><a:solidFill>${colorInner}</a:solidFill><a:latin typeface="Manrope"/></a:rPr><a:t>${xe(text)}</a:t></a:r>`;
 }
 
 /**
- * Build multiple runs from titulo array [{text, emphasis}] or string
+ * Constrói runs de título a partir de string ou array [{text, emphasis}].
  */
 function titleRuns(titulo, { sz = 3000, baseColor = C.navy, emphColor = C.purpleEmphasis, bold = true } = {}) {
-  if (typeof titulo === "string") {
-    return run(titulo, { bold, sz, color: baseColor });
-  }
+  if (typeof titulo === "string") return run(titulo, { bold, sz, color: baseColor });
   if (Array.isArray(titulo)) {
-    return titulo.map(t =>
-      run(t.text, { bold, sz, color: t.emphasis ? emphColor : baseColor })
-    ).join("");
+    return titulo.map(t => run(t.text, { bold, sz, color: t.emphasis ? emphColor : baseColor })).join("");
   }
   return "";
 }
 
-// ─── Common slide header (eyebrow + title + footer) ─────────────────────────
+// ─── Ícone badge: círculo gradiente + preset icon branco dentro ───────────────
 
-function headerShapes(eyebrow, titulo, { deckName, pageNum }) {
+/**
+ * Retorna array de shapes XML formando um "badge com ícone".
+ * gradKey: chave em GRAD
+ */
+function iconBadge(x, y, size, iconName, gradKey = "badge") {
+  const shapes = [];
+  const g      = GRAD[gradKey] || GRAD.badge;
+  const preset = ICON_MAP[iconName] || ICON_MAP.default;
+  const pad    = Math.round(size * 0.22);
+  const iSize  = size - 2 * pad;
+
+  // Fundo circular com gradiente
+  shapes.push(sp(x, y, size, size, {
+    gradStops: g.stops,
+    gradAngle: g.ang,
+    geom: "ellipse",
+  }));
+
+  // Ícone preset branco centrado
+  shapes.push(sp(x + pad, y + pad, iSize, iSize, {
+    fill: C.white,
+    geom: preset,
+  }));
+
+  return shapes;
+}
+
+// ─── Cabeçalho padrão (eyebrow + título + rodapé) ────────────────────────────
+
+function headerShapes(eyebrow, titulo, ctx, { dark = false } = {}) {
+  const eyebrowColor = dark ? "8C7DFF" : C.purpleEmphasis;
+  const titleColor   = dark ? C.white  : C.navy;
+  const footerColor  = dark ? C.footerMuted : C.footerMuted;
   const shapes = [];
 
-  // Eyebrow
   if (eyebrow) {
     shapes.push(tsp(ML, EYEBROW_Y, CONTENT_W, 300000,
-      run((eyebrow || "").toUpperCase(), { bold: true, sz: 1000, color: C.purpleLight }),
+      run(String(eyebrow).toUpperCase(), { bold: true, sz: 1000, color: eyebrowColor }),
       { anchor: "t", algn: "l" }
     ));
   }
-
-  // Title
   if (titulo) {
-    const runsXml = titleRuns(titulo, { sz: 3000, bold: true });
-    shapes.push(tsp(ML, TITLE_Y, CONTENT_W, 700000, runsXml, { anchor: "t", algn: "l" }));
+    const baseCol  = dark ? C.white : C.navy;
+    const emphCol  = dark ? "8C7DFF" : C.purpleEmphasis;
+    const runsXml  = titleRuns(titulo, { sz: 3000, bold: true, baseColor: baseCol, emphColor: emphCol });
+    shapes.push(tsp(ML, TITLE_Y, CONTENT_W, 750000, runsXml, { anchor: "t", algn: "l" }));
   }
-
-  // Footer left — deck name
-  if (deckName) {
-    shapes.push(tsp(ML, FOOTER_Y, CONTENT_W / 2, 200000,
-      run(deckName, { sz: 900, color: C.textMuted }),
+  if (ctx.deckName) {
+    shapes.push(tsp(ML, FOOTER_Y, CONTENT_W / 2, 220000,
+      run(ctx.deckName, { sz: 900, color: footerColor }),
       { anchor: "t", algn: "l" }
     ));
   }
-
-  // Footer right — page number
-  if (pageNum) {
-    shapes.push(tsp(ML + CONTENT_W / 2, FOOTER_Y, CONTENT_W / 2, 200000,
-      run(String(pageNum).padStart(2, "0"), { sz: 900, color: C.textMuted }),
+  if (ctx.pageNum) {
+    shapes.push(tsp(ML + CONTENT_W / 2, FOOTER_Y, CONTENT_W / 2, 220000,
+      run(String(ctx.pageNum).padStart(2, "0"), { sz: 900, color: footerColor }),
       { anchor: "t", algn: "r" }
     ));
   }
-
   return shapes.join("\n");
 }
 
-// ─── Slide wrapper ────────────────────────────────────────────────────────────
+// ─── Wrapper do slide ─────────────────────────────────────────────────────────
 
-function wrapSlide(shapesXml, { dark = false } = {}) {
-  const bgFill = dark
-    ? `<a:gradFill><a:gsLst><a:gs pos="0"><a:srgbClr val="${C.darkNavy}"/></a:gs><a:gs pos="55000"><a:srgbClr val="${C.navy}"/></a:gs><a:gs pos="100000"><a:srgbClr val="${C.navyMid}"/></a:gs></a:gsLst><a:lin ang="8100000" scaled="0"/></a:gradFill>`
-    : `<a:solidFill><a:srgbClr val="${C.bgLight}"/></a:solidFill>`;
+function wrapSlide(shapesXml, { dark = false, bgFill = null } = {}) {
+  let bg;
+  if (bgFill) {
+    bg = bgFill;
+  } else if (dark) {
+    // Gradiente heroDark: 3 stops, diagonal 135°
+    bg = `<a:gradFill><a:gsLst>
+      <a:gs pos="0"><a:srgbClr val="${C.darkNavy}"/></a:gs>
+      <a:gs pos="55000"><a:srgbClr val="${C.navy}"/></a:gs>
+      <a:gs pos="100000"><a:srgbClr val="${C.navyMid}"/></a:gs>
+    </a:gsLst><a:lin ang="8100000" scaled="0"/></a:gradFill>`;
+  } else {
+    bg = `<a:solidFill><a:srgbClr val="${C.bgLight}"/></a:solidFill>`;
+  }
 
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
   <p:cSld>
-    <p:bg><p:bgPr>${bgFill}<a:effectLst/></p:bgPr></p:bg>
+    <p:bg><p:bgPr>${bg}<a:effectLst/></p:bgPr></p:bg>
     <p:spTree>
       <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>
       <p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${W}" cy="${H}"/><a:chOff x="0" y="0"/><a:chExt cx="${W}" cy="${H}"/></a:xfrm></p:grpSpPr>
@@ -255,79 +359,89 @@ function wrapSlide(shapesXml, { dark = false } = {}) {
 </p:sld>`;
 }
 
-// ─── Standard rels XML ────────────────────────────────────────────────────────
+// ─── Rels padrão ──────────────────────────────────────────────────────────────
 
 const RELS_XML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
   <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout" Target="../slideLayouts/slideLayout3.xml"/>
 </Relationships>`;
 
-// ─── Slide type renderers ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// RENDERERS
+// ═══════════════════════════════════════════════════════════════════════════════
 
+// ─── CARDS ────────────────────────────────────────────────────────────────────
 /**
- * CARDS — 2–4 numbered cards with top bar, badge, title, description
+ * 2–4 cards horizontais.
+ * Cada card: badge gradiente + ícone preset + número ghost atrás + título + descrição.
+ * NÃO usa barras coloridas sólidas na parte superior.
  */
 function renderCards(s, ctx) {
   resetIds();
   const cards = Array.isArray(s.cards) ? s.cards : [];
-  const n = Math.max(2, Math.min(4, cards.length));
-  const gap = 200000;
+  const n     = Math.max(2, Math.min(4, cards.length));
+  const gap   = 220000;
   const cardW = Math.floor((CONTENT_W - (n - 1) * gap) / n);
-  const cardH = H - CONTENT_Y - 591000; // leave room for footer
-  const topBarH = 100000;
-  const badgeSize = 300000;
-  const cardPad = 150000; // internal padding
+  const cardH = FOOTER_Y - CONTENT_Y - 280000;
+  const pad   = 180000;
+  const badgeSz = 340000;
 
-  const shapes = [];
+  const shapes = [headerShapes(s.eyebrow, s.titulo, ctx)];
 
-  // Header shapes
-  shapes.push(headerShapes(s.eyebrow, s.titulo, ctx));
+  // Barra lateral esquerda gradiente (sidebar do slide)
+  shapes.push(sp(0, 0, 380000, H, {
+    gradStops: GRAD.sidebar.stops,
+    gradAngle: GRAD.sidebar.ang,
+  }));
 
   for (let i = 0; i < n; i++) {
-    const card = cards[i] || {};
-    const x = ML + i * (cardW + gap);
-    const y = CONTENT_Y;
-    const accent = ACCENT_COLORS[i % ACCENT_COLORS.length];
+    const card   = cards[i] || {};
+    const x      = ML + i * (cardW + gap);
+    const y      = CONTENT_Y;
+    const aGrad  = ACCENT_GRADS[i % ACCENT_GRADS.length];
 
-    // Card background (white, rounded)
+    // Ghost number no fundo do card (grande, 3% opacidade)
+    shapes.push(tsp(x, y + cardH * 0.35, cardW, cardH * 0.6,
+      run(String(i + 1), { bold: true, sz: 16000, color: C.purpleGhost, alpha: 3500 }),
+      { anchor: "ctr", algn: "ctr" }
+    ));
+
+    // Fundo do card: branco com borda sutil
     shapes.push(sp(x, y, cardW, cardH, {
       fill: C.white,
       border: { color: C.purpleBorder, w: 9525 },
       geom: "roundRect",
-      roundAdj: 12000,
+      roundAdj: 10000,
     }));
 
-    // Top accent bar
-    shapes.push(sp(x, y, cardW, topBarH, { fill: accent, geom: "rect" }));
+    // Acento fino na esquerda do card (gradiente)
+    shapes.push(sp(x, y, 120000, cardH, {
+      gradStops: aGrad.stops,
+      gradAngle: aGrad.ang,
+      geom: "rect",
+    }));
 
-    // Round top corners mask (cover the bar overlap on rounded card)
-    // Badge (ellipse) — purple, top-left of card content
-    const badgeX = x + cardPad;
-    const badgeY = y + topBarH + cardPad;
-    shapes.push(sp(badgeX, badgeY, badgeSize, badgeSize, { fill: C.purple, geom: "ellipse" }));
+    // Badge com ícone
+    const badgeX = x + 120000 + pad;
+    const badgeY = y + pad;
+    const iconKey = card.icone || "default";
+    // Escolhe gradiente para o badge baseado na posição
+    const badgeGradKey = ["badge", "cyan", "green", "orange"][i % 4];
+    shapes.push(...iconBadge(badgeX, badgeY, badgeSz, iconKey, badgeGradKey));
 
-    // Badge number
-    const numStr = String(i + 1).padStart(2, "0");
-    shapes.push(tsp(
-      badgeX, badgeY, badgeSize, badgeSize,
-      run(numStr, { bold: true, sz: 800, color: C.white }),
-      { anchor: "ctr", algn: "ctr" }
-    ));
-
-    // Card title
-    const titleY = badgeY + badgeSize + 100000;
-    const innerW = cardW - 2 * cardPad;
-    shapes.push(tsp(
-      x + cardPad, titleY, innerW, 350000,
+    // Título do card
+    const titleY = badgeY + badgeSz + 90000;
+    const innerX = x + 120000 + pad;
+    const innerW = cardW - 120000 - 2 * pad;
+    shapes.push(tsp(innerX, titleY, innerW, 380000,
       run(card.titulo || "", { bold: true, sz: 1400, color: C.navy }),
       { anchor: "t", algn: "l", wrap: "square" }
     ));
 
-    // Card description
-    const descY = titleY + 370000;
-    const descH = cardH - (descY - y) - cardPad;
-    shapes.push(tsp(
-      x + cardPad, descY, innerW, descH,
+    // Descrição
+    const descY = titleY + 400000;
+    const descH = cardH - (descY - y) - pad;
+    shapes.push(tsp(innerX, descY, innerW, descH,
       run(card.descricao || "", { sz: 1100, color: C.textMuted }),
       { anchor: "t", algn: "l", wrap: "square" }
     ));
@@ -336,83 +450,335 @@ function renderCards(s, ctx) {
   return wrapSlide(shapes.join("\n"));
 }
 
+// ─── LISTA-ICONE ──────────────────────────────────────────────────────────────
 /**
- * PIPELINE — up to 6 steps with arrows between them
+ * Lista de 3–5 itens em linhas horizontais.
+ * Sidebar gradiente completo à esquerda.
+ * Cada item: ícone badge + título bold + descrição + ghost number atrás.
+ */
+function renderListaIcone(s, ctx) {
+  resetIds();
+  const items  = Array.isArray(s.items) ? s.items : [];
+  const n      = Math.max(2, Math.min(5, items.length));
+  const sideW  = 500000;
+  const sideGap = 180000;
+  const contentX = ML + sideW + sideGap;
+  const contentAvail = W - contentX - ML;
+  const badgeSz = 320000;
+  const badgeGap = 180000;
+  const textX  = contentX + badgeSz + badgeGap;
+  const textW  = contentAvail - badgeSz - badgeGap;
+
+  const totalH = FOOTER_Y - CONTENT_Y - 220000;
+  const rowH   = Math.floor(totalH / n);
+
+  const shapes = [headerShapes(s.eyebrow, s.titulo, ctx)];
+
+  // Sidebar gradiente completo
+  shapes.push(sp(0, 0, sideW, H, {
+    gradStops: GRAD.sidebar.stops,
+    gradAngle: GRAD.sidebar.ang,
+  }));
+
+  for (let i = 0; i < n; i++) {
+    const item  = items[i] || {};
+    const rowY  = CONTENT_Y + i * rowH;
+    const midY  = rowY + Math.floor((rowH - badgeSz) / 2);
+
+    // Ghost número atrás da linha (direita, muito transparente)
+    shapes.push(tsp(W - ML - 900000, rowY, 900000, rowH,
+      run(String(i + 1), { bold: true, sz: 14000, color: C.purpleGhost, alpha: 3000 }),
+      { anchor: "ctr", algn: "r" }
+    ));
+
+    // Linha divisória sutil (exceto última)
+    if (i > 0) {
+      shapes.push(sp(contentX, rowY, contentAvail, 9525, {
+        fill: C.purpleBorder, fillAlpha: 40000,
+      }));
+    }
+
+    // Badge com ícone
+    const gradKeys = ["badge", "cyan", "green", "orange", "badge"];
+    shapes.push(...iconBadge(contentX, midY, badgeSz, item.icone || "default", gradKeys[i % gradKeys.length]));
+
+    // Título
+    shapes.push(tsp(textX, rowY + Math.floor(rowH * 0.12), textW, Math.floor(rowH * 0.4),
+      run(item.titulo || "", { bold: true, sz: 1600, color: C.navy }),
+      { anchor: "t", algn: "l" }
+    ));
+
+    // Descrição
+    shapes.push(tsp(textX, rowY + Math.floor(rowH * 0.47), textW, Math.floor(rowH * 0.45),
+      run(item.descricao || "", { sz: 1200, color: C.textMuted }),
+      { anchor: "t", algn: "l", wrap: "square" }
+    ));
+  }
+
+  return wrapSlide(shapes.join("\n"));
+}
+
+// ─── GRID-ICONE ───────────────────────────────────────────────────────────────
+/**
+ * Grade 2×2 de itens — diferente de "cards" horizontal.
+ * Cada célula: área de ícone com gradiente (topo) + título + descrição (baixo).
+ */
+function renderGridIcone(s, ctx) {
+  resetIds();
+  const items = Array.isArray(s.items) ? s.items.slice(0, 4) : [];
+  const cols  = 2;
+  const rows  = 2;
+  const gap   = 220000;
+  const cellW = Math.floor((CONTENT_W - gap) / cols);
+  const cellH = Math.floor((FOOTER_Y - CONTENT_Y - gap - 220000) / rows);
+  const iconAreaH = Math.floor(cellH * 0.42);
+  const pad   = 160000;
+
+  const CELL_GRADS = [GRAD.purple, GRAD.cyan, GRAD.green, GRAD.orange];
+
+  const shapes = [headerShapes(s.eyebrow, s.titulo, ctx)];
+
+  for (let i = 0; i < 4; i++) {
+    const item   = items[i] || {};
+    const col    = i % cols;
+    const row    = Math.floor(i / cols);
+    const x      = ML + col * (cellW + gap);
+    const y      = CONTENT_Y + row * (cellH + gap);
+    const aGrad  = CELL_GRADS[i % CELL_GRADS.length];
+
+    // Fundo da célula (branco com borda)
+    shapes.push(sp(x, y, cellW, cellH, {
+      fill: C.white,
+      border: { color: C.purpleBorder, w: 9525 },
+      geom: "roundRect",
+      roundAdj: 10000,
+    }));
+
+    // Área de ícone (gradiente, canto superior arredondado – usamos rect; roundRect não afeta partes)
+    shapes.push(sp(x, y, cellW, iconAreaH, {
+      gradStops: aGrad.stops,
+      gradAngle: aGrad.ang,
+      geom: "rect",
+    }));
+
+    // Ícone centrado na área gradiente
+    const iconSz  = Math.floor(iconAreaH * 0.55);
+    const iconX   = x + Math.floor((cellW - iconSz) / 2);
+    const iconY   = y + Math.floor((iconAreaH - iconSz) / 2);
+    shapes.push(sp(iconX, iconY, iconSz, iconSz, {
+      fill: C.white,
+      geom: ICON_MAP[item.icone] || ICON_MAP.default,
+    }));
+
+    // Título
+    shapes.push(tsp(x + pad, y + iconAreaH + pad, cellW - 2 * pad, 380000,
+      run(item.titulo || "", { bold: true, sz: 1500, color: C.navy }),
+      { anchor: "t", algn: "l", wrap: "square" }
+    ));
+
+    // Descrição
+    const descY = y + iconAreaH + pad + 390000;
+    const descH = cellH - iconAreaH - pad - 390000 - 80000;
+    shapes.push(tsp(x + pad, descY, cellW - 2 * pad, descH,
+      run(item.descricao || "", { sz: 1100, color: C.textMuted }),
+      { anchor: "t", algn: "l", wrap: "square" }
+    ));
+  }
+
+  return wrapSlide(shapes.join("\n"));
+}
+
+// ─── DIAGRAMA-FLUXO ───────────────────────────────────────────────────────────
+/**
+ * Diagrama em camadas verticais.
+ * "camadas": array de { nos: [{ label, sublabel, cor, destaque }] }
+ * Suporta convergência 2→1 com conector em Y.
+ */
+function renderDiagramaFluxo(s, ctx) {
+  resetIds();
+  const camadas = Array.isArray(s.camadas) ? s.camadas : [];
+  const N       = camadas.length;
+  if (N === 0) return wrapSlide(headerShapes(s.eyebrow, s.titulo, ctx));
+
+  const shapes = [headerShapes(s.eyebrow, s.titulo, ctx)];
+
+  // Layout vertical
+  const totalH  = FOOTER_Y - CONTENT_Y - 300000;
+  const wireGap = 260000;   // espaço entre camadas (para conectores)
+  const nodeHTotal = totalH - (N - 1) * wireGap;
+  const nodeH   = Math.floor(nodeHTotal / N);
+  const nodeGap = 220000;   // gap horizontal entre nós da mesma camada
+  const wireW   = 28000;
+  const wireColor = C.purpleBorder;
+
+  let currentY = CONTENT_Y;
+
+  for (let i = 0; i < N; i++) {
+    const camada  = camadas[i];
+    const nos     = Array.isArray(camada.nos) ? camada.nos : [];
+    const nNos    = nos.length;
+    const boxW    = nNos === 1
+      ? CONTENT_W
+      : Math.floor((CONTENT_W - (nNos - 1) * nodeGap) / nNos);
+
+    // Desenha cada nó da camada
+    for (let j = 0; j < nNos; j++) {
+      const no   = nos[j];
+      const nodeX = ML + j * (boxW + nodeGap);
+      const nodeY = currentY;
+      const node  = COLOR_NODE[no.cor] || COLOR_NODE.purple;
+
+      // Box com gradiente
+      shapes.push(sp(nodeX, nodeY, boxW, nodeH, {
+        gradStops: node.grad.stops,
+        gradAngle: node.grad.ang,
+        geom: "roundRect",
+        roundAdj: 8000,
+        border: no.destaque ? { color: "FFD700", w: 57150 } : null,
+      }));
+
+      // Etiqueta label
+      const splitH = no.sublabel ? Math.floor(nodeH * 0.52) : nodeH;
+      shapes.push(tsp(nodeX, nodeY, boxW, splitH,
+        run(no.label || "", { bold: true, sz: 1600, color: node.text }),
+        { anchor: "b", algn: "ctr", bIns: 60000 }
+      ));
+
+      // Sublabel
+      if (no.sublabel) {
+        shapes.push(tsp(nodeX, nodeY + splitH, boxW, nodeH - splitH,
+          run(no.sublabel, { sz: 1000, color: node.sub }),
+          { anchor: "t", algn: "ctr", tIns: 60000, lIns: 120000, rIns: 120000 }
+        ));
+      }
+    }
+
+    // Conector para próxima camada
+    if (i < N - 1) {
+      const nextCamada = camadas[i + 1];
+      const nextNos    = Array.isArray(nextCamada.nos) ? nextCamada.nos : [];
+      const nextNNos   = nextNos.length;
+      const nextBoxW   = nextNNos === 1
+        ? CONTENT_W
+        : Math.floor((CONTENT_W - (nextNNos - 1) * nodeGap) / nextNNos);
+
+      const wireStartY = currentY + nodeH;
+      const wireEndY   = wireStartY + wireGap;
+
+      if (nNos === 2 && nextNNos === 1) {
+        // Convergência Y: dois fios verticais → horizontal → um fio central
+        const lCenterX = ML + Math.floor(boxW / 2);
+        const rCenterX = ML + boxW + nodeGap + Math.floor(boxW / 2);
+        const midY     = Math.floor((wireStartY + wireEndY) / 2);
+        const hLineX   = Math.min(lCenterX, rCenterX) - wireW;
+        const hLineW   = Math.abs(rCenterX - lCenterX) + 2 * wireW;
+        const centerX  = ML + Math.floor(CONTENT_W / 2);
+
+        // Fio esq. vertical
+        shapes.push(sp(lCenterX - wireW, wireStartY, wireW * 2, midY - wireStartY, { fill: wireColor }));
+        // Fio dir. vertical
+        shapes.push(sp(rCenterX - wireW, wireStartY, wireW * 2, midY - wireStartY, { fill: wireColor }));
+        // Fio horizontal
+        shapes.push(sp(hLineX, midY - wireW, hLineW, wireW * 2, { fill: wireColor }));
+        // Fio central para baixo
+        shapes.push(sp(centerX - wireW, midY, wireW * 2, wireEndY - midY, { fill: wireColor }));
+        // Pontinha ▼
+        shapes.push(tsp(centerX - 180000, wireEndY - 200000, 360000, 220000,
+          run("▼", { sz: 900, color: wireColor }), { anchor: "ctr", algn: "ctr" }
+        ));
+
+      } else {
+        // Fios simples de cada nó para baixo
+        for (let j = 0; j < nNos; j++) {
+          const cx = ML + j * (boxW + nodeGap) + Math.floor(boxW / 2);
+          shapes.push(sp(cx - wireW, wireStartY, wireW * 2, wireGap, { fill: wireColor }));
+          shapes.push(tsp(cx - 180000, wireStartY + wireGap - 200000, 360000, 220000,
+            run("▼", { sz: 900, color: wireColor }), { anchor: "ctr", algn: "ctr" }
+          ));
+        }
+      }
+    }
+
+    currentY += nodeH + wireGap;
+  }
+
+  return wrapSlide(shapes.join("\n"));
+}
+
+// ─── PIPELINE ─────────────────────────────────────────────────────────────────
+/**
+ * Etapas sequenciais com gradiente por tipo.
+ * gate:true → destaque laranja. Última etapa → roxo escuro.
  */
 function renderPipeline(s, ctx) {
   resetIds();
-  const steps = Array.isArray(s.steps) ? s.steps : [];
-  const n = Math.max(1, Math.min(6, steps.length));
-  const arrowCount = n - 1;
+  const steps  = Array.isArray(s.steps) ? s.steps : [];
+  const n      = Math.max(1, Math.min(6, steps.length));
+  const arrowW = 220000;
+  const boxH   = 420000;
+  const boxW   = Math.floor((CONTENT_W - (n - 1) * arrowW) / n);
+  const boxY   = CONTENT_Y + Math.floor((FOOTER_Y - CONTENT_Y - boxH - 600000) / 2);
+  const descH  = 280000;
+  const descGap = 80000;
 
-  // Layout: boxes + arrow gaps
-  const arrowW = 200000;
-  const boxH = 350000;
-  const totalArrowW = arrowCount * arrowW;
-  const boxW = Math.floor((CONTENT_W - totalArrowW) / n);
-  const boxY = CONTENT_Y + 400000; // vertically center in content area
-  const descH = 280000;
-  const descGap = 60000;
+  const shapes = [headerShapes(s.eyebrow, s.titulo, ctx)];
 
-  const shapes = [];
-  shapes.push(headerShapes(s.eyebrow, s.titulo, ctx));
+  // Barra lateral gradiente
+  shapes.push(sp(0, 0, 380000, H, {
+    gradStops: GRAD.sidebar.stops,
+    gradAngle: GRAD.sidebar.ang,
+  }));
+
+  // Linha de progresso (fundo)
+  shapes.push(sp(ML, boxY + Math.floor(boxH / 2) - 10000, CONTENT_W, 20000, {
+    fill: C.purpleBorder, fillAlpha: 50000,
+  }));
 
   for (let i = 0; i < n; i++) {
-    const step = steps[i] || {};
+    const step  = steps[i] || {};
     const isGate = !!step.gate;
     const isLast = i === n - 1;
+    const x     = ML + i * (boxW + arrowW);
+    const y     = boxY;
 
-    const x = ML + i * (boxW + arrowW);
-    const y = boxY;
-
-    // Choose style
-    let bgColor, textColor, borderColor, borderW;
+    let grad, textCol;
     if (isLast) {
-      bgColor = C.purple;
-      textColor = C.white;
-      borderColor = C.purple;
-      borderW = 19050;
+      grad    = GRAD.impact;
+      textCol = C.white;
     } else if (isGate) {
-      bgColor = C.orange;
-      textColor = C.white;
-      borderColor = C.orange;
-      borderW = 19050;
+      grad    = GRAD.orange;
+      textCol = C.white;
     } else {
-      bgColor = C.purplePale;
-      textColor = C.navy;
-      borderColor = C.purple;
-      borderW = 9525;
+      grad    = GRAD.purple;
+      textCol = C.white;
     }
 
-    // Box
+    // Box com gradiente
     shapes.push(sp(x, y, boxW, boxH, {
-      fill: bgColor,
-      border: { color: borderColor, w: borderW },
+      gradStops: grad.stops,
+      gradAngle: grad.ang,
       geom: "roundRect",
-      roundAdj: 15000,
+      roundAdj: 10000,
     }));
 
-    // Label text in box
+    // Label no box
     shapes.push(tsp(x, y, boxW, boxH,
-      run(step.label || "", { bold: true, sz: 1200, color: textColor }),
+      run(step.label || "", { bold: true, sz: 1300, color: textCol }),
       { anchor: "ctr", algn: "ctr" }
     ));
 
-    // Description below box
+    // Descrição abaixo do box
     if (step.descricao) {
-      shapes.push(tsp(
-        x, y + boxH + descGap, boxW, descH,
+      shapes.push(tsp(x, y + boxH + descGap, boxW, descH,
         run(step.descricao, { sz: 1000, color: C.textMuted }),
         { anchor: "t", algn: "ctr" }
       ));
     }
 
-    // Arrow between boxes
+    // Seta entre boxes
     if (i < n - 1) {
-      const arrowX = x + boxW;
-      shapes.push(tsp(
-        arrowX, y, arrowW, boxH,
-        run("→", { sz: 1400, color: C.textMuted }),
+      shapes.push(tsp(x + boxW, y, arrowW, boxH,
+        run("›", { sz: 2000, color: C.purpleBorder }),
         { anchor: "ctr", algn: "ctr" }
       ));
     }
@@ -421,68 +787,84 @@ function renderPipeline(s, ctx) {
   return wrapSlide(shapes.join("\n"));
 }
 
+// ─── COMPARACAO ───────────────────────────────────────────────────────────────
 /**
- * COMPARACAO — two-column comparison
+ * Duas colunas lado a lado.
+ * Cabeçalhos com gradiente (não sólido).
+ * Símbolos ✓ e ✕ desenhados com shapes geométricos.
  */
 function renderComparacao(s, ctx) {
   resetIds();
-  const gap = 200000;
-  const colW = Math.floor((CONTENT_W - gap) / 2);
-  const colH = H - CONTENT_Y - 591000;
-  const headerH = 300000;
-  const pad = 150000;
+  const gap    = 220000;
+  const colW   = Math.floor((CONTENT_W - gap) / 2);
+  const colH   = FOOTER_Y - CONTENT_Y - 220000;
+  const hdrH   = 340000;
+  const pad    = 180000;
+  const esq    = s.esquerda || {};
+  const dir    = s.direita  || {};
 
-  const esq = s.esquerda || {};
-  const dir = s.direita || {};
+  const shapes = [headerShapes(s.eyebrow, s.titulo, ctx)];
 
-  const shapes = [];
-  shapes.push(headerShapes(s.eyebrow, s.titulo, ctx));
-
-  // Subtitle
   if (s.subtitulo) {
-    shapes.push(tsp(ML, TITLE_Y + 580000, CONTENT_W, 250000,
+    shapes.push(tsp(ML, TITLE_Y + 600000, CONTENT_W, 260000,
       run(s.subtitulo, { sz: 1200, color: C.textMuted }),
       { anchor: "t", algn: "l" }
     ));
   }
 
   const cols = [
-    { data: esq, x: ML, accentColor: C.purple, bgColor: C.cardBg, borderColor: C.purple },
-    { data: dir, x: ML + colW + gap, accentColor: C.orange, bgColor: C.orangeBg, borderColor: C.orange },
+    { data: esq, x: ML,              grad: GRAD.purple, symb: "✓" },
+    { data: dir, x: ML + colW + gap, grad: GRAD.orange, symb: "✕" },
   ];
 
   for (const col of cols) {
-    const { data, x, accentColor, bgColor, borderColor } = col;
+    const { data, x, grad, symb } = col;
     const y = CONTENT_Y;
 
-    // Column background
+    // Fundo claro da coluna
     shapes.push(sp(x, y, colW, colH, {
-      fill: bgColor,
-      border: { color: borderColor, w: 19050 },
+      fill: C.white,
+      border: { color: C.purpleBorder, w: 9525 },
       geom: "roundRect",
       roundAdj: 10000,
     }));
 
-    // Header bar
-    shapes.push(sp(x, y, colW, headerH, { fill: accentColor, geom: "rect" }));
+    // Header gradiente
+    shapes.push(sp(x, y, colW, hdrH, {
+      gradStops: grad.stops,
+      gradAngle: grad.ang,
+      geom: "rect",
+    }));
 
-    // Header label
-    shapes.push(tsp(x, y, colW, headerH,
-      run((data.rotulo || "").toUpperCase(), { bold: true, sz: 1100, color: C.white }),
+    // Símbolo ✓/✕ no header (shape circular)
+    const symX = x + pad;
+    const symSz = hdrH - 80000;
+    shapes.push(sp(symX, y + 40000, symSz, symSz, {
+      fill: C.white, fillAlpha: 25000,
+      geom: "ellipse",
+    }));
+    shapes.push(tsp(symX, y + 40000, symSz, symSz,
+      run(symb, { bold: true, sz: 1600, color: C.white }),
       { anchor: "ctr", algn: "ctr" }
     ));
 
-    // Column title
-    shapes.push(tsp(x + pad, y + headerH + pad, colW - 2 * pad, 350000,
-      run(data.titulo || "", { bold: true, sz: 1600, color: C.navy }),
+    // Rótulo do header
+    shapes.push(tsp(x + symSz + pad + 60000, y, colW - symSz - 2 * pad - 60000, hdrH,
+      run((data.rotulo || "").toUpperCase(), { bold: true, sz: 1100, color: C.white }),
+      { anchor: "ctr", algn: "l" }
+    ));
+
+    // Título da coluna
+    shapes.push(tsp(x + pad, y + hdrH + pad, colW - 2 * pad, 420000,
+      run(data.titulo || "", { bold: true, sz: 1700, color: C.navy }),
       { anchor: "t", algn: "l" }
     ));
 
-    // Column description
-    const descY = y + headerH + pad + 370000;
-    const descH = colH - headerH - 2 * pad - 370000;
+    // Descrição
+    const descY = y + hdrH + pad + 440000;
+    const descH = colH - hdrH - 2 * pad - 440000;
     shapes.push(tsp(x + pad, descY, colW - 2 * pad, descH,
-      run(data.descricao || "", { sz: 1100, color: C.textMuted }),
+      run(data.descricao || "", { sz: 1200, color: C.textMuted }),
       { anchor: "t", algn: "l", wrap: "square" }
     ));
   }
@@ -490,52 +872,64 @@ function renderComparacao(s, ctx) {
   return wrapSlide(shapes.join("\n"));
 }
 
+// ─── TIMELINE ─────────────────────────────────────────────────────────────────
 /**
- * TIMELINE — horizontal line with circles and labels
+ * Linha do tempo horizontal com círculos numerados e gradiente.
  */
 function renderTimeline(s, ctx) {
   resetIds();
-  const steps = Array.isArray(s.steps) ? s.steps : [];
-  const n = Math.max(1, Math.min(6, steps.length));
+  const steps  = Array.isArray(s.steps) ? s.steps : [];
+  const n      = Math.max(1, Math.min(6, steps.length));
+  const circD  = 420000;
+  const circR  = Math.floor(circD / 2);
+  const lineY  = CONTENT_Y + 800000;
+  const lineH  = 19050;
+  const stepW  = Math.floor(CONTENT_W / n);
+  const labelPad = 70000;
 
-  const circleD = 400000;
-  const circleR = circleD / 2;
-  const lineY = CONTENT_Y + 700000; // center of line
-  const lineH = 19050;
-  const stepW = Math.floor(CONTENT_W / n);
-  const labelPad = 60000;
+  const shapes = [headerShapes(s.eyebrow, s.titulo, ctx)];
 
-  const shapes = [];
-  shapes.push(headerShapes(s.eyebrow, s.titulo, ctx));
-
-  // Horizontal line
-  shapes.push(sp(ML, lineY - lineH / 2, CONTENT_W, lineH, { fill: C.purpleBorder }));
+  // Linha horizontal de fundo
+  shapes.push(sp(ML, lineY - lineH, CONTENT_W, lineH * 2, {
+    fill: C.purpleBorder,
+  }));
 
   for (let i = 0; i < n; i++) {
-    const step = steps[i] || {};
+    const step  = steps[i] || {};
     const centerX = ML + i * stepW + Math.floor(stepW / 2);
-    const circleX = centerX - circleR;
-    const circleY = lineY - circleR;
+    const circX   = centerX - circR;
+    const circY   = lineY - circR;
+    const isLast  = i === n - 1;
+    const grad    = isLast ? GRAD.impact : GRAD.badge;
 
-    // Circle
-    shapes.push(sp(circleX, circleY, circleD, circleD, { fill: C.purple, geom: "ellipse" }));
+    // Sombra leve do círculo
+    shapes.push(sp(circX + 15000, circY + 15000, circD, circD, {
+      fill: C.navy, fillAlpha: 10000,
+      geom: "ellipse",
+    }));
 
-    // Number inside circle
-    shapes.push(tsp(circleX, circleY, circleD, circleD,
-      run(String(i + 1), { bold: true, sz: 1200, color: C.white }),
+    // Círculo com gradiente
+    shapes.push(sp(circX, circY, circD, circD, {
+      gradStops: grad.stops,
+      gradAngle: grad.ang,
+      geom: "ellipse",
+    }));
+
+    // Número
+    shapes.push(tsp(circX, circY, circD, circD,
+      run(String(i + 1), { bold: true, sz: 1400, color: C.white }),
       { anchor: "ctr", algn: "ctr" }
     ));
 
-    // Label below
-    const labelY = circleY + circleD + labelPad;
-    shapes.push(tsp(centerX - stepW / 2, labelY, stepW, 300000,
+    // Label
+    shapes.push(tsp(centerX - stepW / 2, circY + circD + labelPad, stepW, 340000,
       run(step.label || "", { bold: true, sz: 1300, color: C.navy }),
       { anchor: "t", algn: "ctr" }
     ));
 
-    // Description below label
+    // Descrição
     if (step.descricao) {
-      shapes.push(tsp(centerX - stepW / 2, labelY + 320000, stepW, 400000,
+      shapes.push(tsp(centerX - stepW / 2, circY + circD + labelPad + 360000, stepW, 500000,
         run(step.descricao, { sz: 1100, color: C.textMuted }),
         { anchor: "t", algn: "ctr" }
       ));
@@ -545,85 +939,59 @@ function renderTimeline(s, ctx) {
   return wrapSlide(shapes.join("\n"));
 }
 
+// ─── KPI ──────────────────────────────────────────────────────────────────────
 /**
- * KPI — big number metric cards
+ * Cards de métricas com número grande.
+ * dark:true → fundo heroDark, cards escuros.
+ * Barras superiores com gradiente (não sólido).
  */
 function renderKpi(s, ctx) {
   resetIds();
-  const dark = !!s.dark;
-  const metricas = Array.isArray(s.metricas) ? s.metricas : [];
-  const n = Math.max(2, Math.min(4, metricas.length));
-  const gap = 200000;
-  const cardW = Math.floor((CONTENT_W - (n - 1) * gap) / n);
-  const cardH = H - CONTENT_Y - 591000;
-  const topBarH = 80000;
-  const pad = 150000;
+  const dark      = !!s.dark;
+  const metricas  = Array.isArray(s.metricas) ? s.metricas : [];
+  const n         = Math.max(2, Math.min(4, metricas.length));
+  const gap       = 220000;
+  const cardW     = Math.floor((CONTENT_W - (n - 1) * gap) / n);
+  const cardH     = FOOTER_Y - CONTENT_Y - 280000;
+  const barH      = 90000;
+  const pad       = 160000;
 
-  const headingColor = dark ? C.white : C.navy;
-  const mutedColor = dark ? C.textDark : C.textMuted;
-  const cardBg = dark ? C.darkCard : C.white;
+  const headingCol = dark ? C.white      : C.navy;
+  const mutedCol   = dark ? "CFC9E6"    : C.textMuted;
+  const cardBgCol  = dark ? C.darkCard  : C.white;
+  const numCol     = dark ? C.purpleEmphasis : C.purple;
 
-  const shapes = [];
-
-  // Header
-  const eyebrowColor = dark ? C.textDark : C.purpleLight;
-  if (s.eyebrow) {
-    shapes.push(tsp(ML, EYEBROW_Y, CONTENT_W, 300000,
-      run((s.eyebrow || "").toUpperCase(), { bold: true, sz: 1000, color: eyebrowColor }),
-      { anchor: "t", algn: "l" }
-    ));
-  }
-  if (s.titulo) {
-    const runsXml = titleRuns(s.titulo, {
-      sz: 3000,
-      bold: true,
-      baseColor: headingColor,
-      emphColor: C.purpleEmphasis,
-    });
-    shapes.push(tsp(ML, TITLE_Y, CONTENT_W, 700000, runsXml, { anchor: "t", algn: "l" }));
-  }
-
-  // Footer
-  if (ctx.deckName) {
-    shapes.push(tsp(ML, FOOTER_Y, CONTENT_W / 2, 200000,
-      run(ctx.deckName, { sz: 900, color: mutedColor }),
-      { anchor: "t", algn: "l" }
-    ));
-  }
-  if (ctx.pageNum) {
-    shapes.push(tsp(ML + CONTENT_W / 2, FOOTER_Y, CONTENT_W / 2, 200000,
-      run(String(ctx.pageNum).padStart(2, "0"), { sz: 900, color: mutedColor }),
-      { anchor: "t", algn: "r" }
-    ));
-  }
+  const shapes = [headerShapes(s.eyebrow, s.titulo, ctx, { dark })];
 
   for (let i = 0; i < n; i++) {
-    const m = metricas[i] || {};
-    const x = ML + i * (cardW + gap);
-    const y = CONTENT_Y;
-    const accent = ACCENT_COLORS[i % ACCENT_COLORS.length];
+    const m     = metricas[i] || {};
+    const x     = ML + i * (cardW + gap);
+    const y     = CONTENT_Y;
+    const aGrad = ACCENT_GRADS[i % ACCENT_GRADS.length];
 
-    // Card background
+    // Card bg
     shapes.push(sp(x, y, cardW, cardH, {
-      fill: cardBg,
+      fill: cardBgCol,
       geom: "roundRect",
-      roundAdj: 12000,
+      roundAdj: 10000,
     }));
 
-    // Top accent bar
-    shapes.push(sp(x, y, cardW, topBarH, { fill: accent, geom: "rect" }));
+    // Barra superior gradiente
+    shapes.push(sp(x, y, cardW, barH, {
+      gradStops: aGrad.stops,
+      gradAngle: aGrad.ang,
+      geom: "rect",
+    }));
 
-    // KPI value (big number)
-    const valY = y + topBarH + pad;
-    shapes.push(tsp(x, valY, cardW, 1000000,
-      run(m.valor || "", { bold: true, sz: 5600, color: dark ? C.white : C.purple }),
+    // Valor grande
+    shapes.push(tsp(x, y + barH + pad, cardW, 1100000,
+      run(m.valor || "", { bold: true, sz: 6400, color: numCol }),
       { anchor: "t", algn: "ctr" }
     ));
 
-    // KPI label
-    const labelY = valY + 1050000;
-    shapes.push(tsp(x + pad, labelY, cardW - 2 * pad, 500000,
-      run(m.label || "", { sz: 1200, color: mutedColor }),
+    // Label
+    shapes.push(tsp(x + pad, y + barH + pad + 1120000, cardW - 2 * pad, 500000,
+      run(m.label || "", { sz: 1200, color: mutedCol }),
       { anchor: "t", algn: "ctr", wrap: "square" }
     ));
   }
@@ -631,30 +999,29 @@ function renderKpi(s, ctx) {
   return wrapSlide(shapes.join("\n"), { dark });
 }
 
+// ─── TRES PILARES ─────────────────────────────────────────────────────────────
 /**
- * TRES PILARES — exactly 3 equal white columns with colored headers
+ * Exatamente 3 colunas com cabeçalho gradiente.
  */
 function renderTresPilares(s, ctx) {
   resetIds();
   const pilares = Array.isArray(s.pilares) ? s.pilares.slice(0, 3) : [];
-  const gap = 200000;
-  const colW = Math.floor((CONTENT_W - 2 * gap) / 3);
-  const colH = H - CONTENT_Y - 591000;
-  const headerH = 420000;
-  const pad = 150000;
+  const gap     = 220000;
+  const colW    = Math.floor((CONTENT_W - 2 * gap) / 3);
+  const colH    = FOOTER_Y - CONTENT_Y - 280000;
+  const hdrH    = 460000;
+  const pad     = 180000;
+  const PILAR_GRADS = [GRAD.purple, GRAD.cyan, GRAD.green];
 
-  const PILAR_COLORS = [C.purple, C.cyan, C.green];
-
-  const shapes = [];
-  shapes.push(headerShapes(s.eyebrow, s.titulo, ctx));
+  const shapes = [headerShapes(s.eyebrow, s.titulo, ctx)];
 
   for (let i = 0; i < 3; i++) {
     const pilar = pilares[i] || {};
-    const x = ML + i * (colW + gap);
-    const y = CONTENT_Y;
-    const accent = PILAR_COLORS[i % PILAR_COLORS.length];
+    const x     = ML + i * (colW + gap);
+    const y     = CONTENT_Y;
+    const grad  = PILAR_GRADS[i];
 
-    // Column background
+    // Fundo coluna
     shapes.push(sp(x, y, colW, colH, {
       fill: C.white,
       border: { color: C.purpleBorder, w: 9525 },
@@ -662,27 +1029,30 @@ function renderTresPilares(s, ctx) {
       roundAdj: 10000,
     }));
 
-    // Header bar
-    shapes.push(sp(x, y, colW, headerH, { fill: accent, geom: "rect" }));
+    // Header gradiente
+    shapes.push(sp(x, y, colW, hdrH, {
+      gradStops: grad.stops,
+      gradAngle: grad.ang,
+      geom: "rect",
+    }));
 
-    // Large number in header
-    const numStr = String(i + 1).padStart(2, "0");
-    shapes.push(tsp(x, y, colW, headerH,
-      run(numStr, { bold: true, sz: 2800, color: C.white }),
+    // Número grande no header
+    shapes.push(tsp(x, y, colW, hdrH,
+      run(String(i + 1).padStart(2, "0"), { bold: true, sz: 3200, color: C.white }),
       { anchor: "ctr", algn: "ctr" }
     ));
 
-    // Pilar title
-    shapes.push(tsp(x + pad, y + headerH + pad, colW - 2 * pad, 350000,
-      run(pilar.titulo || "", { bold: true, sz: 1400, color: C.navy }),
+    // Título
+    shapes.push(tsp(x + pad, y + hdrH + pad, colW - 2 * pad, 380000,
+      run(pilar.titulo || "", { bold: true, sz: 1500, color: C.navy }),
       { anchor: "t", algn: "l" }
     ));
 
-    // Pilar description
-    const descY = y + headerH + pad + 370000;
-    const descH = colH - headerH - 2 * pad - 370000;
+    // Descrição
+    const descY = y + hdrH + pad + 400000;
+    const descH = colH - hdrH - 2 * pad - 400000;
     shapes.push(tsp(x + pad, descY, colW - 2 * pad, descH,
-      run(pilar.descricao || "", { sz: 1100, color: C.textMuted }),
+      run(pilar.descricao || "", { sz: 1200, color: C.textMuted }),
       { anchor: "t", algn: "l", wrap: "square" }
     ));
   }
@@ -690,47 +1060,42 @@ function renderTresPilares(s, ctx) {
   return wrapSlide(shapes.join("\n"));
 }
 
-// ─── Public API ───────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// API PÚBLICA
+// ═══════════════════════════════════════════════════════════════════════════════
 
 export const VISUAL_TYPES = {
-  cards: true,
-  pipeline: true,
-  comparacao: true,
-  timeline: true,
-  kpi: true,
-  "tres-pilares": true,
+  cards:             true,
+  "lista-icone":     true,
+  "diagrama-fluxo":  true,
+  "grid-icone":      true,
+  pipeline:          true,
+  comparacao:        true,
+  timeline:          true,
+  kpi:               true,
+  "tres-pilares":    true,
 };
 
 /**
- * buildVisualSlide(tipo, slideData, ctx) → { xml, relsXml }
+ * buildVisualSlide(tipo, slideData, ctx) → { xml, relsXml } | null
  * ctx = { deckName: string, pageNum: number }
  */
 export function buildVisualSlide(tipo, slideData, ctx) {
-  const s = slideData || {};
-  const safeCtx = ctx || {};
+  const s    = slideData || {};
+  const safe = ctx || {};
 
   let xml;
   switch (tipo) {
-    case "cards":
-      xml = renderCards(s, safeCtx);
-      break;
-    case "pipeline":
-      xml = renderPipeline(s, safeCtx);
-      break;
-    case "comparacao":
-      xml = renderComparacao(s, safeCtx);
-      break;
-    case "timeline":
-      xml = renderTimeline(s, safeCtx);
-      break;
-    case "kpi":
-      xml = renderKpi(s, safeCtx);
-      break;
-    case "tres-pilares":
-      xml = renderTresPilares(s, safeCtx);
-      break;
-    default:
-      return null;
+    case "cards":            xml = renderCards(s, safe);           break;
+    case "lista-icone":      xml = renderListaIcone(s, safe);      break;
+    case "diagrama-fluxo":   xml = renderDiagramaFluxo(s, safe);   break;
+    case "grid-icone":       xml = renderGridIcone(s, safe);       break;
+    case "pipeline":         xml = renderPipeline(s, safe);        break;
+    case "comparacao":       xml = renderComparacao(s, safe);      break;
+    case "timeline":         xml = renderTimeline(s, safe);        break;
+    case "kpi":              xml = renderKpi(s, safe);             break;
+    case "tres-pilares":     xml = renderTresPilares(s, safe);     break;
+    default: return null;
   }
 
   return { xml, relsXml: RELS_XML };
