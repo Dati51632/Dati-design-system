@@ -53,6 +53,9 @@ Esses seis slides formam o bloco institucional fixo da Dati. A geração do cont
 
 Eles permanecem visualmente idênticos aos originais. Esta regra tem prioridade sobre qualquer outra instrução de design.
 
+**Implementação no motor de templates:**
+O `pptx-template-engine.mjs` já implementa essa regra automaticamente — os slides 1–6 do `MAP.pptx` são copiados verbatim como os primeiros slides de qualquer deck gerado, antes de processar qualquer slide do JSON do usuário. A numeração de página dos slides do usuário começa em **7**. O fallback (`gerar-apresentacao.mjs`) **não implementa** essa regra — ao usá-lo, o bloco institucional deve ser adicionado manualmente no PowerPoint antes de distribuir.
+
 ---
 
 ## Princípio central — o slide não é uma página de documento
