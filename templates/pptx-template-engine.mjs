@@ -1038,6 +1038,79 @@ const TEMPLATE_MAP = {
     },
   },
 
+  // ── DIAGRAMA-FLUXO (scratch) ──────────────────────────────────────────────────
+  "diagrama-fluxo": {
+    build(s, { deckName, pageNum }) {
+      const camadas = Array.isArray(s.camadas) ? s.camadas : [];
+      const bg = buildBackground("light");
+      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
+      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
+      const logo    = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+
+      const NODE_W   = 3200000;
+      const NODE_H   = 800000;
+      const NODE_GAP = 400000; // gap horizontal entre 2 nós na mesma camada
+      const LAYER_H  = NODE_H + 500000; // altura total por camada (nó + seta)
+      const CONTENT_Y_START = 1900000;
+
+      const COR_FILL = {
+        cyan:   () => buildSolidFill("5BBEED"),
+        green:  () => buildSolidFill("A4DF64"),
+        purple: () => buildGradientFill([{ pos: 0, hex: C.purpleMid }, { pos: 100000, hex: C.purpleDark }], 135),
+        navy:   () => buildSolidFill(C.navy),
+      };
+      const COR_TEXT = { cyan: C.navy, green: C.navy, purple: C.white, navy: C.white };
+
+      let idCounter = 30;
+      let diagramXml = "";
+
+      camadas.forEach((camada, layerIdx) => {
+        const nos = Array.isArray(camada.nos) ? camada.nos.slice(0, 2) : [];
+        const layerY = CONTENT_Y_START + layerIdx * LAYER_H;
+        const isSingle = nos.length === 1;
+
+        nos.forEach((no, ni) => {
+          const cor = no.cor || "purple";
+          const fill = (COR_FILL[cor] || COR_FILL.purple)();
+          const txtColor = COR_TEXT[cor] || C.white;
+          const stroke = no.destaque ? C.purple : null;
+
+          // X: centralizado (1 nó) ou side-by-side (2 nós)
+          let nx;
+          if (isSingle) {
+            nx = (W - NODE_W) / 2;
+          } else {
+            const totalW = NODE_W * 2 + NODE_GAP;
+            nx = (W - totalW) / 2 + ni * (NODE_W + NODE_GAP);
+          }
+
+          diagramXml += buildRoundedRect(idCounter++, Math.round(nx), layerY, NODE_W, NODE_H, 8000, fill, stroke);
+
+          // Label
+          const lRun = buildRun(no.label || "", { color: txtColor, sz: 1500, bold: true, typeface: "Manrope" });
+          diagramXml += buildTextShape(idCounter++, Math.round(nx) + 200000, layerY + 100000,
+            NODE_W - 400000, 400000, [{ runs: lRun, algn: "ctr" }]);
+
+          // Sublabel
+          const sRun = buildRun(no.sublabel || "", { color: txtColor, sz: 1100, typeface: "Manrope" });
+          diagramXml += buildTextShape(idCounter++, Math.round(nx) + 200000, layerY + 480000,
+            NODE_W - 400000, 300000, [{ runs: sRun, algn: "ctr" }]);
+        });
+
+        // Seta entre camadas (não após a última)
+        if (layerIdx < camadas.length - 1) {
+          const arrowY = layerY + NODE_H + 100000;
+          diagramXml += buildArrowText(idCounter++, (W - 400000) / 2, arrowY, "▼", C.footerMuted, 2000);
+        }
+      });
+
+      const footer = buildFooterShapes(deckName, pageNum, false);
+      const xml = buildScratchSlide(bg, eyebrow + title + logo + diagramXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
   // ── ENCERRAMENTO (slide18) ─────────────────────────────────────────────────
   encerramento: {
     sourceSlide: 18,
