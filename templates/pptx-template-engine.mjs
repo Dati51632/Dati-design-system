@@ -351,6 +351,110 @@ const TEMPLATE_MAP = {
     },
   },
 
+  // ── CARDS (slide8 — 4 numbered cards with title + description) ────────────
+  // Source slide has: eyebrow, title (2 runs), 4 cards each with card-title + card-description
+  cards: {
+    sourceSlide: 8,
+    render(xml, s, { deckName, pageNum }) {
+      if (s.eyebrow !== undefined)
+        xml = replaceText(xml, "POR QUE MIGRAR", s.eyebrow.toUpperCase());
+
+      // Title: original has two runs "O que muda quando o " + "ambiente vira nuvem"
+      if (s.titulo !== undefined) {
+        const titulo = s.titulo;
+        if (typeof titulo === "string") {
+          xml = replaceText(xml, "O que muda quando o ", "");
+          xml = replaceText(xml, "ambiente vira nuvem", titulo);
+        } else {
+          // Array [{text, emphasis}] → rebuild text box at y=1028700
+          const runs = titulo.map(t =>
+            buildRun(t.text, { color: t.emphasis ? "8F65FE" : "1A0F3D", bold: true, sz: 3100 })
+          ).join("");
+          const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:noAutofit/></a:bodyPr><a:lstStyle/>${buildParagraph(runs, { lnSpc: "78776" })}</p:txBody>`;
+          xml = rebuildTextBox(xml, "1028700", newTxBody);
+        }
+      }
+
+      // Cards: up to 4 items, each with titulo + descricao
+      const CARD_TITULOS = [
+        "Custo visível e variável",
+        "Fim do ciclo de renovação",
+        "Segurança e resiliência",
+        "Base pronta para dados e IA",
+      ];
+      const CARD_DESCRICOES = [
+        "A conta passa a ter dono por aplicação. Paga-se o que está ligado.",
+        "O plano de cinco anos perde o degrau de investimento em hardware no meio dele.",
+        "Backup, redundância e controles que custariam outro data center on-premises.",
+        "O que bloqueia o valor de analytics e IA hoje é o ambiente. Na nuvem, o dado está a um serviço de distância.",
+      ];
+      const cards = Array.isArray(s.cards) ? s.cards : [];
+      CARD_TITULOS.forEach((placeholder, i) => {
+        const card = cards[i];
+        xml = replaceText(xml, placeholder, card?.titulo || placeholder);
+      });
+      CARD_DESCRICOES.forEach((placeholder, i) => {
+        const card = cards[i];
+        xml = replaceText(xml, placeholder, card?.descricao || placeholder);
+      });
+
+      xml = replaceText(xml, "Dati | Migração e modernização na AWS", deckName);
+      xml = replaceText(xml, "08", String(pageNum).padStart(2, "0"));
+      return xml;
+    },
+  },
+
+  // ── COMPARAÇÃO (slide10 — 2-column comparison: left label/heading/desc + right) ─
+  comparacao: {
+    sourceSlide: 10,
+    render(xml, s, { deckName, pageNum }) {
+      if (s.eyebrow !== undefined)
+        xml = replaceText(xml, "A ESTRATÉGIA DE VELOCIDADE", s.eyebrow.toUpperCase());
+
+      // Title: original has two runs "A velocidade vem do " + "as-is"
+      if (s.titulo !== undefined) {
+        const titulo = s.titulo;
+        if (typeof titulo === "string") {
+          xml = replaceText(xml, "A velocidade vem do ", "");
+          xml = replaceText(xml, "as-is", titulo);
+        } else {
+          const runs = titulo.map(t =>
+            buildRun(t.text, { color: t.emphasis ? "8F65FE" : "1A0F3D", bold: true, sz: 3100 })
+          ).join("");
+          const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:noAutofit/></a:bodyPr><a:lstStyle/>${buildParagraph(runs, { lnSpc: "78776" })}</p:txBody>`;
+          xml = rebuildTextBox(xml, "1028700", newTxBody);
+        }
+      }
+
+      if (s.subtitulo !== undefined)
+        xml = replaceText(xml, "A IA permite modernizar alguns pontos no caminho, sem pagar pedágio de prazo.", s.subtitulo);
+
+      // Left column
+      const esq = s.esquerda || {};
+      if (esq.rotulo !== undefined)
+        xml = replaceText(xml, "MIGRAÇÃO AS-IS", esq.rotulo.toUpperCase());
+      if (esq.titulo !== undefined)
+        xml = replaceText(xml, "Migre rápido como está", esq.titulo);
+      if (esq.descricao !== undefined) {
+        xml = replaceText(xml, "Migramos o máximo possível da forma como está. ", esq.descricao);
+        xml = replaceText(xml, "É o que dá velocidade, reduz risco e destrava o ganho da nuvem já na primeira onda.", "");
+      }
+
+      // Right column
+      const dir = s.direita || {};
+      if (dir.rotulo !== undefined)
+        xml = replaceText(xml, "MODERNIZAÇÃO NO CAMINHO", dir.rotulo.toUpperCase());
+      if (dir.titulo !== undefined)
+        xml = replaceText(xml, "Meses viram dias", dir.titulo);
+      if (dir.descricao !== undefined)
+        xml = replaceText(xml, "Com Agentes de IA e o AWS Transform, modernizamos códigos durante a migração, sem onerar tempo.", dir.descricao);
+
+      xml = replaceText(xml, "Dati | Migração e modernização na AWS", deckName);
+      xml = replaceText(xml, "10", String(pageNum).padStart(2, "0"));
+      return xml;
+    },
+  },
+
   // ── ENCERRAMENTO (slide18) ─────────────────────────────────────────────────
   encerramento: {
     sourceSlide: 18,
