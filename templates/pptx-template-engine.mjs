@@ -25,6 +25,8 @@ import { buildVisualSlide, VISUAL_TYPES } from "./pptx-visual-engine.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_PPTX = path.resolve(__dirname, "../assets/template-source/MAP.pptx");
+const LOGO_NAVY_PNG = path.resolve(__dirname, "../assets/logo/dati-logo-navy.png");
+const LOGO_MEDIA_NAME = "dati-logo-navy.png";
 
 // ─── XML helpers ────────────────────────────────────────────────────────────
 
@@ -289,6 +291,28 @@ function buildScratchRels(mediaRefs = []) {
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
   ${rels}
 </Relationships>`;
+}
+
+/**
+ * Gera <p:pic> para o logo navy.
+ * rId: relationship ID (ex: "rId1") definido no _rels do slide
+ */
+function buildLogoShape(id, rId, x, y, w, h) {
+  return `<p:pic>
+    <p:nvPicPr>
+      <p:cNvPr id="${id}" name="Logo"/>
+      <p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr>
+      <p:nvPr/>
+    </p:nvPicPr>
+    <p:blipFill>
+      <a:blip r:embed="${rId}"/>
+      <a:stretch><a:fillRect/></a:stretch>
+    </p:blipFill>
+    <p:spPr>
+      <a:xfrm><a:off x="${x}" y="${y}"/><a:ext cx="${w}" cy="${h}"/></a:xfrm>
+      <a:prstGeom prst="rect"><a:avLst/></a:prstGeom>
+    </p:spPr>
+  </p:pic>`;
 }
 
 // ─── Template definitions ────────────────────────────────────────────────────
@@ -753,6 +777,15 @@ async function main() {
       outZip.addFile(entry.entryName, entry.getData());
     }
   });
+
+  // Embed logo PNG for scratch-built slides
+  let logoEmbedded = false;
+  if (fs.existsSync(LOGO_NAVY_PNG)) {
+    outZip.addFile(`ppt/media/${LOGO_MEDIA_NAME}`, fs.readFileSync(LOGO_NAVY_PNG));
+    logoEmbedded = true;
+  } else {
+    console.warn(`⚠️  Logo não encontrado em ${LOGO_NAVY_PNG} — slides sem logo`);
+  }
 
   // ─── Bloco Institucional Fixo ────────────────────────────────────────────────
   // Os 6 primeiros slides do MAP.pptx são sempre copiados verbatim ao início
