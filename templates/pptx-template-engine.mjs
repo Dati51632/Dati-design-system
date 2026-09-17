@@ -760,6 +760,54 @@ const TEMPLATE_MAP = {
     },
   },
 
+  // ── GRID-ÍCONE (scratch) ──────────────────────────────────────────────────────
+  "grid-icone": {
+    build(s, { deckName, pageNum }) {
+      const items = (Array.isArray(s.items) ? s.items : []).slice(0, 4);
+      const bg = buildBackground("light");
+      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
+      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
+      const logo    = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+
+      const CARD_W = 5400000;
+      const CARD_H = 2200000;
+      const GAP    = 292800;
+      const COL_X  = [MARGIN, MARGIN + CARD_W + GAP];
+      const ROW_Y  = [1828800, 1828800 + CARD_H + GAP];
+
+      const cardFill = buildSolidFill("FFFFFF");
+      let idCounter = 30;
+      let cardsXml = "";
+
+      items.forEach((item, i) => {
+        const col = i % 2;
+        const row = Math.floor(i / 2);
+        const cx = COL_X[col];
+        const cy = ROW_Y[row];
+
+        // Card background
+        cardsXml += buildRoundedRect(idCounter++, cx, cy, CARD_W, CARD_H, 8000, cardFill);
+
+        // Badge no topo esquerdo do card
+        cardsXml += buildIconBadge(item.icone || "diamond", cx + 200000, cy + 200000, idCounter);
+        idCounter += 2;
+
+        // Título do item
+        const tRun = buildRun(item.titulo || "", { color: C.navy, sz: 1600, bold: true, typeface: "Manrope" });
+        cardsXml += buildTextShape(idCounter++, cx + 200000, cy + 950000, CARD_W - 400000, 450000, [{ runs: tRun }]);
+
+        // Descrição
+        const dRun = buildRun(item.descricao || "", { color: C.textMuted, sz: 1300, typeface: "Manrope" });
+        cardsXml += buildTextShape(idCounter++, cx + 200000, cy + 1400000, CARD_W - 400000, 600000, [{ runs: dRun, lnSpc: "110000" }]);
+      });
+
+      const footer = buildFooterShapes(deckName, pageNum, false);
+      const xml = buildScratchSlide(bg, eyebrow + title + logo + cardsXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
   // ── ENCERRAMENTO (slide18) ─────────────────────────────────────────────────
   encerramento: {
     sourceSlide: 18,
