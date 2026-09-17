@@ -262,6 +262,36 @@ function buildIconBadge(icone, x, y, id) {
   return badge + iconTxt;
 }
 
+/**
+ * Injeta badges de ícone no XML de um slide cards MAP-based.
+ * Localiza o fim de </p:spTree> e insere os badges antes dele.
+ * cards: [{icone, ...}] — usa índice 0-3 para posição
+ */
+function appendIconBadgesToSlideXml(xml, cards) {
+  if (!Array.isArray(cards) || cards.length === 0) return xml;
+
+  // Coordenadas X dos 4 cards no slide8 do MAP (medidas pelo pixel da ref)
+  const CARD_X = [533400, 3200400, 5867400, 8534400];
+  // Y superior dos cards no slide8
+  const CARD_Y = 2133600;
+  const BADGE_OFFSET_X = 200000;
+  const BADGE_OFFSET_Y = 200000;
+
+  let badgesXml = "";
+  let idBase = 200;
+  cards.forEach((card, i) => {
+    if (!card.icone || !CARD_X[i]) return;
+    badgesXml += buildIconBadge(
+      card.icone,
+      CARD_X[i] + BADGE_OFFSET_X,
+      CARD_Y + BADGE_OFFSET_Y,
+      idBase + i * 2
+    );
+  });
+
+  return xml.replace("</p:spTree>", badgesXml + "</p:spTree>");
+}
+
 function buildScratchSlide(bgXml, shapesXml) {
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
@@ -618,6 +648,12 @@ const TEMPLATE_MAP = {
 
       xml = replaceText(xml, "Dati | Migração e modernização na AWS", deckName);
       xml = replaceText(xml, "08", String(pageNum).padStart(2, "0"));
+
+      // Injetar badges de ícone se fornecidos
+      if (Array.isArray(s.cards) && s.cards.some(c => c.icone)) {
+        xml = appendIconBadgesToSlideXml(xml, s.cards);
+      }
+
       return xml;
     },
   },
