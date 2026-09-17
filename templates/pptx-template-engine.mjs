@@ -97,6 +97,200 @@ function removeShapesByY(xml, yOffsets) {
   return xml;
 }
 
+// ─── Scratch-build constants ─────────────────────────────────────────────────
+
+const W = 12192000; // slide width EMU
+const H = 6858000;  // slide height EMU
+const MARGIN = 457200; // lateral margin EMU
+
+// Paleta Dati (hex sem #)
+const C = {
+  navy:        "1A0F3D",
+  purple:      "6838E8",
+  purpleMed:   "8F65FE",
+  purpleTint:  "8C7DFF",
+  purpleDark:  "3629D1",
+  purpleDarker:"3503BB",
+  purpleMid:   "6F62FF",
+  purpleSubtle:"655CC6",
+  neutralLight:"EDF0F2",
+  textMuted:   "5B5570",
+  footerMuted: "9891AB",
+  cyan:        "5EBAE8",
+  white:       "FFFFFF",
+  orange:      "F59D01",
+  green:       "72E600",
+};
+
+// Mapa icone → Unicode (Segoe UI Symbol)
+const ICON_MAP = {
+  gear:     "⚙",
+  lightning:"⚡",
+  layers:   "▤",
+  loop:     "↻",
+  code:     "⌨",
+  database: "◉",
+  shield:   "⛨",
+  diff:     "≠",
+  check:    "✓",
+  audit:    "⊙",
+  arrow:    "→",
+  star:     "★",
+  diamond:  "◆",
+  cloud:    "☁",
+  funnel:   "▽",
+  merge:    "⑂",
+  branch:   "⑃",
+  lock:     "⊠",
+  chart:    "↗",
+};
+
+function buildGradientFill(stops, angleDeg = 90) {
+  const ang = Math.round(angleDeg * 60000);
+  const gsLst = stops.map(s =>
+    `<a:gs pos="${s.pos}"><a:srgbClr val="${s.hex}"/></a:gs>`
+  ).join("");
+  return `<a:gradFill><a:gsLst>${gsLst}</a:gsLst><a:lin ang="${ang}" scaled="0"/></a:gradFill>`;
+}
+
+function buildSolidFill(hex) {
+  return `<a:solidFill><a:srgbClr val="${hex}"/></a:solidFill>`;
+}
+
+function buildBackground(mode) {
+  const fill = mode === "dark"
+    ? buildGradientFill([
+        { pos: 0,      hex: "0D0824" },
+        { pos: 55000,  hex: "1A0F3D" },
+        { pos: 100000, hex: "2B1B5C" },
+      ], 135)
+    : buildSolidFill(C.neutralLight);
+  return `<p:bg><p:bgPr>${fill}<a:effectLst/></p:bgPr></p:bg>`;
+}
+
+function buildPlainRect(id, x, y, w, h, fillXml, strokeHex = null) {
+  const ln = strokeHex
+    ? `<a:ln w="25400"><a:solidFill><a:srgbClr val="${strokeHex}"/></a:solidFill></a:ln>`
+    : `<a:ln><a:noFill/></a:ln>`;
+  return `<p:sp>
+    <p:nvSpPr><p:cNvPr id="${id}" name="Rect${id}"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr/></p:nvSpPr>
+    <p:spPr><a:xfrm><a:off x="${x}" y="${y}"/><a:ext cx="${w}" cy="${h}"/></a:xfrm>
+      <a:prstGeom prst="rect"><a:avLst/></a:prstGeom>${fillXml}${ln}</p:spPr>
+    <p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody>
+  </p:sp>`;
+}
+
+function buildRoundedRect(id, x, y, w, h, adj, fillXml, strokeHex = null) {
+  const ln = strokeHex
+    ? `<a:ln w="38100"><a:solidFill><a:srgbClr val="${strokeHex}"/></a:solidFill></a:ln>`
+    : `<a:ln><a:noFill/></a:ln>`;
+  return `<p:sp>
+    <p:nvSpPr><p:cNvPr id="${id}" name="RRect${id}"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr/></p:nvSpPr>
+    <p:spPr><a:xfrm><a:off x="${x}" y="${y}"/><a:ext cx="${w}" cy="${h}"/></a:xfrm>
+      <a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val ${adj}"/></a:avLst></a:prstGeom>
+      ${fillXml}${ln}</p:spPr>
+    <p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody>
+  </p:sp>`;
+}
+
+function buildTextShape(id, x, y, w, h, paragraphs, bodyAttrs = "") {
+  const paras = paragraphs.map(p =>
+    buildParagraph(p.runs, { algn: p.algn || "l", lnSpc: p.lnSpc || "100000" })
+  ).join("");
+  return `<p:sp>
+    <p:nvSpPr><p:cNvPr id="${id}" name="Txt${id}"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr/></p:nvSpPr>
+    <p:spPr><a:xfrm><a:off x="${x}" y="${y}"/><a:ext cx="${w}" cy="${h}"/></a:xfrm>
+      <a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/></p:spPr>
+    <p:txBody><a:bodyPr wrap="square" lIns="0" rIns="0" tIns="0" bIns="0" ${bodyAttrs}><a:normAutofit/></a:bodyPr>
+      <a:lstStyle/>${paras}</p:txBody>
+  </p:sp>`;
+}
+
+function buildArrowText(id, x, y, char, color, sz = 2000) {
+  const run = buildRun(char, { color, sz, typeface: "Segoe UI Symbol" });
+  return buildTextShape(id, x, y, 400000, 400000,
+    [{ runs: run, algn: "ctr" }], 'anchor="ctr"');
+}
+
+function buildEyebrowShape(id, text, x, y, dark = false) {
+  const run = buildRun(text.toUpperCase(), {
+    color: dark ? C.purpleTint : C.purpleMed, sz: 1200, typeface: "Manrope"
+  });
+  return buildTextShape(id, x, y, W - x - MARGIN, 400000, [{ runs: run }]);
+}
+
+function buildTitleShape(id, titulo, x, y, w, dark = false) {
+  let runs;
+  if (typeof titulo === "string") {
+    runs = buildRun(titulo, {
+      color: dark ? C.white : C.navy,
+      sz: dark ? 4700 : 3100, bold: !dark, typeface: "Manrope"
+    });
+  } else {
+    runs = titulo.map(t => buildRun(t.text, {
+      color: t.emphasis ? (dark ? C.purpleTint : C.purpleMed) : (dark ? C.white : C.navy),
+      sz: dark ? 4700 : 3100, bold: !dark, typeface: "Manrope"
+    })).join("");
+  }
+  return buildTextShape(id, x, y, w, 1100000, [{ runs, lnSpc: "90000" }]);
+}
+
+function buildFooterShapes(deckName, pageNum, dark = false) {
+  const color = C.footerMuted;
+  const y = 6350000;
+  const leftRun = buildRun(deckName, { color, sz: 1100, typeface: "Manrope" });
+  const rightRun = buildRun(String(pageNum).padStart(2, "0"), { color, sz: 1100, typeface: "Manrope" });
+  return [
+    buildTextShape(900, MARGIN, y, 6000000, 300000, [{ runs: leftRun }]),
+    buildTextShape(901, W - MARGIN - 600000, y, 600000, 300000,
+      [{ runs: rightRun, algn: "r" }]),
+  ].join("");
+}
+
+function buildIconBadge(icone, x, y, id) {
+  const SIZE = 670000;
+  const char = ICON_MAP[icone] || "◆";
+  const fill = buildGradientFill([
+    { pos: 0,      hex: C.purpleMid },
+    { pos: 100000, hex: C.purpleDark },
+  ], 90);
+  const badge = buildRoundedRect(id, x, y, SIZE, SIZE, 25000, fill);
+  const iconRun = buildRun(char, { color: C.white, sz: 2000, typeface: "Segoe UI Symbol" });
+  const iconTxt = buildTextShape(id + 1, x, y, SIZE, SIZE,
+    [{ runs: iconRun, algn: "ctr" }], 'anchor="ctr"');
+  return badge + iconTxt;
+}
+
+function buildScratchSlide(bgXml, shapesXml) {
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+       xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+       xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld>
+    ${bgXml}
+    <p:spTree>
+      <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>
+      <p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/>
+        <a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>
+      ${shapesXml}
+    </p:spTree>
+  </p:cSld>
+  <p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr>
+</p:sld>`;
+}
+
+function buildScratchRels(mediaRefs = []) {
+  const rels = mediaRefs.map(r =>
+    `<Relationship Id="${r.rId}" ` +
+    `Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" ` +
+    `Target="${r.target}"/>`
+  ).join("\n  ");
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  ${rels}
+</Relationships>`;
+}
+
 // ─── Template definitions ────────────────────────────────────────────────────
 // Maps slide types to source slide numbers from the MAP PPTX.
 // Text slots = { "exact XML text to find" => "slot name in input JSON" }
@@ -598,18 +792,26 @@ async function main() {
       continue;
     }
 
-    const srcNum = tmpl.sourceSlide;
-    let xml = sourceSlides[srcNum];
-    const relsXml = sourceSlideRels[srcNum];
+    let xml, relsXml;
 
-    if (!xml) {
-      console.warn(`⚠️  Slide template ${srcNum} não encontrado no PPTX`);
-      continue;
+    if (tmpl.build) {
+      // Scratch-built slide (novos tipos)
+      const result = tmpl.build(s, { deckName, pageNum });
+      xml = result.xml;
+      relsXml = result.relsXml;
+    } else {
+      // MAP.pptx-based slide (tipos existentes)
+      const srcNum = tmpl.sourceSlide;
+      xml = sourceSlides[srcNum];
+      relsXml = sourceSlideRels[srcNum];
+
+      if (!xml) {
+        console.warn(`⚠️  Slide template ${srcNum} não encontrado no PPTX`);
+        continue;
+      }
+      const ctx = s.tipo === "capa" ? {} : { deckName, pageNum };
+      xml = tmpl.render(xml, s, ctx);
     }
-
-    // Apply template rendering
-    const ctx = s.tipo === "capa" ? {} : { deckName, pageNum };
-    xml = tmpl.render(xml, s, ctx);
 
     if (s.tipo !== "capa" && s.tipo !== "encerramento") pageNum++;
 
