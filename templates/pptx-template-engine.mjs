@@ -709,6 +709,57 @@ const TEMPLATE_MAP = {
     },
   },
 
+  // ── LISTA-ÍCONE (scratch) ─────────────────────────────────────────────────────
+  "lista-icone": {
+    build(s, { deckName, pageNum }) {
+      const items = Array.isArray(s.items) ? s.items.slice(0, 5) : [];
+      const dark = false;
+      const bg = buildBackground("light");
+
+      // Sidebar gradiente vertical no lado esquerdo
+      const sidebarFill = buildGradientFill([
+        { pos: 0,      hex: C.purpleMid },
+        { pos: 100000, hex: C.purpleDark },
+      ], 90);
+      const sidebar = buildPlainRect(10, 0, 0, 500000, H, sidebarFill);
+
+      // Eyebrow e título
+      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", 700000, 381000, dark);
+      const title   = buildTitleShape(21, s.titulo || "", 700000, 685000, W - 700000 - MARGIN, dark);
+
+      // Logo
+      const logo = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+
+      // Itens
+      const ITEM_Y_START = 1900000;
+      const ITEM_SPACING = 900000;
+      const BADGE_SIZE   = 670000;
+      const TEXT_X       = 1500000;
+      const TEXT_W       = W - TEXT_X - MARGIN;
+
+      let idCounter = 30;
+      let itemsXml = "";
+      items.forEach((item, i) => {
+        const y = ITEM_Y_START + i * ITEM_SPACING;
+        // Badge
+        itemsXml += buildIconBadge(item.icone || "diamond", 700000, y, idCounter);
+        idCounter += 2;
+        // Título do item
+        const titleRun = buildRun(item.titulo || "", { color: C.navy, sz: 1800, bold: true, typeface: "Manrope" });
+        itemsXml += buildTextShape(idCounter++, TEXT_X, y, TEXT_W, 500000, [{ runs: titleRun }]);
+        // Descrição
+        const descRun = buildRun(item.descricao || "", { color: C.textMuted, sz: 1300, typeface: "Manrope" });
+        itemsXml += buildTextShape(idCounter++, TEXT_X, y + 460000, TEXT_W, 400000, [{ runs: descRun }]);
+      });
+
+      const footer = buildFooterShapes(deckName, pageNum, dark);
+      const shapesXml = sidebar + eyebrow + title + logo + itemsXml + footer;
+      const xml = buildScratchSlide(bg, shapesXml);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
   // ── ENCERRAMENTO (slide18) ─────────────────────────────────────────────────
   encerramento: {
     sourceSlide: 18,
