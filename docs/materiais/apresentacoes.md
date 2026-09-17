@@ -15,6 +15,30 @@ Toda decisão de design deve responder: **este slide poderia existir em uma dess
 
 ---
 
+## Gradientes — Regra Primária
+
+**Gradientes são elementos visuais primários da identidade Dati. Nunca substituir por cor sólida.**
+
+Todo fundo escuro, sidebar, painel de impacto ou elemento de destaque deve usar o gradiente correspondente da tabela abaixo — não uma aproximação sólida.
+
+| Elemento | Gradiente | Token / Referência |
+|---|---|---|
+| **Fundo capa** | `radial-gradient, #371791 (0%) → #170041 (33%) → #050C1A (67%) → #18041B (100%)` | Extraído do MAP.pptx |
+| **Fundo seção / encerramento** | `linear-gradient(135deg, #0D0824 → #1A0F3D 55% → #2B1B5C 100%)` | `--dati-gradient-hero-dark` |
+| **Sidebar / barra bigword** | `linear-gradient(180deg, #6F62FF → #3629D1)` | Extraído do MAP.pptx |
+| **Painel de impacto** | `linear-gradient(180deg, #6838E8 → #3503BB)` | Extraído do MAP.pptx |
+| **Card decorativo (capa)** | `radial-gradient, #3629D1 α45% → #6F62FF α18%` | Extraído do MAP.pptx |
+| **CTA / botão primário** | `linear-gradient(135deg, #3B2A8C → #6838E8 100%)` | `--dati-gradient-cta` |
+| **Badge / destaque verde** | `linear-gradient(#72E600 → #28A30F)` | Extraído do MAP.pptx |
+
+**Regras de aplicação:**
+
+- O motor **pptx-template-engine.mjs** copia os slides do MAP.pptx como XML — os gradientes são preservados automaticamente. **Este é o motor obrigatório.**
+- O motor fallback `gerar-apresentacao.mjs` (pptxgenjs) aproxima gradientes com retângulos sólidos — **não garante fidelidade visual**. Usar apenas quando o template engine falhar e avisar o usuário.
+- Qualquer slide gerado fora dos motores (ex.: Canva, Google Slides manual) deve usar os valores exatos da tabela acima — nunca "#1A0F3D puro" no lugar de um gradiente de fundo.
+
+---
+
 ## REGRA ABSOLUTA — Bloco Institucional Fixo
 
 **Toda apresentação Dati começa com os 6 primeiros slides do MAP, copiados exatamente do arquivo original.**
