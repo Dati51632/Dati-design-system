@@ -871,6 +871,61 @@ const TEMPLATE_MAP = {
     },
   },
 
+  // ── TIMELINE (scratch) ────────────────────────────────────────────────────────
+  timeline: {
+    build(s, { deckName, pageNum }) {
+      const steps = Array.isArray(s.steps) ? s.steps.slice(0, 5) : [];
+      const n = steps.length;
+      const bg = buildBackground("light");
+      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
+      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
+      const logo    = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+
+      const LINE_Y   = 3600000;
+      const CIRCLE_D = 800000;
+      const CIRCLE_R = CIRCLE_D / 2;
+      const USABLE_W = W - 2 * MARGIN;
+      const STEP_GAP = Math.floor(USABLE_W / (n - 1 || 1));
+
+      // Linha horizontal de fundo
+      const lineFill = buildSolidFill(C.purpleSubtle);
+      let timelineXml = buildPlainRect(10, MARGIN, LINE_Y - 25000, USABLE_W, 50000, lineFill);
+
+      let idCounter = 30;
+      steps.forEach((step, i) => {
+        const cx = MARGIN + (n > 1 ? i * STEP_GAP : USABLE_W / 2);
+        const cy = LINE_Y - CIRCLE_R;
+
+        // Círculo gradiente
+        const circleFill = buildGradientFill([
+          { pos: 0,      hex: C.purpleMid },
+          { pos: 100000, hex: C.purpleDark },
+        ], 135);
+        timelineXml += buildRoundedRect(idCounter++, cx - CIRCLE_R, cy, CIRCLE_D, CIRCLE_D, 50000, circleFill);
+
+        // Número
+        const numRun = buildRun(String(i + 1), { color: C.white, sz: 2200, bold: true, typeface: "Manrope" });
+        timelineXml += buildTextShape(idCounter++, cx - CIRCLE_R, cy, CIRCLE_D, CIRCLE_D,
+          [{ runs: numRun, algn: "ctr" }], 'anchor="ctr"');
+
+        // Label
+        const lRun = buildRun(step.label || "", { color: C.navy, sz: 1400, bold: true, typeface: "Manrope" });
+        timelineXml += buildTextShape(idCounter++, cx - 800000, LINE_Y + CIRCLE_R + 150000, 1600000, 450000,
+          [{ runs: lRun, algn: "ctr" }]);
+
+        // Descrição
+        const dRun = buildRun(step.descricao || "", { color: C.textMuted, sz: 1200, typeface: "Manrope" });
+        timelineXml += buildTextShape(idCounter++, cx - 800000, LINE_Y + CIRCLE_R + 600000, 1600000, 400000,
+          [{ runs: dRun, algn: "ctr" }]);
+      });
+
+      const footer = buildFooterShapes(deckName, pageNum, false);
+      const xml = buildScratchSlide(bg, eyebrow + title + logo + timelineXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
   // ── ENCERRAMENTO (slide18) ─────────────────────────────────────────────────
   encerramento: {
     sourceSlide: 18,
