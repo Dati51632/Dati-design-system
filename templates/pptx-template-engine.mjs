@@ -985,6 +985,60 @@ const TEMPLATE_MAP = {
     },
   },
 
+  // ── TRÊS PILARES (scratch) ────────────────────────────────────────────────────
+  "tres-pilares": {
+    build(s, { deckName, pageNum }) {
+      const pilares = Array.isArray(s.pilares) ? s.pilares.slice(0, 3) : [];
+      const bg = buildBackground("light");
+      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
+      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
+      const logo    = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+
+      const COL_Y    = 1900000;
+      const COL_H    = 4200000;
+      const HEADER_H = 600000;
+      const GAP      = 200000;
+      const USABLE_W = W - 2 * MARGIN;
+      const COL_W    = Math.floor((USABLE_W - 2 * GAP) / 3);
+
+      const headerFill = buildGradientFill([
+        { pos: 0,      hex: C.purpleMid },
+        { pos: 100000, hex: C.purpleDark },
+      ], 135);
+      const bodyFill = buildSolidFill("FFFFFF");
+
+      let idCounter = 30;
+      let colsXml = "";
+
+      pilares.forEach((pilar, i) => {
+        const cx = MARGIN + i * (COL_W + GAP);
+
+        // Corpo do card
+        colsXml += buildRoundedRect(idCounter++, cx, COL_Y, COL_W, COL_H, 5000, bodyFill);
+
+        // Cabeçalho gradiente
+        colsXml += buildPlainRect(idCounter++, cx, COL_Y, COL_W, HEADER_H, headerFill);
+
+        // Título do pilar
+        const tRun = buildRun((pilar.titulo || "").toUpperCase(), {
+          color: C.white, sz: 1600, bold: true, typeface: "Manrope"
+        });
+        colsXml += buildTextShape(idCounter++, cx + 200000, COL_Y, COL_W - 400000, HEADER_H,
+          [{ runs: tRun, algn: "ctr" }], 'anchor="ctr"');
+
+        // Descrição
+        const dRun = buildRun(pilar.descricao || "", { color: C.textMuted, sz: 1300, typeface: "Manrope" });
+        colsXml += buildTextShape(idCounter++, cx + 200000, COL_Y + HEADER_H + 200000,
+          COL_W - 400000, COL_H - HEADER_H - 400000, [{ runs: dRun, lnSpc: "120000" }]);
+      });
+
+      const footer = buildFooterShapes(deckName, pageNum, false);
+      const xml = buildScratchSlide(bg, eyebrow + title + logo + colsXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
   // ── ENCERRAMENTO (slide18) ─────────────────────────────────────────────────
   encerramento: {
     sourceSlide: 18,
