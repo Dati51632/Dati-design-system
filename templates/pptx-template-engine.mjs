@@ -808,6 +808,68 @@ const TEMPLATE_MAP = {
     },
   },
 
+  // ── PIPELINE (scratch) ────────────────────────────────────────────────────────
+  pipeline: {
+    build(s, { deckName, pageNum }) {
+      const steps = Array.isArray(s.steps) ? s.steps.slice(0, 6) : [];
+      const n = steps.length;
+      const bg = buildBackground("light");
+      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
+      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
+      const logo    = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+
+      const PIPE_Y   = 2700000;
+      const STEP_H   = 1400000;
+      const ARROW_W  = 300000;
+      const TOTAL_W  = W - 2 * MARGIN;
+      const STEP_W   = Math.floor((TOTAL_W - (n - 1) * ARROW_W) / n);
+
+      let idCounter = 30;
+      let stepsXml = "";
+
+      steps.forEach((step, i) => {
+        const x = MARGIN + i * (STEP_W + ARROW_W);
+
+        // Cor do step
+        let fill;
+        if (i === n - 1) {
+          fill = buildSolidFill(C.navy);
+        } else if (step.gate) {
+          fill = buildSolidFill(C.orange);
+        } else {
+          fill = buildGradientFill([
+            { pos: 0,      hex: C.purpleMid },
+            { pos: 100000, hex: C.purpleDark },
+          ], 135);
+        }
+
+        stepsXml += buildRoundedRect(idCounter++, x, PIPE_Y, STEP_W, STEP_H, 8000, fill);
+
+        // Label
+        const lRun = buildRun(step.label || "", { color: C.white, sz: 1400, bold: true, typeface: "Manrope" });
+        stepsXml += buildTextShape(idCounter++, x, PIPE_Y + 350000, STEP_W, 500000,
+          [{ runs: lRun, algn: "ctr" }]);
+
+        // Descrição
+        const dRun = buildRun(step.descricao || "", { color: "FFFFFFBB", sz: 1100, typeface: "Manrope" });
+        stepsXml += buildTextShape(idCounter++, x, PIPE_Y + 850000, STEP_W, 400000,
+          [{ runs: dRun, algn: "ctr" }]);
+
+        // Seta (não após o último)
+        if (i < n - 1) {
+          stepsXml += buildArrowText(idCounter++,
+            x + STEP_W, PIPE_Y + STEP_H / 2 - 200000,
+            "›", C.footerMuted, 2800);
+        }
+      });
+
+      const footer = buildFooterShapes(deckName, pageNum, false);
+      const xml = buildScratchSlide(bg, eyebrow + title + logo + stepsXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
   // ── ENCERRAMENTO (slide18) ─────────────────────────────────────────────────
   encerramento: {
     sourceSlide: 18,
