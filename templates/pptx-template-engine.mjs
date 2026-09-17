@@ -345,6 +345,42 @@ function buildLogoShape(id, rId, x, y, w, h) {
   </p:pic>`;
 }
 
+/**
+ * Gera o XML de notesSlide para um slide.
+ * text: string com o conteúdo das notas.
+ */
+function buildNotesSlide(text) {
+  const escaped = xmlEsc(text || "");
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<p:notes xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+         xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+         xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld><p:spTree>
+    <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>
+    <p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/>
+      <a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>
+    <p:sp>
+      <p:nvSpPr><p:cNvPr id="2" name="Notes"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr>
+        <p:nvPr><p:ph type="body" idx="1"/></p:nvPr></p:nvSpPr>
+      <p:spPr/>
+      <p:txBody><a:bodyPr/><a:lstStyle/>
+        <a:p><a:r><a:rPr lang="pt-BR" sz="1200"/><a:t>${escaped}</a:t></a:r></a:p>
+      </p:txBody>
+    </p:sp>
+  </p:spTree></p:cSld>
+  <p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr>
+</p:notes>`;
+}
+
+function buildNotesRels(slideNum) {
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1"
+    Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide"
+    Target="../slides/slide${slideNum}.xml"/>
+</Relationships>`;
+}
+
 // ─── Template definitions ────────────────────────────────────────────────────
 // Maps slide types to source slide numbers from the MAP PPTX.
 // Text slots = { "exact XML text to find" => "slot name in input JSON" }
@@ -1236,7 +1272,7 @@ async function main() {
       const cleanRels = sourceSlideRels[i]
         ? sourceSlideRels[i].replace(/<Relationship[^>]*notesSlide[^>]*/g, "")
         : null;
-      outputSlides.push({ xml: sourceSlides[i], relsXml: cleanRels });
+      outputSlides.push({ xml: sourceSlides[i], relsXml: cleanRels, notes: null });
     } else {
       console.warn(`⚠️  Slide institucional ${i} não encontrado no MAP.pptx`);
     }
@@ -1286,11 +1322,11 @@ async function main() {
 
     if (s.tipo !== "capa" && s.tipo !== "encerramento") pageNum++;
 
-    outputSlides.push({ xml, relsXml });
+    outputSlides.push({ xml, relsXml, notes: s.notes || null });
   }
 
   // Add generated slides to zip
-  outputSlides.forEach(({ xml, relsXml }, i) => {
+  outputSlides.forEach(({ xml, relsXml, notes }, i) => {
     const slideNum = i + 1;
     outZip.addFile(`ppt/slides/slide${slideNum}.xml`, Buffer.from(xml, "utf8"));
     if (relsXml) {
@@ -1300,6 +1336,23 @@ async function main() {
         ""
       );
       outZip.addFile(`ppt/slides/_rels/slide${slideNum}.xml.rels`, Buffer.from(cleanRels, "utf8"));
+    }
+
+    if (notes) {
+      const notesXml = buildNotesSlide(notes);
+      const notesRelsXml = buildNotesRels(slideNum);
+      outZip.addFile(`ppt/notesSlides/notesSlide${slideNum}.xml`, Buffer.from(notesXml, "utf8"));
+      outZip.addFile(`ppt/notesSlides/_rels/notesSlide${slideNum}.xml.rels`, Buffer.from(notesRelsXml, "utf8"));
+      // Adicionar relação notes no _rels do slide
+      const sRels = outZip.getEntry(`ppt/slides/_rels/slide${slideNum}.xml.rels`);
+      if (sRels) {
+        let sRelsXml = sRels.getData().toString("utf8");
+        const notesRel = `<Relationship Id="rIdNotes" ` +
+          `Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesSlide" ` +
+          `Target="../notesSlides/notesSlide${slideNum}.xml"/>`;
+        sRelsXml = sRelsXml.replace("</Relationships>", `  ${notesRel}\n</Relationships>`);
+        outZip.updateFile(`ppt/slides/_rels/slide${slideNum}.xml.rels`, Buffer.from(sRelsXml, "utf8"));
+      }
     }
   });
 
