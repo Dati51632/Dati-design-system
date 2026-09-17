@@ -21,7 +21,6 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import AdmZip from "adm-zip";
-import { buildVisualSlide, VISUAL_TYPES } from "./pptx-visual-engine.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_PPTX = path.resolve(__dirname, "../assets/template-source/MAP.pptx");
@@ -312,14 +311,15 @@ function buildScratchSlide(bgXml, shapesXml) {
 }
 
 function buildScratchRels(mediaRefs = []) {
-  const rels = mediaRefs.map(r =>
+  const imageRels = mediaRefs.map(r =>
     `<Relationship Id="${r.rId}" ` +
     `Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" ` +
     `Target="${r.target}"/>`
   ).join("\n  ");
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  ${rels}
+  <Relationship Id="rIdLayout" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout" Target="../slideLayouts/slideLayout3.xml"/>
+  ${imageRels}
 </Relationships>`;
 }
 
@@ -1247,6 +1247,8 @@ async function main() {
   skipPaths.add("ppt/_rels/presentation.xml.rels");
 
   sourceZip.getEntries().forEach(entry => {
+    // Skip notesSlides from source — the engine rebuilds only the ones that have content
+    if (entry.entryName.startsWith("ppt/notesSlides/")) return;
     if (!skipPaths.has(entry.entryName)) {
       outZip.addFile(entry.entryName, entry.getData());
     }
@@ -1270,7 +1272,7 @@ async function main() {
   for (let i = 1; i <= INSTITUTIONAL_COUNT; i++) {
     if (sourceSlides[i]) {
       const cleanRels = sourceSlideRels[i]
-        ? sourceSlideRels[i].replace(/<Relationship[^>]*notesSlide[^>]*/g, "")
+        ? sourceSlideRels[i].replace(/<Relationship[^>]*notesSlide[^>]*>/g, "")
         : null;
       outputSlides.push({ xml: sourceSlides[i], relsXml: cleanRels, notes: null });
     } else {
@@ -1283,16 +1285,6 @@ async function main() {
   let pageNum = INSTITUTIONAL_COUNT + 1;
 
   for (const s of slides) {
-    // Visual slide types (generated from scratch, not from MAP.pptx templates)
-    if (VISUAL_TYPES[s.tipo]) {
-      const result = buildVisualSlide(s.tipo, s, { deckName, pageNum });
-      if (result) {
-        if (s.tipo !== "encerramento") pageNum++;
-        outputSlides.push(result);
-        continue;
-      }
-    }
-
     const tmpl = TEMPLATE_MAP[s.tipo];
     if (!tmpl) {
       console.warn(`⚠️  Tipo desconhecido: "${s.tipo}" — slide ignorado`);
@@ -1332,7 +1324,7 @@ async function main() {
     if (relsXml) {
       // Update notesSide reference in rels (just remove it to keep things clean)
       const cleanRels = relsXml.replace(
-        /<Relationship[^>]*notesSlide[^>]*/g,
+        /<Relationship[^>]*notesSlide[^>]*>/g,
         ""
       );
       outZip.addFile(`ppt/slides/_rels/slide${slideNum}.xml.rels`, Buffer.from(cleanRels, "utf8"));
@@ -1359,6 +1351,29 @@ async function main() {
   // Add updated presentation.xml and rels
   outZip.addFile("ppt/presentation.xml", Buffer.from(buildPresentationXml(outputSlides.length), "utf8"));
   outZip.addFile("ppt/_rels/presentation.xml.rels", Buffer.from(buildPresentationRels(outputSlides.length), "utf8"));
+
+  // Fix [Content_Types].xml — remove stale slide entries from source template and add
+  // correct entries for the actual output slides (including notesSlides).
+  // Google Slides rejects files where Content_Types.xml references non-existent parts
+  // or is missing entries for parts that do exist.
+  const ctEntry = outZip.getEntry("[Content_Types].xml");
+  if (ctEntry) {
+    let ctXml = ctEntry.getData().toString("utf8");
+    // Remove all Override entries for slides and notesSlides (stale from MAP.pptx)
+    ctXml = ctXml.replace(/<Override[^>]*"\/ppt\/slides\/slide\d+\.xml"[^>]*\/>\s*/g, "");
+    ctXml = ctXml.replace(/<Override[^>]*"\/ppt\/notesSlides\/notesSlide\d+\.xml"[^>]*\/>\s*/g, "");
+    // Build fresh entries for actual output
+    const slideEntries = outputSlides.map((slide, i) => {
+      const n = i + 1;
+      let entry = `  <Override PartName="/ppt/slides/slide${n}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>`;
+      if (slide.notes) {
+        entry += `\n  <Override PartName="/ppt/notesSlides/notesSlide${n}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml"/>`;
+      }
+      return entry;
+    }).join("\n");
+    ctXml = ctXml.replace("</Types>", slideEntries + "\n</Types>");
+    outZip.updateFile("[Content_Types].xml", Buffer.from(ctXml, "utf8"));
+  }
 
   // Write output
   const defaultOut = path.resolve(__dirname, "../../../../Downloads/dati-apresentacao-gerada.pptx");
