@@ -104,6 +104,12 @@ const W = 12192000; // slide width EMU
 const H = 6858000;  // slide height EMU
 const MARGIN = 457200; // lateral margin EMU
 
+// Logo — exact dimensions from MAP.pptx reference (slide 11): ~5% slide width
+const LOGO_W = 613468;
+const LOGO_H = 254000;
+const LOGO_X = W - 698501 - LOGO_W; // right margin matches MAP reference
+const LOGO_Y = 444500;
+
 // Paleta Dati (hex sem #)
 const C = {
   navy:        "1A0F3D",
@@ -201,7 +207,7 @@ function buildTextShape(id, x, y, w, h, paragraphs, bodyAttrs = "") {
   return `<p:sp>
     <p:nvSpPr><p:cNvPr id="${id}" name="Txt${id}"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr/></p:nvSpPr>
     <p:spPr><a:xfrm><a:off x="${x}" y="${y}"/><a:ext cx="${w}" cy="${h}"/></a:xfrm>
-      <a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/></p:spPr>
+      <a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/><a:ln w="0"><a:noFill/></a:ln></p:spPr>
     <p:txBody><a:bodyPr wrap="square" lIns="0" rIns="0" tIns="0" bIns="0" ${bodyAttrs}><a:normAutofit/></a:bodyPr>
       <a:lstStyle/>${paras}</p:txBody>
   </p:sp>`;
@@ -239,8 +245,8 @@ function buildTitleShape(id, titulo, x, y, w, dark = false) {
 function buildFooterShapes(deckName, pageNum, dark = false) {
   const color = C.footerMuted;
   const y = 6350000;
-  const leftRun = buildRun(deckName, { color, sz: 1100, typeface: "Manrope" });
-  const rightRun = buildRun(String(pageNum).padStart(2, "0"), { color, sz: 1100, typeface: "Manrope" });
+  const leftRun = buildRun(deckName, { color, sz: 1200, typeface: "Manrope" });
+  const rightRun = buildRun(String(pageNum).padStart(2, "0"), { color, sz: 1200, typeface: "Manrope" });
   return [
     buildTextShape(900, MARGIN, y, 6000000, 300000, [{ runs: leftRun }]),
     buildTextShape(901, W - MARGIN - 600000, y, 600000, 300000,
@@ -278,7 +284,7 @@ function appendIconBadgesToSlideXml(xml, cards) {
   const BADGE_OFFSET_Y = 200000;
 
   let badgesXml = "";
-  let idBase = 200;
+  let idBase = 2000;
   cards.forEach((card, i) => {
     if (!card.icone || !CARD_X[i]) return;
     badgesXml += buildIconBadge(
@@ -422,7 +428,7 @@ const TEMPLATE_MAP = {
         } else {
           // Rebuild text box with one paragraph per line
           const paragraphs = lines.map(line => {
-            const run = buildRun(line, { color: "FFFFFF", sz: 3900 });
+            const run = buildRun(line, { color: "FFFFFF", sz: 4700 });
             return buildParagraph(run, { lnSpc: "90000" });
           }).join("");
           const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:normAutofit/></a:bodyPr><a:lstStyle/>${paragraphs}</p:txBody>`;
@@ -504,9 +510,19 @@ const TEMPLATE_MAP = {
         5300960, // bottom quote
       ]);
 
-      // footer
+      // Footer: the MAP slide 11 right-footer text box (cx=184500) is too narrow
+      // to render a 2-digit page number on one line. Remove both footer shapes
+      // at y=6267450 and inject properly sized ones.
+      xml = removeShapesByY(xml, [6267450]);
       xml = replaceText(xml, "Dati | Migração e modernização na AWS", deckName);
-      xml = replaceText(xml, "11", String(pageNum).padStart(2, "0"));
+      {
+        const leftRun  = buildRun(deckName, { color: C.footerMuted, sz: 1200, typeface: "Manrope" });
+        const rightRun = buildRun(String(pageNum).padStart(2, "0"), { color: C.footerMuted, sz: 1200, typeface: "Manrope" });
+        const leftShape  = buildTextShape(980, MARGIN, 6267450, 5000000, 280000, [{ runs: leftRun }]);
+        const rightShape = buildTextShape(981, W - MARGIN - 800000, 6267450, 800000, 280000,
+          [{ runs: rightRun, algn: "r" }]);
+        xml = xml.replace("</p:spTree>", leftShape + rightShape + "</p:spTree>");
+      }
       return xml;
     },
   },
@@ -607,17 +623,12 @@ const TEMPLATE_MAP = {
         }
       }
 
-      // Corpo: rebuild the body text box at y=2710570
-      if (s.corpo !== undefined) {
-        const run = buildRun(s.corpo, { color: "EDF0F2", sz: 1400 });
-        const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:normAutofit/></a:bodyPr><a:lstStyle/>${buildParagraph(run, { lnSpc: "101818" })}</p:txBody>`;
-        xml = rebuildTextBox(xml, "2710570", newTxBody);
-      }
-
-      // Remove the MAP-phase boxes (Assess / Mobilize / Migrate & Modernize)
-      // that are hardcoded in slide 9 of the source template and don't belong
-      // in a generic bigword slide
+      // Remove the MAP-phase boxes AND the lavender gradient pill (y=2538650)
+      // that persists from the MAP "Assess/Mobilize/Migrate" graphic.
+      // The corpo text box at y=2710570 has <a:noFill/> so we keep it and
+      // rebuild its text with a readable color below.
       xml = removeShapesByY(xml, [
+        2538650, // lavender gradient pill (F1F1F1→DED4F1 rounded rect) ← NEW
         3153873, // phase card backgrounds (×3)
         3362078, // phase icon pics (×3)
         3528636, // decorative element inside the phase area
@@ -630,68 +641,79 @@ const TEMPLATE_MAP = {
         4811454, // phase description 3
       ]);
 
+      // Rebuild corpo inside the existing no-fill text box at y=2710570
+      if (s.corpo !== undefined) {
+        const run = buildRun(s.corpo, { color: C.textMuted, sz: 1400 });
+        const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:normAutofit/></a:bodyPr><a:lstStyle/>${buildParagraph(run, { lnSpc: "120000" })}</p:txBody>`;
+        xml = rebuildTextBox(xml, "2710570", newTxBody);
+      }
+
       xml = replaceText(xml, "Dati | Migração e modernização na AWS", deckName);
       xml = replaceText(xml, "09", String(pageNum).padStart(2, "0"));
       return xml;
     },
   },
 
-  // ── CARDS (slide8 — 4 numbered cards with title + description) ────────────
-  // Source slide has: eyebrow, title (2 runs), 4 cards each with card-title + card-description
+  // ── CARDS (scratch — dark background, 4 colunas, sem overlap de badges) ─────
   cards: {
-    sourceSlide: 8,
-    render(xml, s, { deckName, pageNum }) {
-      if (s.eyebrow !== undefined)
-        xml = replaceText(xml, "POR QUE MIGRAR", s.eyebrow.toUpperCase());
+    build(s, { deckName, pageNum }) {
+      const cardItems = Array.isArray(s.cards) ? s.cards.slice(0, 4) : [];
+      const n = Math.max(cardItems.length, 1);
+      const bg = buildBackground("dark");
+      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, true);
+      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, true);
+      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
 
-      // Title: original has two runs "O que muda quando o " + "ambiente vira nuvem"
-      if (s.titulo !== undefined) {
-        const titulo = s.titulo;
-        if (typeof titulo === "string") {
-          xml = replaceText(xml, "O que muda quando o ", "");
-          xml = replaceText(xml, "ambiente vira nuvem", titulo);
-        } else {
-          // Array [{text, emphasis}] → rebuild text box at y=1028700
-          const runs = titulo.map(t =>
-            buildRun(t.text, { color: t.emphasis ? "8F65FE" : "1A0F3D", bold: true, sz: 3100 })
-          ).join("");
-          const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:noAutofit/></a:bodyPr><a:lstStyle/>${buildParagraph(runs, { lnSpc: "78776" })}</p:txBody>`;
-          xml = rebuildTextBox(xml, "1028700", newTxBody);
-        }
-      }
+      const CARD_Y   = 1900000;
+      const CARD_H   = 4450000;
+      const GAP      = 200000;
+      const USABLE_W = W - 2 * MARGIN;
+      const CARD_W   = Math.floor((USABLE_W - (n - 1) * GAP) / n);
 
-      // Cards: up to 4 items, each with titulo + descricao
-      const CARD_TITULOS = [
-        "Custo visível e variável",
-        "Fim do ciclo de renovação",
-        "Segurança e resiliência",
-        "Base pronta para dados e IA",
-      ];
-      const CARD_DESCRICOES = [
-        "A conta passa a ter dono por aplicação. Paga-se o que está ligado.",
-        "O plano de cinco anos perde o degrau de investimento em hardware no meio dele.",
-        "Backup, redundância e controles que custariam outro data center on-premises.",
-        "O que bloqueia o valor de analytics e IA hoje é o ambiente. Na nuvem, o dado está a um serviço de distância.",
-      ];
-      const cards = Array.isArray(s.cards) ? s.cards : [];
-      CARD_TITULOS.forEach((placeholder, i) => {
-        const card = cards[i];
-        xml = replaceText(xml, placeholder, card?.titulo || placeholder);
+      const cardFill = buildGradientFill([
+        { pos: 0,      hex: "201453" },
+        { pos: 100000, hex: "2D1D69" },
+      ], 180);
+
+      let idCounter = 30;
+      let cardsXml = "";
+
+      cardItems.forEach((card, i) => {
+        const cx = MARGIN + i * (CARD_W + GAP);
+
+        // Card background
+        cardsXml += buildRoundedRect(idCounter++, cx, CARD_Y, CARD_W, CARD_H, 8000, cardFill);
+
+        // Número (01, 02, 03, 04) — pequeno, topo do card
+        const numRun = buildRun(String(i + 1).padStart(2, "0"), {
+          color: C.purpleTint, sz: 1000, bold: true, typeface: "Manrope",
+        });
+        cardsXml += buildTextShape(idCounter++, cx + 220000, CARD_Y + 220000,
+          CARD_W - 440000, 350000, [{ runs: numRun }]);
+
+        // Icon badge abaixo do número
+        cardsXml += buildIconBadge(card.icone || "diamond", cx + 220000, CARD_Y + 580000, idCounter);
+        idCounter += 2;
+
+        // Título do card
+        const tRun = buildRun(card.titulo || "", {
+          color: C.white, sz: 1600, bold: true, typeface: "Manrope",
+        });
+        cardsXml += buildTextShape(idCounter++, cx + 220000, CARD_Y + 1400000,
+          CARD_W - 440000, 500000, [{ runs: tRun }]);
+
+        // Descrição
+        const dRun = buildRun(card.descricao || "", {
+          color: C.purpleTint, sz: 1200, typeface: "Manrope",
+        });
+        cardsXml += buildTextShape(idCounter++, cx + 220000, CARD_Y + 1950000,
+          CARD_W - 440000, 2250000, [{ runs: dRun, lnSpc: "130000" }]);
       });
-      CARD_DESCRICOES.forEach((placeholder, i) => {
-        const card = cards[i];
-        xml = replaceText(xml, placeholder, card?.descricao || placeholder);
-      });
 
-      xml = replaceText(xml, "Dati | Migração e modernização na AWS", deckName);
-      xml = replaceText(xml, "08", String(pageNum).padStart(2, "0"));
-
-      // Injetar badges de ícone se fornecidos
-      if (Array.isArray(s.cards) && s.cards.some(c => c.icone)) {
-        xml = appendIconBadgesToSlideXml(xml, s.cards);
-      }
-
-      return xml;
+      const footer = buildFooterShapes(deckName, pageNum, true);
+      const xml = buildScratchSlide(bg, eyebrow + title + logo + cardsXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
     },
   },
 
@@ -750,28 +772,18 @@ const TEMPLATE_MAP = {
   "lista-icone": {
     build(s, { deckName, pageNum }) {
       const items = Array.isArray(s.items) ? s.items.slice(0, 5) : [];
-      const dark = false;
       const bg = buildBackground("light");
 
-      // Sidebar gradiente vertical no lado esquerdo
-      const sidebarFill = buildGradientFill([
-        { pos: 0,      hex: C.purpleMid },
-        { pos: 100000, hex: C.purpleDark },
-      ], 90);
-      const sidebar = buildPlainRect(10, 0, 0, 500000, H, sidebarFill);
-
-      // Eyebrow e título
-      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", 700000, 381000, dark);
-      const title   = buildTitleShape(21, s.titulo || "", 700000, 685000, W - 700000 - MARGIN, dark);
-
-      // Logo
-      const logo = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+      // Eyebrow e título — sem sidebar, alinhados à margem padrão
+      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
+      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
+      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
 
       // Itens
       const ITEM_Y_START = 1900000;
-      const ITEM_SPACING = 900000;
+      const ITEM_SPACING = 950000;
       const BADGE_SIZE   = 670000;
-      const TEXT_X       = 1500000;
+      const TEXT_X       = MARGIN + BADGE_SIZE + 200000; // badge + gap
       const TEXT_W       = W - TEXT_X - MARGIN;
 
       let idCounter = 30;
@@ -779,19 +791,18 @@ const TEMPLATE_MAP = {
       items.forEach((item, i) => {
         const y = ITEM_Y_START + i * ITEM_SPACING;
         // Badge
-        itemsXml += buildIconBadge(item.icone || "diamond", 700000, y, idCounter);
+        itemsXml += buildIconBadge(item.icone || "diamond", MARGIN, y, idCounter);
         idCounter += 2;
         // Título do item
         const titleRun = buildRun(item.titulo || "", { color: C.navy, sz: 1800, bold: true, typeface: "Manrope" });
-        itemsXml += buildTextShape(idCounter++, TEXT_X, y, TEXT_W, 500000, [{ runs: titleRun }]);
+        itemsXml += buildTextShape(idCounter++, TEXT_X, y, TEXT_W, 470000, [{ runs: titleRun }]);
         // Descrição
         const descRun = buildRun(item.descricao || "", { color: C.textMuted, sz: 1300, typeface: "Manrope" });
-        itemsXml += buildTextShape(idCounter++, TEXT_X, y + 460000, TEXT_W, 400000, [{ runs: descRun }]);
+        itemsXml += buildTextShape(idCounter++, TEXT_X, y + 470000, TEXT_W, 450000, [{ runs: descRun }]);
       });
 
-      const footer = buildFooterShapes(deckName, pageNum, dark);
-      const shapesXml = sidebar + eyebrow + title + logo + itemsXml + footer;
-      const xml = buildScratchSlide(bg, shapesXml);
+      const footer = buildFooterShapes(deckName, pageNum, false);
+      const xml = buildScratchSlide(bg, eyebrow + title + logo + itemsXml + footer);
       const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
       return { xml, relsXml };
     },
@@ -804,7 +815,7 @@ const TEMPLATE_MAP = {
       const bg = buildBackground("light");
       const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
       const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
-      const logo    = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
 
       const CARD_W = 5400000;
       const CARD_H = 2200000;
@@ -850,10 +861,20 @@ const TEMPLATE_MAP = {
     build(s, { deckName, pageNum }) {
       const steps = Array.isArray(s.steps) ? s.steps.slice(0, 6) : [];
       const n = steps.length;
+      if (n === 0) {
+        const bg = buildBackground("light");
+        const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
+        const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
+        const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
+        const footer  = buildFooterShapes(deckName, pageNum, false);
+        const xml = buildScratchSlide(bg, eyebrow + title + logo + footer);
+        const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+        return { xml, relsXml };
+      }
       const bg = buildBackground("light");
       const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
       const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
-      const logo    = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
 
       const PIPE_Y   = 2700000;
       const STEP_H   = 1400000;
@@ -915,24 +936,27 @@ const TEMPLATE_MAP = {
       const bg = buildBackground("light");
       const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
       const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
-      const logo    = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
 
-      const LINE_Y   = 3600000;
-      const CIRCLE_D = 800000;
+      const LINE_Y   = 2950000; // raised from 3600000 for better vertical balance
+      const CIRCLE_D = 500000;  // reduced from 800000 — proportional to reference
       const CIRCLE_R = CIRCLE_D / 2;
       const USABLE_W = W - 2 * MARGIN;
       const STEP_GAP = Math.floor(USABLE_W / (n - 1 || 1));
+      // Column width per step (for centered text boxes)
+      const COL_W    = n > 1 ? STEP_GAP : USABLE_W;
+      const HALF_COL = Math.floor(COL_W / 2);
 
       // Linha horizontal de fundo
       const lineFill = buildSolidFill(C.purpleSubtle);
-      let timelineXml = buildPlainRect(10, MARGIN, LINE_Y - 25000, USABLE_W, 50000, lineFill);
+      let timelineXml = buildPlainRect(10, MARGIN, LINE_Y - 12500, USABLE_W, 25000, lineFill);
 
       let idCounter = 30;
       steps.forEach((step, i) => {
         const cx = MARGIN + (n > 1 ? i * STEP_GAP : USABLE_W / 2);
         const cy = LINE_Y - CIRCLE_R;
 
-        // Círculo gradiente
+        // Círculo gradiente — menor e mais proporcional
         const circleFill = buildGradientFill([
           { pos: 0,      hex: C.purpleMid },
           { pos: 100000, hex: C.purpleDark },
@@ -940,19 +964,23 @@ const TEMPLATE_MAP = {
         timelineXml += buildRoundedRect(idCounter++, cx - CIRCLE_R, cy, CIRCLE_D, CIRCLE_D, 50000, circleFill);
 
         // Número
-        const numRun = buildRun(String(i + 1), { color: C.white, sz: 2200, bold: true, typeface: "Manrope" });
+        const numRun = buildRun(String(i + 1), { color: C.white, sz: 1600, bold: true, typeface: "Manrope" });
         timelineXml += buildTextShape(idCounter++, cx - CIRCLE_R, cy, CIRCLE_D, CIRCLE_D,
           [{ runs: numRun, algn: "ctr" }], 'anchor="ctr"');
 
-        // Label
-        const lRun = buildRun(step.label || "", { color: C.navy, sz: 1400, bold: true, typeface: "Manrope" });
-        timelineXml += buildTextShape(idCounter++, cx - 800000, LINE_Y + CIRCLE_R + 150000, 1600000, 450000,
+        // Label — centered in column width for uniform alignment
+        const lRun = buildRun(step.label || "", { color: C.navy, sz: 1200, bold: true, typeface: "Manrope" });
+        timelineXml += buildTextShape(idCounter++,
+          cx - Math.min(HALF_COL, 900000), LINE_Y + CIRCLE_R + 120000,
+          Math.min(COL_W, 1800000), 380000,
           [{ runs: lRun, algn: "ctr" }]);
 
-        // Descrição
-        const dRun = buildRun(step.descricao || "", { color: C.textMuted, sz: 1200, typeface: "Manrope" });
-        timelineXml += buildTextShape(idCounter++, cx - 800000, LINE_Y + CIRCLE_R + 600000, 1600000, 400000,
-          [{ runs: dRun, algn: "ctr" }]);
+        // Descrição — wider box, smaller text
+        const dRun = buildRun(step.descricao || "", { color: C.textMuted, sz: 1100, typeface: "Manrope" });
+        timelineXml += buildTextShape(idCounter++,
+          cx - Math.min(HALF_COL, 900000), LINE_Y + CIRCLE_R + 500000,
+          Math.min(COL_W, 1800000), 600000,
+          [{ runs: dRun, algn: "ctr", lnSpc: "115000" }]);
       });
 
       const footer = buildFooterShapes(deckName, pageNum, false);
@@ -972,7 +1000,7 @@ const TEMPLATE_MAP = {
 
       const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, dark);
       const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, dark);
-      const logo    = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
 
       const CARD_H   = 2400000;
       const CARD_Y   = 2600000;
@@ -1028,7 +1056,7 @@ const TEMPLATE_MAP = {
       const bg = buildBackground("light");
       const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
       const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
-      const logo    = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
 
       const COL_Y    = 1900000;
       const COL_H    = 4200000;
@@ -1082,7 +1110,7 @@ const TEMPLATE_MAP = {
       const bg = buildBackground("light");
       const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
       const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
-      const logo    = buildLogoShape(22, "rId1", W - MARGIN - 1600000, 200000, 1600000, 450000);
+      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
 
       const NODE_W   = 3200000;
       const NODE_H   = 800000;

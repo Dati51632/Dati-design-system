@@ -26,15 +26,79 @@ design-system-dati/
         └── documentos-internos.md
 ```
 
-## Como usar no Claude (Cowork / Claude Code)
+## Instalação e uso no Claude Code
 
-Este repositório funciona como uma **skill do Claude**: o arquivo `SKILL.md` na raiz é o que o Claude lê para saber como aplicar a marca. Para instalar:
+Este repositório funciona como uma **skill do Claude**: o `SKILL.md` na raiz é o que o Claude lê para saber como aplicar a marca. A skill cobre dois tipos de uso — a skill de design e o gerador de PPTX.
 
-1. Clone ou baixe este repositório.
-2. Coloque a pasta `design-system-dati/` dentro do diretório de skills do seu projeto/organização (consulte a documentação de skills do Claude para o caminho exato do seu ambiente).
-3. A partir daí, qualquer pedido de criar apresentação, post, one-pager ou proposta para a Dati vai acionar automaticamente as diretrizes deste repositório.
+### Pré-requisitos
 
-Como o skill é só arquivos de texto e imagem em uma pasta, **qualquer membro do time que clonar/atualizar o repositório sempre tem a versão mais recente** — não há build ou instalação além de copiar a pasta.
+- **Node.js** ≥ 18 instalado (para o gerador de PPTX)
+- Arquivo `MAP.pptx` colocado em `assets/template-source/MAP.pptx` (template visual de referência — solicite ao time)
+
+### Windows
+
+```bat
+REM 1. Clone o repositório
+git clone https://github.com/Dati51632/Dati-design-system.git
+
+REM 2. Instale as dependências do engine
+cd Dati-design-system\templates
+npm install
+
+REM 3. Copie a pasta para o diretório de skills do Claude Code
+xcopy /E /I "C:\caminho\Dati-design-system" "C:\Users\<seu-usuario>\.claude\skills\dati-design-system"
+```
+
+**Usar o gerador de PPTX (Windows):**
+```bat
+node "C:\Users\<seu-usuario>\.claude\skills\dati-design-system\templates\pptx-template-engine.mjs" "C:\caminho\slides-input.json"
+REM Saída padrão: C:\Users\<seu-usuario>\Downloads\dati-apresentacao-gerada.pptx
+```
+
+Para abrir o arquivo gerado automaticamente:
+```bat
+start "" "C:\Users\<seu-usuario>\Downloads\dati-apresentacao-gerada.pptx"
+```
+
+### Mac
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/Dati51632/Dati-design-system.git
+
+# 2. Instale as dependências do engine
+cd Dati-design-system/templates
+npm install
+
+# 3. Copie a pasta para o diretório de skills do Claude Code
+cp -r ~/caminho/Dati-design-system ~/.claude/skills/dati-design-system
+```
+
+**Usar o gerador de PPTX (Mac):**
+```bash
+node ~/.claude/skills/dati-design-system/templates/pptx-template-engine.mjs ~/caminho/slides-input.json
+# Saída padrão: ~/Downloads/dati-apresentacao-gerada.pptx
+```
+
+Para abrir o arquivo gerado automaticamente:
+```bash
+open ~/Downloads/dati-apresentacao-gerada.pptx
+```
+
+### Atualizar para a versão mais recente
+
+```bash
+# Dentro da pasta do repositório
+git pull origin main
+
+# Windows — re-sincronize os skills
+xcopy /E /I /Y "." "C:\Users\<seu-usuario>\.claude\skills\dati-design-system"
+
+# Mac — re-sincronize os skills
+cp -r . ~/.claude/skills/dati-design-system
+```
+
+> Como o skill é só arquivos de texto, imagem e um script Node, **qualquer membro do time que clonar/atualizar o repositório sempre tem a versão mais recente** — não há build além do `npm install` na pasta `templates/`.
 
 ## Como usar em outras IAs (ChatGPT, Gemini, etc.)
 
