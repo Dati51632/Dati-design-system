@@ -1193,7 +1193,7 @@ const TEMPLATE_MAP = {
       let bodyXml = buildRoundedRect(30, MARGIN, CONTENT_Y, PANEL_W, PANEL_H, 8000, panelFill);
 
       if (s.painelRotulo) {
-        const run = buildRun(s.painelRotulo, { color: "A4DF64", sz: 2000, bold: true, typeface: "Manrope" });
+        const run = buildRun(s.painelRotulo, { color: "A4DF64", sz: 1800, bold: true, typeface: "Manrope" });
         bodyXml += buildTextShape(31, MARGIN + 350000, CONTENT_Y, PANEL_W - 700000, PANEL_H,
           [{ runs: run }], 'anchor="ctr"');
       }
@@ -1211,26 +1211,26 @@ const TEMPLATE_MAP = {
         FIO_W, COL_H, buildSolidFill("C9C4D8"));
 
       if (esq.titulo) {
-        const run = buildRun(esq.titulo, { color: C.navy, sz: 3200, bold: true, typeface: "Manrope" });
-        bodyXml += buildTextShape(idC++, MARGIN + PAD, COL_Y + PAD, HALF - PAD - 100000, 700000,
+        const run = buildRun(esq.titulo, { color: C.navy, sz: 2500, bold: true, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, MARGIN + PAD, COL_Y + PAD, HALF - PAD - 100000, 600000,
           [{ runs: run, lnSpc: "110000" }]);
       }
       if (esq.descricao) {
-        const run = buildRun(esq.descricao, { color: C.textMuted, sz: 2000, typeface: "Manrope" });
-        bodyXml += buildTextShape(idC++, MARGIN + PAD, COL_Y + PAD + 750000, HALF - PAD - 100000,
-          COL_H - PAD - 750000, [{ runs: run, lnSpc: "130000" }]);
+        const run = buildRun(esq.descricao, { color: C.textMuted, sz: 1800, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, MARGIN + PAD, COL_Y + PAD + 650000, HALF - PAD - 100000,
+          COL_H - PAD - 650000, [{ runs: run, lnSpc: "130000" }]);
       }
 
       const rightX = MARGIN + HALF + 100000;
       if (dir.titulo) {
-        const run = buildRun(dir.titulo, { color: C.navy, sz: 3200, bold: true, typeface: "Manrope" });
-        bodyXml += buildTextShape(idC++, rightX, COL_Y + PAD, HALF - PAD - 100000, 700000,
+        const run = buildRun(dir.titulo, { color: C.navy, sz: 2500, bold: true, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, rightX, COL_Y + PAD, HALF - PAD - 100000, 600000,
           [{ runs: run, lnSpc: "110000" }]);
       }
       if (dir.descricao) {
-        const run = buildRun(dir.descricao, { color: C.textMuted, sz: 2000, typeface: "Manrope" });
-        bodyXml += buildTextShape(idC++, rightX, COL_Y + PAD + 750000, HALF - PAD - 100000,
-          COL_H - PAD - 750000, [{ runs: run, lnSpc: "130000" }]);
+        const run = buildRun(dir.descricao, { color: C.textMuted, sz: 1800, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, rightX, COL_Y + PAD + 650000, HALF - PAD - 100000,
+          COL_H - PAD - 650000, [{ runs: run, lnSpc: "130000" }]);
       }
 
       const footer  = buildFooterShapes(deckName, pageNum, false);
@@ -1271,18 +1271,18 @@ const TEMPLATE_MAP = {
 
         if (col.rotulo) {
           const run = buildRun(String(col.rotulo).toUpperCase(),
-            { color: C.purpleMed, sz: 1800, bold: true, typeface: "Manrope" });
-          colXml += buildTextShape(idC++, colX + PAD, textBaseY, COL_W - 2 * PAD, 350000, [{ runs: run }]);
+            { color: C.purpleMed, sz: 1600, bold: true, typeface: "Manrope" });
+          colXml += buildTextShape(idC++, colX + PAD, textBaseY, COL_W - 2 * PAD, 320000, [{ runs: run }]);
         }
         if (col.titulo) {
-          const run = buildRun(col.titulo, { color: C.navy, sz: 2800, bold: true, typeface: "Manrope" });
-          colXml += buildTextShape(idC++, colX + PAD, textBaseY + 400000, COL_W - 2 * PAD, 700000,
+          const run = buildRun(col.titulo, { color: C.navy, sz: 2300, bold: true, typeface: "Manrope" });
+          colXml += buildTextShape(idC++, colX + PAD, textBaseY + 370000, COL_W - 2 * PAD, 600000,
             [{ runs: run, lnSpc: "110000" }]);
         }
         if (col.descricao) {
-          const run = buildRun(col.descricao, { color: C.textMuted, sz: 2000, typeface: "Manrope" });
-          colXml += buildTextShape(idC++, colX + PAD, textBaseY + 1150000, COL_W - 2 * PAD,
-            FOOTER_Y - textBaseY - 1150000 - 300000, [{ runs: run, lnSpc: "130000" }]);
+          const run = buildRun(col.descricao, { color: C.textMuted, sz: 1800, typeface: "Manrope" });
+          colXml += buildTextShape(idC++, colX + PAD, textBaseY + 1020000, COL_W - 2 * PAD,
+            FOOTER_Y - textBaseY - 1020000 - 300000, [{ runs: run, lnSpc: "130000" }]);
         }
       });
 
@@ -1338,12 +1338,12 @@ const TEMPLATE_MAP = {
         idC += 2;
 
         if (step.label) {
-          const run = buildRun(step.label, { color: C.purpleMed, sz: 1800, bold: true, typeface: "Manrope" });
+          const run = buildRun(step.label, { color: C.purpleMed, sz: 1600, bold: true, typeface: "Manrope" });
           bodyXml += buildTextShape(idC++, centerX - Math.floor(STEP_W / 2), START_Y, STEP_W, LABEL_H,
             [{ runs: run, algn: "ctr" }]);
         }
         if (step.descricao) {
-          const run = buildRun(step.descricao, { color: C.textMuted, sz: 1800, typeface: "Manrope" });
+          const run = buildRun(step.descricao, { color: C.textMuted, sz: 1600, typeface: "Manrope" });
           bodyXml += buildTextShape(idC++, centerX - Math.floor(STEP_W / 2),
             BAND_Y + BAND_H + GAP, STEP_W, DESC_H,
             [{ runs: run, algn: "ctr", lnSpc: "110000" }]);
@@ -1384,10 +1384,10 @@ const TEMPLATE_MAP = {
         const isLast = i === esq.items.length - 1;
         const itemY  = CONTENT_Y + PAD + 400000 + i * 650000;
         const numRun = buildRun(`${String(i + 1).padStart(2, "0")}. `,
-          { color: C.footerLight, sz: 1800, bold: true, typeface: "Manrope" });
+          { color: C.footerLight, sz: 1600, bold: true, typeface: "Manrope" });
         const txtRun = buildRun(item,
-          { color: isLast ? "A4DF64" : C.navy, sz: 2000, bold: isLast, typeface: "Manrope" });
-        xml2 += buildTextShape(idC++, MARGIN + PAD, itemY, COL_W - 2 * PAD, 550000,
+          { color: isLast ? "A4DF64" : C.navy, sz: 1800, bold: isLast, typeface: "Manrope" });
+        xml2 += buildTextShape(idC++, MARGIN + PAD, itemY, COL_W - 2 * PAD, 500000,
           [{ runs: numRun + txtRun, lnSpc: "110000" }]);
       });
 
@@ -1405,12 +1405,12 @@ const TEMPLATE_MAP = {
       }
       (Array.isArray(dir.items) ? dir.items : []).forEach((item, i) => {
         const isLast = i === dir.items.length - 1;
-        const itemY  = CONTENT_Y + PAD + 400000 + i * 650000;
+        const itemY  = CONTENT_Y + PAD + 400000 + i * 580000;
         const numRun = buildRun(`${String(i + 1).padStart(2, "0")}. `,
-          { color: C.purpleTint, sz: 1800, bold: true, typeface: "Manrope" });
+          { color: C.purpleTint, sz: 1600, bold: true, typeface: "Manrope" });
         const txtRun = buildRun(item,
-          { color: isLast ? "A4DF64" : C.white, sz: 2000, bold: isLast, typeface: "Manrope" });
-        xml2 += buildTextShape(idC++, rightX + PAD, itemY, COL_W - 2 * PAD, 550000,
+          { color: isLast ? "A4DF64" : C.white, sz: 1800, bold: isLast, typeface: "Manrope" });
+        xml2 += buildTextShape(idC++, rightX + PAD, itemY, COL_W - 2 * PAD, 500000,
           [{ runs: numRun + txtRun, lnSpc: "110000" }]);
       });
 
@@ -1444,10 +1444,10 @@ const TEMPLATE_MAP = {
       if (s.declaracao) {
         let runs;
         if (typeof s.declaracao === "string") {
-          runs = buildRun(s.declaracao, { color: C.navy, sz: 2800, bold: true, typeface: "Manrope" });
+          runs = buildRun(s.declaracao, { color: C.navy, sz: 2300, bold: true, typeface: "Manrope" });
         } else {
           runs = s.declaracao.map(t => buildRun(t.text, {
-            color: t.emphasis ? C.purpleMed : C.navy, sz: 2800, bold: true, typeface: "Manrope",
+            color: t.emphasis ? C.purpleMed : C.navy, sz: 2300, bold: true, typeface: "Manrope",
           })).join("");
         }
         bodyXml += buildTextShape(idC++, MARGIN + PAD, CARD_Y + PAD, LEFT_W - 2 * PAD,
@@ -1461,14 +1461,14 @@ const TEMPLATE_MAP = {
       ], 135);
       bodyXml += buildRoundedRect(idC++, rightX, CARD_Y, RIGHT_W, CARD_H, 8000, rightFill);
       if (s.painelTitulo) {
-        const run = buildRun(s.painelTitulo, { color: C.white, sz: 2800, bold: true, typeface: "Manrope" });
-        bodyXml += buildTextShape(idC++, rightX + PAD, CARD_Y + PAD, RIGHT_W - 2 * PAD, 700000,
+        const run = buildRun(s.painelTitulo, { color: C.white, sz: 2300, bold: true, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, rightX + PAD, CARD_Y + PAD, RIGHT_W - 2 * PAD, 600000,
           [{ runs: run, lnSpc: "110000" }]);
       }
       if (s.painelDescricao) {
-        const run = buildRun(s.painelDescricao, { color: C.purpleTint, sz: 2000, typeface: "Manrope" });
-        bodyXml += buildTextShape(idC++, rightX + PAD, CARD_Y + PAD + 750000, RIGHT_W - 2 * PAD,
-          CARD_H - PAD - 750000 - PAD, [{ runs: run, lnSpc: "130000" }]);
+        const run = buildRun(s.painelDescricao, { color: C.purpleTint, sz: 1800, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, rightX + PAD, CARD_Y + PAD + 650000, RIGHT_W - 2 * PAD,
+          CARD_H - PAD - 650000 - PAD, [{ runs: run, lnSpc: "130000" }]);
       }
 
       const footer  = buildFooterShapes(deckName, pageNum, false);
@@ -1503,18 +1503,18 @@ const TEMPLATE_MAP = {
         const TEXT_H = ROW_H - 100000;
 
         if (p.termo) {
-          const run = buildRun(p.termo, { color: C.navy, sz: 2800, bold: true, typeface: "Manrope" });
+          const run = buildRun(p.termo, { color: C.navy, sz: 2300, bold: true, typeface: "Manrope" });
           listXml += buildTextShape(idC++, MARGIN, TEXT_Y, THIRD - 100000, TEXT_H,
             [{ runs: run }], 'anchor="ctr"');
         }
 
         const conRun = buildRun(p.conector || "acima de",
-          { color: C.purpleMed, sz: 2300, typeface: "Manrope" });
+          { color: C.purpleMed, sz: 2000, typeface: "Manrope" });
         listXml += buildTextShape(idC++, MARGIN + THIRD, TEXT_Y, THIRD, TEXT_H,
           [{ runs: conRun, algn: "ctr" }], 'anchor="ctr"');
 
         if (p.neutro) {
-          const run = buildRun(p.neutro, { color: C.footerLight, sz: 2300, typeface: "Manrope" });
+          const run = buildRun(p.neutro, { color: C.footerLight, sz: 2000, typeface: "Manrope" });
           listXml += buildTextShape(idC++, MARGIN + 2 * THIRD + 100000, TEXT_Y, THIRD - 100000, TEXT_H,
             [{ runs: run }], 'anchor="ctr"');
         }
@@ -1543,7 +1543,7 @@ const TEMPLATE_MAP = {
       let bodyXml = buildRoundedRect(30, MARGIN, CONTENT_Y, SIDE_W, AREA_H, 8000, sideFill);
 
       if (s.sidebarLabel) {
-        const run = buildRun(s.sidebarLabel, { color: C.white, sz: 1800, bold: true, typeface: "Manrope" });
+        const run = buildRun(s.sidebarLabel, { color: C.white, sz: 1600, bold: true, typeface: "Manrope" });
         bodyXml += buildTextShape(31, MARGIN, CONTENT_Y, SIDE_W, AREA_H,
           [{ runs: run, algn: "ctr" }], 'anchor="ctr"');
       }
@@ -1578,11 +1578,11 @@ const TEMPLATE_MAP = {
           bodyXml += buildRoundedRect(idC++, cx, cy, CARD_W, CARD_H, 8000,
             buildSolidFill("FFFFFF"), "DDD6EE");
           if (step.label) {
-            const run = buildRun(step.label, { color: C.navy, sz: 1800, bold: true, typeface: "Manrope" });
+            const run = buildRun(step.label, { color: C.navy, sz: 1600, bold: true, typeface: "Manrope" });
             bodyXml += buildTextShape(idC++, cx + PAD, cy + PAD, CARD_W - 2 * PAD, 300000, [{ runs: run }]);
           }
           if (step.descricao) {
-            const run = buildRun(step.descricao, { color: C.textMuted, sz: 1600, typeface: "Manrope" });
+            const run = buildRun(step.descricao, { color: C.textMuted, sz: 1400, typeface: "Manrope" });
             bodyXml += buildTextShape(idC++, cx + PAD, cy + PAD + 350000, CARD_W - 2 * PAD,
               CARD_H - 2 * PAD - 350000, [{ runs: run, lnSpc: "120000" }]);
           }
@@ -1622,12 +1622,12 @@ const TEMPLATE_MAP = {
         bodyXml += buildRoundedRect(idC++, cx, cy, CARD_W, CARD_H, 8000,
           buildSolidFill("FFFFFF"), "DDD6EE");
         if (card.titulo) {
-          const run = buildRun(card.titulo, { color: C.navy, sz: 2000, bold: true, typeface: "Manrope" });
+          const run = buildRun(card.titulo, { color: C.navy, sz: 1800, bold: true, typeface: "Manrope" });
           bodyXml += buildTextShape(idC++, cx + PAD, cy + PAD, CARD_W - 2 * PAD, 400000,
             [{ runs: run, lnSpc: "110000" }]);
         }
         if (card.descricao) {
-          const run = buildRun(card.descricao, { color: C.textMuted, sz: 1800, typeface: "Manrope" });
+          const run = buildRun(card.descricao, { color: C.textMuted, sz: 1600, typeface: "Manrope" });
           bodyXml += buildTextShape(idC++, cx + PAD, cy + PAD + 450000, CARD_W - 2 * PAD,
             CARD_H - 2 * PAD - 450000, [{ runs: run, lnSpc: "120000" }]);
         }
@@ -1660,10 +1660,10 @@ const TEMPLATE_MAP = {
       if (s.frase && FRASE_W > 500000) {
         let runs;
         if (typeof s.frase === "string") {
-          runs = buildRun(s.frase, { color: C.navy, sz: 2800, bold: true, typeface: "Manrope" });
+          runs = buildRun(s.frase, { color: C.navy, sz: 2300, bold: true, typeface: "Manrope" });
         } else {
           runs = s.frase.map(t => buildRun(t.text, {
-            color: t.emphasis ? C.purpleMed : C.navy, sz: 2800, bold: true, typeface: "Manrope",
+            color: t.emphasis ? C.purpleMed : C.navy, sz: 2300, bold: true, typeface: "Manrope",
           })).join("");
         }
         bodyXml += buildTextShape(idC++, FRASE_X, GRID_Y, FRASE_W, GRID_H,
