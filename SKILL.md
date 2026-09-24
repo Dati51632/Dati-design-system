@@ -89,11 +89,19 @@ Somente após verificar os 7 pontos: gerar o JSON completo.
 | Processo com fases ou marcos temporais | `timeline` |
 | Arquitetura com camadas e conexões | `diagrama-fluxo` |
 | 2 caminhos opostos / permitido × proibido | `comparacao` |
+| 2 caminhos com itens numerados, último em verde | `comparacao-v2` |
 | Exatamente 3 pilares, princípios ou dimensões | `tres-pilares` |
+| 3 colunas independentes com ícone, rótulo e texto | `tres-colunas` |
 | 2–4 métricas com número grande | `kpi` |
 | Exatamente 4 itens com título + descrição | `grid-icone` |
 | 2–4 benefícios, problemas ou pilares | `cards` |
 | 3–5 itens em lista homogênea | `lista-icone` |
+| Fluxo de etapas em linha horizontal com ícones | `fluxo-horizontal` |
+| Swimlane com 2 papéis e cards de passo | `fluxo-raias` |
+| Hub central + 4 cards periféricos + frase | `sistema-hub` |
+| Faixa temática + 2 colunas de conteúdo | `painel-regra` |
+| Declaração em destaque + painel explicativo | `declaracao-painel` |
+| Lista de princípios com "X acima de Y" | `principios-lista` |
 | Conceito-chave ou estatística de impacto | `bigword` |
 | Declaração forte / dado de mercado | `impacto` |
 | Divisor de capítulo | `secao` |
@@ -178,6 +186,14 @@ Se o usuário pedir para abrir: `start "" "C:\Users\Dati - 148\Downloads\dati-ap
 {"tipo":"kpi","eyebrow":"Resultado","titulo":"Título","dark":true,"metricas":[{"valor":"40%","label":"Descrição"},{"valor":"3×","label":"Descrição"}]}
 {"tipo":"tres-pilares","eyebrow":"Metodologia","titulo":"Título","pilares":[{"titulo":"Pilar 1","descricao":"Desc."},{"titulo":"Pilar 2","descricao":"Desc."},{"titulo":"Pilar 3","descricao":"Desc."}]}
 {"tipo":"comparacao","eyebrow":"Estratégia","titulo":[{"text":"Velocidade "},{"text":"com controle","emphasis":true}],"esquerda":{"rotulo":"CAMINHO A","titulo":"Com estrutura","descricao":"Desc."},"direita":{"rotulo":"CAMINHO B","titulo":"Sem estrutura","descricao":"Desc."}}
+{"tipo":"comparacao-v2","eyebrow":"Estratégia","titulo":[{"text":"Lift & Shift "},{"text":"vs modernização","emphasis":true}],"esquerda":{"rotulo":"OPÇÃO A","items":["Item 1","Item 2","Vencedor"]},"direita":{"rotulo":"OPÇÃO B","items":["Item 1","Item 2","Vencedor"]}}
+{"tipo":"tres-colunas","eyebrow":"Pilares","titulo":"Título","colunas":[{"icone":"shield","rotulo":"CATEGORIA","titulo":"Título coluna","descricao":"Desc."},{"icone":"chart","rotulo":"CATEGORIA","titulo":"Título coluna","descricao":"Desc."},{"icone":"gear","rotulo":"CATEGORIA","titulo":"Título coluna","descricao":"Desc."}]}
+{"tipo":"fluxo-horizontal","eyebrow":"Processo","titulo":"Título","steps":[{"icone":"audit","label":"PASSO 1","descricao":"desc"},{"icone":"arrow","label":"PASSO 2","descricao":"desc"},{"icone":"check","label":"PASSO 3","descricao":"desc"}]}
+{"tipo":"painel-regra","eyebrow":"Metodologia","titulo":"Título","painelRotulo":"REGRA","esquerda":{"titulo":"Coluna esq.","descricao":"Descrição detalhada."},"direita":{"titulo":"Coluna dir.","descricao":"Descrição detalhada."}}
+{"tipo":"declaracao-painel","eyebrow":"Visão","titulo":"Título","declaracao":[{"text":"Frase de "},{"text":"impacto","emphasis":true}],"painelTitulo":"Painel título","painelDescricao":"Desc. do painel."}
+{"tipo":"principios-lista","eyebrow":"Valores","titulo":"Título","principios":[{"termo":"Velocidade","conector":"acima de","neutro":"Perfeição prematura"},{"termo":"Evidência","conector":"acima de","neutro":"Opinião"}]}
+{"tipo":"fluxo-raias","eyebrow":"Papéis","titulo":"Título","sidebarLabel":"PAPÉIS","raias":[{"label":"ATOR 1","steps":[{"label":"Passo 1","descricao":"desc"},{"label":"Passo 2","descricao":"desc"}]},{"label":"ATOR 2","steps":[{"label":"Passo A","descricao":"desc"},{"label":"Passo B","descricao":"desc"}]}]}
+{"tipo":"sistema-hub","eyebrow":"Plataforma","titulo":"Título","hubLabel":"HUB","cards":[{"titulo":"Card 1","descricao":"Desc."},{"titulo":"Card 2","descricao":"Desc."},{"titulo":"Card 3","descricao":"Desc."},{"titulo":"Card 4","descricao":"Desc."}],"frase":[{"text":"Frase "},{"text":"central","emphasis":true}]}
 {"tipo":"diagrama-fluxo","eyebrow":"Arquitetura","titulo":[{"text":"Uma "},{"text":"fronteira humana","emphasis":true}],"camadas":[{"nos":[{"label":"NÓ A","sublabel":"sub","cor":"cyan"},{"label":"NÓ B","sublabel":"sub","cor":"green"}]},{"nos":[{"label":"CONVERGÊNCIA","sublabel":"sub","cor":"purple","destaque":true}]}]}
 {"tipo":"encerramento","titulo":"Obrigado!"}
 ```

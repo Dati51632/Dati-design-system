@@ -99,16 +99,23 @@ function removeShapesByY(xml, yOffsets) {
 }
 
 // ─── Scratch-build constants ─────────────────────────────────────────────────
+// Todas as medidas validadas contra o SeniorTec 2026.pptx (fonte oficial)
+// Conversão: 1px = 6350 EMU (slide 12192000×6858000 = 1920×1080px)
 
-const W = 12192000; // slide width EMU
-const H = 6858000;  // slide height EMU
-const MARGIN = 457200; // lateral margin EMU
+const W          = 12192000; // largura do slide EMU
+const H          = 6858000;  // altura do slide EMU
+const MARGIN     = 698500;   // 110px margem lateral (SeniorTec spec)
+const EYEBROW_Y  = 444500;   // 70px topo do eyebrow
+const TITLE_Y    = 762000;   // 120px topo do título
+const FOOTER_Y   = 6305550;  // 993px topo do rodapé
+const PAGE_NUM_X = 11328400; // 1784px início do número de página
+const CONTENT_Y  = 2286000;  // 360px início da área de conteúdo
 
-// Logo — exact dimensions from MAP.pptx reference (slide 11): ~5% slide width
-const LOGO_W = 613468;
-const LOGO_H = 254000;
-const LOGO_X = W - 698501 - LOGO_W; // right margin matches MAP reference
-const LOGO_Y = 444500;
+// Logo — dimensões validadas contra SeniorTec 2026: 97×40px, x=1713px
+const LOGO_W = 615950;  // 97px
+const LOGO_H = 254000;  // 40px
+const LOGO_X = W - MARGIN - LOGO_W; // 1713px (margem direita = MARGIN)
+const LOGO_Y = 444500;              // 70px (alinhado ao eyebrow)
 
 // Paleta Dati (hex sem #)
 const C = {
@@ -122,7 +129,8 @@ const C = {
   purpleSubtle:"655CC6",
   neutralLight:"EDF0F2",
   textMuted:   "5B5570",
-  footerMuted: "9891AB",
+  footerDark:  "9891AB",  // rodapé sobre fundo escuro
+  footerLight: "77718A",  // rodapé sobre fundo claro (SeniorTec spec)
   cyan:        "5EBAE8",
   white:       "FFFFFF",
   orange:      "F59D01",
@@ -219,11 +227,35 @@ function buildArrowText(id, x, y, char, color, sz = 2000) {
     [{ runs: run, algn: "ctr" }], 'anchor="ctr"');
 }
 
+/** Barra de acento gradiente (88×7px) acima do eyebrow */
+function buildAccentBar(id, x, y) {
+  const fill = buildGradientFill([
+    { pos: 0,      hex: C.purpleDarker },
+    { pos: 100000, hex: C.purple },
+  ], 90);
+  return buildRoundedRect(id, x, y, 558800, 44450, 50000, fill);  // 88×7px, raio arredondado
+}
+
+/**
+ * Monta o "chrome" de um slide claro scratch-built:
+ * barra de acento + eyebrow + título + logo
+ * Retorna XML concatenado. idBase: ID inicial (usa 10, 11, 12, 13, 22).
+ */
+function buildSlideChrome(eyebrow, titulo, dark = false) {
+  const ACCENT_Y = EYEBROW_Y - 95250;  // ~15px acima do eyebrow
+  return [
+    buildAccentBar(10, MARGIN, ACCENT_Y),
+    buildEyebrowShape(11, eyebrow || "", MARGIN, EYEBROW_Y, dark),
+    buildTitleShape(12, titulo || "", MARGIN, TITLE_Y, W - 2 * MARGIN, dark),
+    buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H),
+  ].join("");
+}
+
 function buildEyebrowShape(id, text, x, y, dark = false) {
   const run = buildRun(text.toUpperCase(), {
-    color: dark ? C.purpleTint : C.purpleMed, sz: 1200, typeface: "Manrope"
+    color: dark ? C.purpleTint : C.purpleMed, sz: 1800, typeface: "Manrope"
   });
-  return buildTextShape(id, x, y, W - x - MARGIN, 400000, [{ runs: run }]);
+  return buildTextShape(id, x, y, W - x - MARGIN, 450000, [{ runs: run }]);
 }
 
 function buildTitleShape(id, titulo, x, y, w, dark = false) {
@@ -231,25 +263,25 @@ function buildTitleShape(id, titulo, x, y, w, dark = false) {
   if (typeof titulo === "string") {
     runs = buildRun(titulo, {
       color: dark ? C.white : C.navy,
-      sz: dark ? 4700 : 3100, bold: !dark, typeface: "Manrope"
+      sz: 4700, bold: true, typeface: "Manrope"
     });
   } else {
     runs = titulo.map(t => buildRun(t.text, {
       color: t.emphasis ? (dark ? C.purpleTint : C.purpleMed) : (dark ? C.white : C.navy),
-      sz: dark ? 4700 : 3100, bold: !dark, typeface: "Manrope"
+      sz: 4700, bold: true, typeface: "Manrope"
     })).join("");
   }
-  return buildTextShape(id, x, y, w, 1100000, [{ runs, lnSpc: "90000" }]);
+  return buildTextShape(id, x, y, w, 1200000, [{ runs, lnSpc: "90000" }]);
 }
 
 function buildFooterShapes(deckName, pageNum, dark = false) {
-  const color = C.footerMuted;
-  const y = 6350000;
-  const leftRun = buildRun(deckName, { color, sz: 1200, typeface: "Manrope" });
-  const rightRun = buildRun(String(pageNum).padStart(2, "0"), { color, sz: 1200, typeface: "Manrope" });
+  const color = dark ? C.footerDark : C.footerLight;
+  const y = FOOTER_Y;
+  const leftRun  = buildRun(deckName, { color, sz: 1800, typeface: "Manrope" });
+  const rightRun = buildRun(String(pageNum).padStart(2, "0"), { color, sz: 1800, bold: true, typeface: "Manrope" });
   return [
-    buildTextShape(900, MARGIN, y, 6000000, 300000, [{ runs: leftRun }]),
-    buildTextShape(901, W - MARGIN - 600000, y, 600000, 300000,
+    buildTextShape(900, MARGIN, y, 9000000, 350000, [{ runs: leftRun }]),
+    buildTextShape(901, PAGE_NUM_X, y, W - PAGE_NUM_X - MARGIN, 350000,
       [{ runs: rightRun, algn: "r" }]),
   ].join("");
 }
@@ -442,88 +474,35 @@ const TEMPLATE_MAP = {
     },
   },
 
-  // ── CONTEÚDO (slide11 — eyebrow + título + corpo + footer) ────────────────
-  // O slide11 tem o chrome exato do MAP: gradiente EDF0F2, logo navy, eyebrow
-  // roxo, título navy bold, corpo cinza, formas decorativas roxas, footer.
+  // ── CONTEÚDO (scratch) ────────────────────────────────────────────────────
   conteudo: {
-    sourceSlide: 11,
-    render(xml, s, { deckName, pageNum }) {
-      // eyebrow
-      if (s.eyebrow !== undefined)
-        xml = replaceText(xml, "CONCEITO", s.eyebrow.toUpperCase());
+    build(s, { deckName, pageNum }) {
+      const bg     = buildBackground("light");
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
 
-      // título: single run (navy bold) ou array com ênfase
-      if (s.titulo !== undefined) {
-        const titulo = s.titulo;
-        if (typeof titulo === "string") {
-          xml = replaceText(xml, "Modernização do legado", titulo);
-        } else {
-          // Array [{text, emphasis}] → multiple runs
-          const runs = titulo.map(t =>
-            buildRun(t.text, {
-              color: t.emphasis ? "8F65FE" : "1A0F3D",
-              bold: true, sz: 3100,
-            })
-          ).join("");
-          const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:noAutofit/></a:bodyPr><a:lstStyle/>${buildParagraph(runs, { lnSpc: "78776" })}</p:txBody>`;
-          xml = rebuildTextBox(xml, "1028700", newTxBody);
-        }
-      }
+      const items = s.itens
+        ? (Array.isArray(s.itens) ? s.itens : [s.itens])
+        : (s.corpo !== undefined ? [s.corpo] : []);
 
-      // corpo: substitui os runs do body text box
-      if (s.corpo !== undefined || s.itens !== undefined) {
-        const items = s.itens
-          ? (Array.isArray(s.itens) ? s.itens : [s.itens])
-          : [s.corpo];
-
-        // Build paragraphs — each item is a new paragraph
-        const paragraphs = items.map(item => {
+      let bodyXml = "";
+      if (items.length > 0) {
+        const BODY_W = W - 2 * MARGIN;
+        const paras = items.map(item => {
           if (typeof item === "string") {
-            const run = buildRun(item, { color: "5B5570", sz: 1600 });
-            return buildParagraph(run, { lnSpc: "101818" });
+            return { runs: buildRun(item, { color: C.textMuted, sz: 2300 }), lnSpc: "120000" };
           }
-          // Array of {text, emphasis}
           const runs = item.map(t =>
-            buildRun(t.text, { color: t.emphasis ? "8F65FE" : "5B5570", sz: 1600 })
+            buildRun(t.text, { color: t.emphasis ? C.purpleMed : C.textMuted, sz: 2300 })
           ).join("");
-          return buildParagraph(runs, { lnSpc: "101818" });
-        }).join("");
-
-        const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:normAutofit/></a:bodyPr><a:lstStyle/>${paragraphs}</p:txBody>`;
-        xml = rebuildTextBox(xml, "1555453", newTxBody);
-      } else {
-        // Clear body text if nothing provided
-        xml = replaceText(xml, "Modernizar é quando plataforma, código ou arquitetura mudam", "");
-        xml = replaceText(xml, ", ", "");
-        xml = replaceText(xml, " não apenas trocam o host.", "");
+          return { runs, lnSpc: "120000" };
+        });
+        bodyXml = buildTextShape(30, MARGIN, CONTENT_Y, BODY_W, FOOTER_Y - CONTENT_Y - 250000, paras);
       }
 
-      // Remove layout-specific shapes from the MAP deck that don't belong in a
-      // generic content slide (Replatform/Refactor/Rearchitect/Replace columns
-      // and the bottom quote that are hardcoded in slide 11 of the source template)
-      xml = removeShapesByY(xml, [
-        2461122, // column card backgrounds (×4)
-        2562722, // column icons / pics (×4)
-        3019922, // column label text (Replatform / Refactor / …)
-        3418880, // column heading text (MUDA A PLATAFORMA / …)
-        3755430, // column description text
-        5300960, // bottom quote
-      ]);
-
-      // Footer: the MAP slide 11 right-footer text box (cx=184500) is too narrow
-      // to render a 2-digit page number on one line. Remove both footer shapes
-      // at y=6267450 and inject properly sized ones.
-      xml = removeShapesByY(xml, [6267450]);
-      xml = replaceText(xml, "Dati | Migração e modernização na AWS", deckName);
-      {
-        const leftRun  = buildRun(deckName, { color: C.footerMuted, sz: 1200, typeface: "Manrope" });
-        const rightRun = buildRun(String(pageNum).padStart(2, "0"), { color: C.footerMuted, sz: 1200, typeface: "Manrope" });
-        const leftShape  = buildTextShape(980, MARGIN, 6267450, 5000000, 280000, [{ runs: leftRun }]);
-        const rightShape = buildTextShape(981, W - MARGIN - 800000, 6267450, 800000, 280000,
-          [{ runs: rightRun, algn: "r" }]);
-        xml = xml.replace("</p:spTree>", leftShape + rightShape + "</p:spTree>");
-      }
-      return xml;
+      const footer = buildFooterShapes(deckName, pageNum, false);
+      const xml = buildScratchSlide(bg, chrome + bodyXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
     },
   },
 
@@ -554,103 +533,112 @@ const TEMPLATE_MAP = {
     },
   },
 
-  // ── CTA / PRÓXIMO PASSO (slide17) ─────────────────────────────────────────
+  // ── CTA / PRÓXIMO PASSO (scratch) ─────────────────────────────────────────
   cta: {
-    sourceSlide: 17,
-    render(xml, s, { deckName, pageNum }) {
-      if (s.eyebrow !== undefined)
-        xml = replaceText(xml, "PRÓXIMO PASSO", s.eyebrow.toUpperCase());
+    build(s, { deckName, pageNum }) {
+      const bg = buildBackground("light");
 
-      // Título com dois runs: normal + destaque
-      const titulo = s.titulo || "";
-      const destaque = s.tituloDestaque || "";
+      // Chrome manual — título suporta tituloDestaque como campo separado
+      const ACCENT_Y = EYEBROW_Y - 95250;
+      let tituloRuns;
+      if (Array.isArray(s.titulo)) {
+        tituloRuns = s.titulo.map(t => buildRun(t.text, {
+          color: t.emphasis ? C.purpleMed : C.navy, sz: 4700, bold: true, typeface: "Manrope",
+        })).join("");
+      } else {
+        const plain    = (s.titulo || "") + (s.tituloDestaque ? " " : "");
+        tituloRuns     = buildRun(plain, { color: C.navy, sz: 4700, bold: true, typeface: "Manrope" });
+        if (s.tituloDestaque)
+          tituloRuns  += buildRun(s.tituloDestaque, { color: C.purpleMed, sz: 4700, bold: true, typeface: "Manrope" });
+      }
+      const chrome = [
+        buildAccentBar(10, MARGIN, ACCENT_Y),
+        buildEyebrowShape(11, s.eyebrow || "", MARGIN, EYEBROW_Y, false),
+        buildTextShape(12, MARGIN, TITLE_Y, W - 2 * MARGIN, 1200000,
+          [{ runs: tituloRuns, lnSpc: "90000" }]),
+        buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H),
+      ].join("");
 
-      const runs = [
-        titulo && buildRun(titulo + " ", { color: "1A0F3D", bold: true, sz: 2400 }),
-        destaque && buildRun(destaque, { color: "8F65FE", bold: true, sz: 2400 }),
-      ].filter(Boolean).join("");
+      let idCounter = 30;
+      let bodyXml   = "";
 
-      const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:normAutofit/></a:bodyPr><a:lstStyle/>${buildParagraph(runs, { lnSpc: "78776" })}</p:txBody>`;
-      xml = rebuildTextBox(xml, "1028700", newTxBody);
-
-      // Instrução / corpo (y=1555453)
-      if (s.instrucao !== undefined)
-        xml = replaceText(
-          xml,
-          "Escaneie o QR Code e a gente entra em contato para agendar uma conversa de aprofundamento sobre o seu ambiente.",
-          s.instrucao
-        );
-
-      // ctaLabel: rebuild the supporting text box at y=3866059
-      // ("Sem compromisso: o primeiro passo é a avaliação do MAP, financiada pela AWS.")
-      if (s.ctaLabel !== undefined) {
-        const run = buildRun(s.ctaLabel, { color: "1A0F3D", bold: true, sz: 1400 });
-        const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:normAutofit/></a:bodyPr><a:lstStyle/>${buildParagraph(run, { lnSpc: "101818" })}</p:txBody>`;
-        xml = rebuildTextBox(xml, "3866059", newTxBody);
+      // instrucao — corpo de texto
+      if (s.instrucao !== undefined) {
+        const run = buildRun(s.instrucao, { color: C.textMuted, sz: 2300, typeface: "Manrope" });
+        bodyXml += buildTextShape(idCounter++, MARGIN, CONTENT_Y,
+          W - 2 * MARGIN - 2000000, FOOTER_Y - CONTENT_Y - 1500000,
+          [{ runs: run, lnSpc: "140000" }]);
       }
 
-      xml = replaceText(xml, "Dati | Migração e modernização na AWS", deckName);
-      xml = replaceText(xml, "17", String(pageNum).padStart(2, "0"));
-      return xml;
+      // ctaLabel — pílula/botão de ação
+      if (s.ctaLabel !== undefined) {
+        const BTN_W = 3500000;
+        const BTN_H = 475000;
+        const BTN_Y = FOOTER_Y - 1200000;
+        const btnFill = buildGradientFill([
+          { pos: 0,      hex: C.purpleDarker },
+          { pos: 100000, hex: C.purple },
+        ], 90);
+        bodyXml += buildRoundedRect(idCounter++, MARGIN, BTN_Y, BTN_W, BTN_H, 50000, btnFill);
+        const btnRun = buildRun(s.ctaLabel, { color: C.white, sz: 2000, bold: true, typeface: "Manrope" });
+        bodyXml += buildTextShape(idCounter++, MARGIN, BTN_Y, BTN_W, BTN_H,
+          [{ runs: btnRun, algn: "ctr" }], 'anchor="ctr"');
+      }
+
+      const footer = buildFooterShapes(deckName, pageNum, false);
+      const xml    = buildScratchSlide(bg, chrome + bodyXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
     },
   },
 
-  // ── BIGWORD (slide9 — barra lateral + bigword + título + corpo) ──────────────
+  // ── BIGWORD (scratch — fundo escuro, número/palavra de impacto) ──────────────
   bigword: {
-    sourceSlide: 9,
-    render(xml, s, { deckName, pageNum }) {
-      if (s.eyebrow !== undefined)
-        xml = replaceText(xml, "O CAMINHO ESTRUTURADO", s.eyebrow.toUpperCase());
+    build(s, { deckName, pageNum }) {
+      const bg = buildBackground("dark");
 
-      // Bigword (first paragraph in the title text box at y=1078504)
-      if (s.bigword !== undefined)
-        xml = replaceText(xml, "AWS MAP", s.bigword);
+      // Chrome manual — bigword ocupa a posição do título; eyebrow e logo ficam no topo
+      const ACCENT_Y = EYEBROW_Y - 95250;
+      const chrome = [
+        buildAccentBar(10, MARGIN, ACCENT_Y),
+        buildEyebrowShape(11, s.eyebrow || "", MARGIN, EYEBROW_Y, true),
+        buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H),
+      ].join("");
 
-      // Título (second paragraph in the title text box)
+      // Bigword — impacto visual principal (sz 5300 ≈ 53pt ≈ 102px spec)
+      const bigRun = buildRun(s.bigword || "", {
+        color: C.white, sz: 5300, bold: true, typeface: "Manrope",
+      });
+      const bigwordShape = buildTextShape(13, MARGIN, TITLE_Y, W - 2 * MARGIN, 900000,
+        [{ runs: bigRun, lnSpc: "90000" }]);
+
+      // Titulo — subtítulo imediatamente abaixo do bigword
+      let tituloShape = "";
       if (s.titulo !== undefined) {
-        const titulo = s.titulo;
-        if (typeof titulo === "string") {
-          xml = replaceText(xml, "metodologia e incentivo financeiro", titulo);
+        let runs;
+        if (typeof s.titulo === "string") {
+          runs = buildRun(s.titulo, { color: C.white, sz: 2800, typeface: "Manrope" });
         } else {
-          // Array with emphasis — rebuild entire sp at y=1078504
-          const bigwordText = s.bigword || "MAP";
-          const titleRuns = titulo.map(t =>
-            buildRun(t.text, { color: t.emphasis ? "8F65FE" : "1A0F3D", bold: true, sz: 3100 })
-          ).join("");
-          const bigwordRun = buildRun(bigwordText, { color: "FFFFFF", bold: true, sz: 3100 });
-          const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:normAutofit/></a:bodyPr><a:lstStyle/>${buildParagraph(bigwordRun, { lnSpc: "90000" })}${buildParagraph(titleRuns, { lnSpc: "90000" })}</p:txBody>`;
-          xml = rebuildTextBox(xml, "1078504", newTxBody);
+          runs = s.titulo.map(t => buildRun(t.text, {
+            color: t.emphasis ? C.purpleTint : C.white, sz: 2800, typeface: "Manrope",
+          })).join("");
         }
+        tituloShape = buildTextShape(14, MARGIN, TITLE_Y + 950000, W - 2 * MARGIN, 600000,
+          [{ runs, lnSpc: "120000" }]);
       }
 
-      // Remove the MAP-phase boxes AND the lavender gradient pill (y=2538650)
-      // that persists from the MAP "Assess/Mobilize/Migrate" graphic.
-      // The corpo text box at y=2710570 has <a:noFill/> so we keep it and
-      // rebuild its text with a readable color below.
-      xml = removeShapesByY(xml, [
-        2538650, // lavender gradient pill (F1F1F1→DED4F1 rounded rect) ← NEW
-        3153873, // phase card backgrounds (×3)
-        3362078, // phase icon pics (×3)
-        3528636, // decorative element inside the phase area
-        4139378, // "FASE 01" / "FASE 02" labels
-        4139374, // "FASE 03" label
-        4470145, // phase names (Assess / Mobilize)
-        4470141, // phase name (Migrate & Modernize)
-        4839829, // phase description 1
-        4839837, // phase description 2
-        4811454, // phase description 3
-      ]);
-
-      // Rebuild corpo inside the existing no-fill text box at y=2710570
+      // Corpo — texto de apoio na área de conteúdo
+      let corpoShape = "";
       if (s.corpo !== undefined) {
-        const run = buildRun(s.corpo, { color: C.textMuted, sz: 1400 });
-        const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:normAutofit/></a:bodyPr><a:lstStyle/>${buildParagraph(run, { lnSpc: "120000" })}</p:txBody>`;
-        xml = rebuildTextBox(xml, "2710570", newTxBody);
+        const run = buildRun(s.corpo, { color: C.purpleTint, sz: 2000, typeface: "Manrope" });
+        corpoShape = buildTextShape(15, MARGIN, CONTENT_Y, W - 2 * MARGIN,
+          FOOTER_Y - CONTENT_Y - 300000, [{ runs: run, lnSpc: "130000" }]);
       }
 
-      xml = replaceText(xml, "Dati | Migração e modernização na AWS", deckName);
-      xml = replaceText(xml, "09", String(pageNum).padStart(2, "0"));
-      return xml;
+      const footer  = buildFooterShapes(deckName, pageNum, true);
+      const xml     = buildScratchSlide(bg, chrome + bigwordShape + tituloShape + corpoShape + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
     },
   },
 
@@ -659,13 +647,11 @@ const TEMPLATE_MAP = {
     build(s, { deckName, pageNum }) {
       const cardItems = Array.isArray(s.cards) ? s.cards.slice(0, 4) : [];
       const n = Math.max(cardItems.length, 1);
-      const bg = buildBackground("dark");
-      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, true);
-      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, true);
-      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
+      const bg     = buildBackground("dark");
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, true);
 
-      const CARD_Y   = 1900000;
-      const CARD_H   = 4450000;
+      const CARD_Y   = CONTENT_Y;
+      const CARD_H   = 4000000;
       const GAP      = 200000;
       const USABLE_W = W - 2 * MARGIN;
       const CARD_W   = Math.floor((USABLE_W - (n - 1) * GAP) / n);
@@ -697,74 +683,88 @@ const TEMPLATE_MAP = {
 
         // Título do card
         const tRun = buildRun(card.titulo || "", {
-          color: C.white, sz: 1600, bold: true, typeface: "Manrope",
+          color: C.white, sz: 3200, bold: true, typeface: "Manrope",
         });
         cardsXml += buildTextShape(idCounter++, cx + 220000, CARD_Y + 1400000,
-          CARD_W - 440000, 500000, [{ runs: tRun }]);
+          CARD_W - 440000, 650000, [{ runs: tRun }]);
 
         // Descrição
         const dRun = buildRun(card.descricao || "", {
-          color: C.purpleTint, sz: 1200, typeface: "Manrope",
+          color: C.purpleTint, sz: 2300, typeface: "Manrope",
         });
-        cardsXml += buildTextShape(idCounter++, cx + 220000, CARD_Y + 1950000,
-          CARD_W - 440000, 2250000, [{ runs: dRun, lnSpc: "130000" }]);
+        cardsXml += buildTextShape(idCounter++, cx + 220000, CARD_Y + 2100000,
+          CARD_W - 440000, 1700000, [{ runs: dRun, lnSpc: "130000" }]);
       });
 
       const footer = buildFooterShapes(deckName, pageNum, true);
-      const xml = buildScratchSlide(bg, eyebrow + title + logo + cardsXml + footer);
+      const xml = buildScratchSlide(bg, chrome + cardsXml + footer);
       const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
       return { xml, relsXml };
     },
   },
 
-  // ── COMPARAÇÃO (slide10 — 2-column comparison: left label/heading/desc + right) ─
+  // ── COMPARAÇÃO (scratch — 2 colunas: esquerda neutra, direita roxo) ──────────
   comparacao: {
-    sourceSlide: 10,
-    render(xml, s, { deckName, pageNum }) {
-      if (s.eyebrow !== undefined)
-        xml = replaceText(xml, "A ESTRATÉGIA DE VELOCIDADE", s.eyebrow.toUpperCase());
+    build(s, { deckName, pageNum }) {
+      const bg     = buildBackground("light");
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
 
-      // Title: original has two runs "A velocidade vem do " + "as-is"
-      if (s.titulo !== undefined) {
-        const titulo = s.titulo;
-        if (typeof titulo === "string") {
-          xml = replaceText(xml, "A velocidade vem do ", "");
-          xml = replaceText(xml, "as-is", titulo);
-        } else {
-          const runs = titulo.map(t =>
-            buildRun(t.text, { color: t.emphasis ? "8F65FE" : "1A0F3D", bold: true, sz: 3100 })
-          ).join("");
-          const newTxBody = `<p:txBody><a:bodyPr anchorCtr="0" anchor="t" bIns="16925" lIns="16925" spcFirstLastPara="1" rIns="16925" wrap="square" tIns="16925"><a:noAutofit/></a:bodyPr><a:lstStyle/>${buildParagraph(runs, { lnSpc: "78776" })}</p:txBody>`;
-          xml = rebuildTextBox(xml, "1028700", newTxBody);
-        }
-      }
+      const GAP     = 300000;
+      const COL_W   = Math.floor((W - 2 * MARGIN - GAP) / 2);
+      const PANEL_H = FOOTER_Y - CONTENT_Y - 200000;
+      const PAD     = 250000;
 
-      if (s.subtitulo !== undefined)
-        xml = replaceText(xml, "A IA permite modernizar alguns pontos no caminho, sem pagar pedágio de prazo.", s.subtitulo);
-
-      // Left column
       const esq = s.esquerda || {};
-      if (esq.rotulo !== undefined)
-        xml = replaceText(xml, "MIGRAÇÃO AS-IS", esq.rotulo.toUpperCase());
-      if (esq.titulo !== undefined)
-        xml = replaceText(xml, "Migre rápido como está", esq.titulo);
-      if (esq.descricao !== undefined) {
-        xml = replaceText(xml, "Migramos o máximo possível da forma como está. ", esq.descricao);
-        xml = replaceText(xml, "É o que dá velocidade, reduz risco e destrava o ganho da nuvem já na primeira onda.", "");
+      const dir = s.direita  || {};
+      let idCounter = 30;
+      let panelsXml = "";
+
+      // Left panel — branco com borda lavanda
+      panelsXml += buildRoundedRect(idCounter++, MARGIN, CONTENT_Y, COL_W, PANEL_H, 8000,
+        buildSolidFill("FFFFFF"), "DDD6EE");
+      if (esq.rotulo) {
+        const run = buildRun(String(esq.rotulo).toUpperCase(), { color: C.purpleMed, sz: 1600, bold: true, typeface: "Manrope" });
+        panelsXml += buildTextShape(idCounter++, MARGIN + PAD, CONTENT_Y + PAD, COL_W - 2 * PAD, 350000,
+          [{ runs: run }]);
+      }
+      if (esq.titulo) {
+        const run = buildRun(esq.titulo, { color: C.navy, sz: 3200, bold: true, typeface: "Manrope" });
+        panelsXml += buildTextShape(idCounter++, MARGIN + PAD, CONTENT_Y + PAD + 400000, COL_W - 2 * PAD, 800000,
+          [{ runs: run, lnSpc: "110000" }]);
+      }
+      if (esq.descricao) {
+        const run = buildRun(esq.descricao, { color: C.textMuted, sz: 2000, typeface: "Manrope" });
+        panelsXml += buildTextShape(idCounter++, MARGIN + PAD, CONTENT_Y + PAD + 1300000, COL_W - 2 * PAD,
+          PANEL_H - 1300000 - 2 * PAD, [{ runs: run, lnSpc: "130000" }]);
       }
 
-      // Right column
-      const dir = s.direita || {};
-      if (dir.rotulo !== undefined)
-        xml = replaceText(xml, "MODERNIZAÇÃO NO CAMINHO", dir.rotulo.toUpperCase());
-      if (dir.titulo !== undefined)
-        xml = replaceText(xml, "Meses viram dias", dir.titulo);
-      if (dir.descricao !== undefined)
-        xml = replaceText(xml, "Com Agentes de IA e o AWS Transform, modernizamos códigos durante a migração, sem onerar tempo.", dir.descricao);
+      // Right panel — gradiente roxo
+      const rightX = MARGIN + COL_W + GAP;
+      const rightFill = buildGradientFill([
+        { pos: 0,      hex: C.purpleDarker },
+        { pos: 100000, hex: C.purple },
+      ], 135);
+      panelsXml += buildRoundedRect(idCounter++, rightX, CONTENT_Y, COL_W, PANEL_H, 8000, rightFill);
+      if (dir.rotulo) {
+        const run = buildRun(String(dir.rotulo).toUpperCase(), { color: C.purpleTint, sz: 1600, bold: true, typeface: "Manrope" });
+        panelsXml += buildTextShape(idCounter++, rightX + PAD, CONTENT_Y + PAD, COL_W - 2 * PAD, 350000,
+          [{ runs: run }]);
+      }
+      if (dir.titulo) {
+        const run = buildRun(dir.titulo, { color: C.white, sz: 3200, bold: true, typeface: "Manrope" });
+        panelsXml += buildTextShape(idCounter++, rightX + PAD, CONTENT_Y + PAD + 400000, COL_W - 2 * PAD, 800000,
+          [{ runs: run, lnSpc: "110000" }]);
+      }
+      if (dir.descricao) {
+        const run = buildRun(dir.descricao, { color: C.purpleTint, sz: 2000, typeface: "Manrope" });
+        panelsXml += buildTextShape(idCounter++, rightX + PAD, CONTENT_Y + PAD + 1300000, COL_W - 2 * PAD,
+          PANEL_H - 1300000 - 2 * PAD, [{ runs: run, lnSpc: "130000" }]);
+      }
 
-      xml = replaceText(xml, "Dati | Migração e modernização na AWS", deckName);
-      xml = replaceText(xml, "10", String(pageNum).padStart(2, "0"));
-      return xml;
+      const footer  = buildFooterShapes(deckName, pageNum, false);
+      const xml     = buildScratchSlide(bg, chrome + panelsXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
     },
   },
 
@@ -775,12 +775,10 @@ const TEMPLATE_MAP = {
       const bg = buildBackground("light");
 
       // Eyebrow e título — sem sidebar, alinhados à margem padrão
-      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
-      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
-      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
 
       // Itens
-      const ITEM_Y_START = 1900000;
+      const ITEM_Y_START = CONTENT_Y;
       const ITEM_SPACING = 950000;
       const BADGE_SIZE   = 670000;
       const TEXT_X       = MARGIN + BADGE_SIZE + 200000; // badge + gap
@@ -794,15 +792,15 @@ const TEMPLATE_MAP = {
         itemsXml += buildIconBadge(item.icone || "diamond", MARGIN, y, idCounter);
         idCounter += 2;
         // Título do item
-        const titleRun = buildRun(item.titulo || "", { color: C.navy, sz: 1800, bold: true, typeface: "Manrope" });
-        itemsXml += buildTextShape(idCounter++, TEXT_X, y, TEXT_W, 470000, [{ runs: titleRun }]);
+        const titleRun = buildRun(item.titulo || "", { color: C.navy, sz: 3200, bold: true, typeface: "Manrope" });
+        itemsXml += buildTextShape(idCounter++, TEXT_X, y, TEXT_W, 560000, [{ runs: titleRun }]);
         // Descrição
-        const descRun = buildRun(item.descricao || "", { color: C.textMuted, sz: 1300, typeface: "Manrope" });
-        itemsXml += buildTextShape(idCounter++, TEXT_X, y + 470000, TEXT_W, 450000, [{ runs: descRun }]);
+        const descRun = buildRun(item.descricao || "", { color: C.textMuted, sz: 2300, typeface: "Manrope" });
+        itemsXml += buildTextShape(idCounter++, TEXT_X, y + 520000, TEXT_W, 400000, [{ runs: descRun }]);
       });
 
       const footer = buildFooterShapes(deckName, pageNum, false);
-      const xml = buildScratchSlide(bg, eyebrow + title + logo + itemsXml + footer);
+      const xml = buildScratchSlide(bg, chrome + itemsXml + footer);
       const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
       return { xml, relsXml };
     },
@@ -813,9 +811,7 @@ const TEMPLATE_MAP = {
     build(s, { deckName, pageNum }) {
       const items = (Array.isArray(s.items) ? s.items : []).slice(0, 4);
       const bg = buildBackground("light");
-      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
-      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
-      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
 
       const CARD_W = 5400000;
       const CARD_H = 2200000;
@@ -841,16 +837,16 @@ const TEMPLATE_MAP = {
         idCounter += 2;
 
         // Título do item
-        const tRun = buildRun(item.titulo || "", { color: C.navy, sz: 1600, bold: true, typeface: "Manrope" });
-        cardsXml += buildTextShape(idCounter++, cx + 200000, cy + 950000, CARD_W - 400000, 450000, [{ runs: tRun }]);
+        const tRun = buildRun(item.titulo || "", { color: C.navy, sz: 3200, bold: true, typeface: "Manrope" });
+        cardsXml += buildTextShape(idCounter++, cx + 200000, cy + 1000000, CARD_W - 400000, 500000, [{ runs: tRun }]);
 
         // Descrição
-        const dRun = buildRun(item.descricao || "", { color: C.textMuted, sz: 1300, typeface: "Manrope" });
-        cardsXml += buildTextShape(idCounter++, cx + 200000, cy + 1400000, CARD_W - 400000, 600000, [{ runs: dRun, lnSpc: "110000" }]);
+        const dRun = buildRun(item.descricao || "", { color: C.textMuted, sz: 2300, typeface: "Manrope" });
+        cardsXml += buildTextShape(idCounter++, cx + 200000, cy + 1500000, CARD_W - 400000, 600000, [{ runs: dRun, lnSpc: "110000" }]);
       });
 
       const footer = buildFooterShapes(deckName, pageNum, false);
-      const xml = buildScratchSlide(bg, eyebrow + title + logo + cardsXml + footer);
+      const xml = buildScratchSlide(bg, chrome + cardsXml + footer);
       const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
       return { xml, relsXml };
     },
@@ -863,18 +859,16 @@ const TEMPLATE_MAP = {
       const n = steps.length;
       if (n === 0) {
         const bg = buildBackground("light");
-        const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
-        const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
+        const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, EYEBROW_Y, false);
+        const title   = buildTitleShape(21, s.titulo || "", MARGIN, TITLE_Y, W - 2 * MARGIN, false);
         const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
         const footer  = buildFooterShapes(deckName, pageNum, false);
-        const xml = buildScratchSlide(bg, eyebrow + title + logo + footer);
+        const xml = buildScratchSlide(bg, chrome + footer);
         const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
         return { xml, relsXml };
       }
       const bg = buildBackground("light");
-      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
-      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
-      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
 
       const PIPE_Y   = 2700000;
       const STEP_H   = 1400000;
@@ -904,25 +898,25 @@ const TEMPLATE_MAP = {
         stepsXml += buildRoundedRect(idCounter++, x, PIPE_Y, STEP_W, STEP_H, 8000, fill);
 
         // Label
-        const lRun = buildRun(step.label || "", { color: C.white, sz: 1400, bold: true, typeface: "Manrope" });
-        stepsXml += buildTextShape(idCounter++, x, PIPE_Y + 350000, STEP_W, 500000,
+        const lRun = buildRun(step.label || "", { color: C.white, sz: 1800, bold: true, typeface: "Manrope" });
+        stepsXml += buildTextShape(idCounter++, x, PIPE_Y + 350000, STEP_W, 550000,
           [{ runs: lRun, algn: "ctr" }]);
 
         // Descrição
-        const dRun = buildRun(step.descricao || "", { color: "FFFFFFBB", sz: 1100, typeface: "Manrope" });
-        stepsXml += buildTextShape(idCounter++, x, PIPE_Y + 850000, STEP_W, 400000,
+        const dRun = buildRun(step.descricao || "", { color: "FFFFFFBB", sz: 1600, typeface: "Manrope" });
+        stepsXml += buildTextShape(idCounter++, x, PIPE_Y + 900000, STEP_W, 400000,
           [{ runs: dRun, algn: "ctr" }]);
 
         // Seta (não após o último)
         if (i < n - 1) {
           stepsXml += buildArrowText(idCounter++,
             x + STEP_W, PIPE_Y + STEP_H / 2 - 200000,
-            "›", C.footerMuted, 2800);
+            "›", C.footerLight, 2800);
         }
       });
 
       const footer = buildFooterShapes(deckName, pageNum, false);
-      const xml = buildScratchSlide(bg, eyebrow + title + logo + stepsXml + footer);
+      const xml = buildScratchSlide(bg, chrome + stepsXml + footer);
       const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
       return { xml, relsXml };
     },
@@ -934,9 +928,7 @@ const TEMPLATE_MAP = {
       const steps = Array.isArray(s.steps) ? s.steps.slice(0, 5) : [];
       const n = steps.length;
       const bg = buildBackground("light");
-      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
-      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
-      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
 
       const LINE_Y   = 2950000; // raised from 3600000 for better vertical balance
       const CIRCLE_D = 500000;  // reduced from 800000 — proportional to reference
@@ -969,22 +961,22 @@ const TEMPLATE_MAP = {
           [{ runs: numRun, algn: "ctr" }], 'anchor="ctr"');
 
         // Label — centered in column width for uniform alignment
-        const lRun = buildRun(step.label || "", { color: C.navy, sz: 1200, bold: true, typeface: "Manrope" });
+        const lRun = buildRun(step.label || "", { color: C.navy, sz: 1800, bold: true, typeface: "Manrope" });
         timelineXml += buildTextShape(idCounter++,
           cx - Math.min(HALF_COL, 900000), LINE_Y + CIRCLE_R + 120000,
-          Math.min(COL_W, 1800000), 380000,
+          Math.min(COL_W, 1800000), 430000,
           [{ runs: lRun, algn: "ctr" }]);
 
         // Descrição — wider box, smaller text
-        const dRun = buildRun(step.descricao || "", { color: C.textMuted, sz: 1100, typeface: "Manrope" });
+        const dRun = buildRun(step.descricao || "", { color: C.textMuted, sz: 1600, typeface: "Manrope" });
         timelineXml += buildTextShape(idCounter++,
-          cx - Math.min(HALF_COL, 900000), LINE_Y + CIRCLE_R + 500000,
+          cx - Math.min(HALF_COL, 900000), LINE_Y + CIRCLE_R + 560000,
           Math.min(COL_W, 1800000), 600000,
           [{ runs: dRun, algn: "ctr", lnSpc: "115000" }]);
       });
 
       const footer = buildFooterShapes(deckName, pageNum, false);
-      const xml = buildScratchSlide(bg, eyebrow + title + logo + timelineXml + footer);
+      const xml = buildScratchSlide(bg, chrome + timelineXml + footer);
       const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
       return { xml, relsXml };
     },
@@ -998,9 +990,7 @@ const TEMPLATE_MAP = {
       const n = metricas.length || 1;
       const bg = buildBackground(dark ? "dark" : "light");
 
-      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, dark);
-      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, dark);
-      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, dark);
 
       const CARD_H   = 2400000;
       const CARD_Y   = 2600000;
@@ -1037,13 +1027,13 @@ const TEMPLATE_MAP = {
 
         // Label
         const lColor = dark ? C.purpleTint : C.textMuted;
-        const lRun = buildRun(m.label || "", { color: lColor, sz: 1300, typeface: "Manrope" });
+        const lRun = buildRun(m.label || "", { color: lColor, sz: 2300, typeface: "Manrope" });
         cardsXml += buildTextShape(idCounter++, cx + 200000, CARD_Y + BAR_H + 1500000, CARD_W - 400000, 700000,
           [{ runs: lRun, algn: "ctr", lnSpc: "110000" }]);
       });
 
       const footer = buildFooterShapes(deckName, pageNum, dark);
-      const xml = buildScratchSlide(bg, eyebrow + title + logo + cardsXml + footer);
+      const xml = buildScratchSlide(bg, chrome + cardsXml + footer);
       const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
       return { xml, relsXml };
     },
@@ -1054,11 +1044,9 @@ const TEMPLATE_MAP = {
     build(s, { deckName, pageNum }) {
       const pilares = Array.isArray(s.pilares) ? s.pilares.slice(0, 3) : [];
       const bg = buildBackground("light");
-      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
-      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
-      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
 
-      const COL_Y    = 1900000;
+      const COL_Y    = CONTENT_Y;
       const COL_H    = 4200000;
       const HEADER_H = 600000;
       const GAP      = 200000;
@@ -1085,19 +1073,19 @@ const TEMPLATE_MAP = {
 
         // Título do pilar
         const tRun = buildRun((pilar.titulo || "").toUpperCase(), {
-          color: C.white, sz: 1600, bold: true, typeface: "Manrope"
+          color: C.white, sz: 3200, bold: true, typeface: "Manrope"
         });
         colsXml += buildTextShape(idCounter++, cx + 200000, COL_Y, COL_W - 400000, HEADER_H,
           [{ runs: tRun, algn: "ctr" }], 'anchor="ctr"');
 
         // Descrição
-        const dRun = buildRun(pilar.descricao || "", { color: C.textMuted, sz: 1300, typeface: "Manrope" });
+        const dRun = buildRun(pilar.descricao || "", { color: C.textMuted, sz: 2300, typeface: "Manrope" });
         colsXml += buildTextShape(idCounter++, cx + 200000, COL_Y + HEADER_H + 200000,
           COL_W - 400000, COL_H - HEADER_H - 400000, [{ runs: dRun, lnSpc: "120000" }]);
       });
 
       const footer = buildFooterShapes(deckName, pageNum, false);
-      const xml = buildScratchSlide(bg, eyebrow + title + logo + colsXml + footer);
+      const xml = buildScratchSlide(bg, chrome + colsXml + footer);
       const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
       return { xml, relsXml };
     },
@@ -1108,15 +1096,13 @@ const TEMPLATE_MAP = {
     build(s, { deckName, pageNum }) {
       const camadas = Array.isArray(s.camadas) ? s.camadas : [];
       const bg = buildBackground("light");
-      const eyebrow = buildEyebrowShape(20, s.eyebrow || "", MARGIN, 381000, false);
-      const title   = buildTitleShape(21, s.titulo || "", MARGIN, 685000, W - 2 * MARGIN, false);
-      const logo    = buildLogoShape(22, "rId1", LOGO_X, LOGO_Y, LOGO_W, LOGO_H);
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
 
       const NODE_W   = 3200000;
       const NODE_H   = 800000;
       const NODE_GAP = 400000; // gap horizontal entre 2 nós na mesma camada
       const LAYER_H  = NODE_H + 500000; // altura total por camada (nó + seta)
-      const CONTENT_Y_START = 1900000;
+      const CONTENT_Y_START = CONTENT_Y;
 
       const COR_FILL = {
         cyan:   () => buildSolidFill("5BBEED"),
@@ -1152,25 +1138,25 @@ const TEMPLATE_MAP = {
           diagramXml += buildRoundedRect(idCounter++, Math.round(nx), layerY, NODE_W, NODE_H, 8000, fill, stroke);
 
           // Label
-          const lRun = buildRun(no.label || "", { color: txtColor, sz: 1500, bold: true, typeface: "Manrope" });
+          const lRun = buildRun(no.label || "", { color: txtColor, sz: 2000, bold: true, typeface: "Manrope" });
           diagramXml += buildTextShape(idCounter++, Math.round(nx) + 200000, layerY + 100000,
-            NODE_W - 400000, 400000, [{ runs: lRun, algn: "ctr" }]);
+            NODE_W - 400000, 450000, [{ runs: lRun, algn: "ctr" }]);
 
           // Sublabel
-          const sRun = buildRun(no.sublabel || "", { color: txtColor, sz: 1100, typeface: "Manrope" });
-          diagramXml += buildTextShape(idCounter++, Math.round(nx) + 200000, layerY + 480000,
+          const sRun = buildRun(no.sublabel || "", { color: txtColor, sz: 1600, typeface: "Manrope" });
+          diagramXml += buildTextShape(idCounter++, Math.round(nx) + 200000, layerY + 500000,
             NODE_W - 400000, 300000, [{ runs: sRun, algn: "ctr" }]);
         });
 
         // Seta entre camadas (não após a última)
         if (layerIdx < camadas.length - 1) {
           const arrowY = layerY + NODE_H + 100000;
-          diagramXml += buildArrowText(idCounter++, (W - 400000) / 2, arrowY, "▼", C.footerMuted, 2000);
+          diagramXml += buildArrowText(idCounter++, (W - 400000) / 2, arrowY, "▼", C.footerLight, 2000);
         }
       });
 
       const footer = buildFooterShapes(deckName, pageNum, false);
-      const xml = buildScratchSlide(bg, eyebrow + title + logo + diagramXml + footer);
+      const xml = buildScratchSlide(bg, chrome + diagramXml + footer);
       const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
       return { xml, relsXml };
     },
@@ -1189,6 +1175,505 @@ const TEMPLATE_MAP = {
         (deckName || "DATI").toUpperCase()
       );
       return xml;
+    },
+  },
+
+  // ── PAINEL-REGRA (scratch — faixa gradiente + 2 colunas) ─────────────────────
+  "painel-regra": {
+    build(s, { deckName, pageNum }) {
+      const bg     = buildBackground("light");
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
+
+      const PANEL_H   = 927100;   // 146px
+      const PANEL_W   = W - 2 * MARGIN;
+      const panelFill = buildGradientFill([
+        { pos: 0,      hex: C.purpleDarker },
+        { pos: 100000, hex: C.purple },
+      ], 90);
+      let bodyXml = buildRoundedRect(30, MARGIN, CONTENT_Y, PANEL_W, PANEL_H, 8000, panelFill);
+
+      if (s.painelRotulo) {
+        const run = buildRun(s.painelRotulo, { color: "A4DF64", sz: 2000, bold: true, typeface: "Manrope" });
+        bodyXml += buildTextShape(31, MARGIN + 350000, CONTENT_Y, PANEL_W - 700000, PANEL_H,
+          [{ runs: run }], 'anchor="ctr"');
+      }
+
+      const COL_Y = CONTENT_Y + PANEL_H + 150000;
+      const COL_H = FOOTER_Y - COL_Y - 200000;
+      const HALF  = Math.floor(PANEL_W / 2);
+      const PAD   = 200000;
+      const FIO_W = 31750;
+      const esq   = s.esquerda || {};
+      const dir   = s.direita  || {};
+      let   idC   = 32;
+
+      bodyXml += buildPlainRect(idC++, MARGIN + HALF - Math.floor(FIO_W / 2), COL_Y,
+        FIO_W, COL_H, buildSolidFill("C9C4D8"));
+
+      if (esq.titulo) {
+        const run = buildRun(esq.titulo, { color: C.navy, sz: 3200, bold: true, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, MARGIN + PAD, COL_Y + PAD, HALF - PAD - 100000, 700000,
+          [{ runs: run, lnSpc: "110000" }]);
+      }
+      if (esq.descricao) {
+        const run = buildRun(esq.descricao, { color: C.textMuted, sz: 2000, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, MARGIN + PAD, COL_Y + PAD + 750000, HALF - PAD - 100000,
+          COL_H - PAD - 750000, [{ runs: run, lnSpc: "130000" }]);
+      }
+
+      const rightX = MARGIN + HALF + 100000;
+      if (dir.titulo) {
+        const run = buildRun(dir.titulo, { color: C.navy, sz: 3200, bold: true, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, rightX, COL_Y + PAD, HALF - PAD - 100000, 700000,
+          [{ runs: run, lnSpc: "110000" }]);
+      }
+      if (dir.descricao) {
+        const run = buildRun(dir.descricao, { color: C.textMuted, sz: 2000, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, rightX, COL_Y + PAD + 750000, HALF - PAD - 100000,
+          COL_H - PAD - 750000, [{ runs: run, lnSpc: "130000" }]);
+      }
+
+      const footer  = buildFooterShapes(deckName, pageNum, false);
+      const xml     = buildScratchSlide(bg, chrome + bodyXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
+  // ── TRÊS-COLUNAS (scratch — 3 colunas com ícone, rótulo, título, descrição) ──
+  "tres-colunas": {
+    build(s, { deckName, pageNum }) {
+      const bg     = buildBackground("light");
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
+
+      const colunas = Array.isArray(s.colunas) ? s.colunas.slice(0, 3) : [];
+      const n       = Math.max(colunas.length, 1);
+      const COL_W   = Math.floor((W - 2 * MARGIN) / n);
+      const PAD     = 200000;
+      const FIO_W   = 31750;
+      const BADGE_H = 670000;
+      let   idC     = 30;
+      let   colXml  = "";
+
+      colunas.forEach((col, i) => {
+        const colX    = MARGIN + i * COL_W;
+        const BADGE_Y = CONTENT_Y + PAD;
+
+        if (i > 0) {
+          colXml += buildPlainRect(idC++, colX - Math.floor(FIO_W / 2), CONTENT_Y, FIO_W,
+            FOOTER_Y - CONTENT_Y - 200000, buildSolidFill("C9C4D8"));
+        }
+
+        colXml += buildIconBadge(col.icone || "diamond", colX + PAD, BADGE_Y, idC);
+        idC += 2;
+
+        const textBaseY = BADGE_Y + BADGE_H + 150000;
+
+        if (col.rotulo) {
+          const run = buildRun(String(col.rotulo).toUpperCase(),
+            { color: C.purpleMed, sz: 1800, bold: true, typeface: "Manrope" });
+          colXml += buildTextShape(idC++, colX + PAD, textBaseY, COL_W - 2 * PAD, 350000, [{ runs: run }]);
+        }
+        if (col.titulo) {
+          const run = buildRun(col.titulo, { color: C.navy, sz: 2800, bold: true, typeface: "Manrope" });
+          colXml += buildTextShape(idC++, colX + PAD, textBaseY + 400000, COL_W - 2 * PAD, 700000,
+            [{ runs: run, lnSpc: "110000" }]);
+        }
+        if (col.descricao) {
+          const run = buildRun(col.descricao, { color: C.textMuted, sz: 2000, typeface: "Manrope" });
+          colXml += buildTextShape(idC++, colX + PAD, textBaseY + 1150000, COL_W - 2 * PAD,
+            FOOTER_Y - textBaseY - 1150000 - 300000, [{ runs: run, lnSpc: "130000" }]);
+        }
+      });
+
+      const footer  = buildFooterShapes(deckName, pageNum, false);
+      const xml     = buildScratchSlide(bg, chrome + colXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
+  // ── FLUXO-HORIZONTAL (scratch — faixa lavanda + linha roxa + badges + labels) ─
+  "fluxo-horizontal": {
+    build(s, { deckName, pageNum }) {
+      const bg     = buildBackground("light");
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
+
+      const steps   = Array.isArray(s.steps) ? s.steps.slice(0, 6) : [];
+      const n       = Math.max(steps.length, 1);
+      const BAND_W  = W - 2 * MARGIN;
+      const BAND_H  = 762000;
+      const LABEL_H = 380000;
+      const DESC_H  = 500000;
+      const GAP     = 150000;
+      const TOTAL_H = LABEL_H + GAP + BAND_H + GAP + DESC_H;
+      const START_Y = CONTENT_Y + Math.floor((FOOTER_Y - CONTENT_Y - 250000 - TOTAL_H) / 2);
+      const BAND_Y  = START_Y + LABEL_H + GAP;
+
+      const bandFill = buildGradientFill([
+        { pos: 0,      hex: "F1F1F1" },
+        { pos: 100000, hex: "DED4F1" },
+      ], 90);
+      let bodyXml = buildRoundedRect(30, MARGIN, BAND_Y, BAND_W, BAND_H, 8000, bandFill);
+
+      // Linha 8px gradiente roxa no centro vertical da faixa
+      const LINE_H   = 50800;
+      const LINE_Y   = BAND_Y + Math.floor((BAND_H - LINE_H) / 2);
+      const lineFill = buildGradientFill([
+        { pos: 0,      hex: C.purpleDarker },
+        { pos: 100000, hex: C.purple },
+      ], 90);
+      bodyXml += buildRoundedRect(31, MARGIN, LINE_Y, BAND_W, LINE_H, 25000, lineFill);
+
+      const STEP_W = Math.floor(BAND_W / n);
+      let   idC    = 32;
+
+      steps.forEach((step, i) => {
+        const centerX = MARGIN + i * STEP_W + Math.floor(STEP_W / 2);
+        const BADGE   = 670000;
+        const badgeX  = centerX - Math.floor(BADGE / 2);
+        const badgeY  = BAND_Y + Math.floor((BAND_H - BADGE) / 2);
+
+        bodyXml += buildIconBadge(step.icone || "diamond", badgeX, badgeY, idC);
+        idC += 2;
+
+        if (step.label) {
+          const run = buildRun(step.label, { color: C.purpleMed, sz: 1800, bold: true, typeface: "Manrope" });
+          bodyXml += buildTextShape(idC++, centerX - Math.floor(STEP_W / 2), START_Y, STEP_W, LABEL_H,
+            [{ runs: run, algn: "ctr" }]);
+        }
+        if (step.descricao) {
+          const run = buildRun(step.descricao, { color: C.textMuted, sz: 1800, typeface: "Manrope" });
+          bodyXml += buildTextShape(idC++, centerX - Math.floor(STEP_W / 2),
+            BAND_Y + BAND_H + GAP, STEP_W, DESC_H,
+            [{ runs: run, algn: "ctr", lnSpc: "110000" }]);
+        }
+      });
+
+      const footer  = buildFooterShapes(deckName, pageNum, false);
+      const xml     = buildScratchSlide(bg, chrome + bodyXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
+  // ── COMPARAÇÃO-V2 (scratch — 2 cards com itens numerados, último em verde) ────
+  "comparacao-v2": {
+    build(s, { deckName, pageNum }) {
+      const bg     = buildBackground("light");
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
+
+      const GAP    = 300000;
+      const COL_W  = Math.floor((W - 2 * MARGIN - GAP) / 2);
+      const CARD_H = Math.min(3073400, FOOTER_Y - CONTENT_Y - 200000);
+      const PAD    = 250000;
+      const esq    = s.esquerda || {};
+      const dir    = s.direita  || {};
+      let   idC    = 30;
+      let   xml2   = "";
+
+      // Left card — neutro
+      xml2 += buildRoundedRect(idC++, MARGIN, CONTENT_Y, COL_W, CARD_H, 8000,
+        buildSolidFill("FFFFFF"), "C9C4D8");
+      if (esq.rotulo) {
+        const run = buildRun(String(esq.rotulo).toUpperCase(),
+          { color: C.footerLight, sz: 1600, bold: true, typeface: "Manrope" });
+        xml2 += buildTextShape(idC++, MARGIN + PAD, CONTENT_Y + PAD, COL_W - 2 * PAD, 350000, [{ runs: run }]);
+      }
+      (Array.isArray(esq.items) ? esq.items : []).forEach((item, i) => {
+        const isLast = i === esq.items.length - 1;
+        const itemY  = CONTENT_Y + PAD + 400000 + i * 650000;
+        const numRun = buildRun(`${String(i + 1).padStart(2, "0")}. `,
+          { color: C.footerLight, sz: 1800, bold: true, typeface: "Manrope" });
+        const txtRun = buildRun(item,
+          { color: isLast ? "A4DF64" : C.navy, sz: 2000, bold: isLast, typeface: "Manrope" });
+        xml2 += buildTextShape(idC++, MARGIN + PAD, itemY, COL_W - 2 * PAD, 550000,
+          [{ runs: numRun + txtRun, lnSpc: "110000" }]);
+      });
+
+      // Right card — gradiente roxo
+      const rightX    = MARGIN + COL_W + GAP;
+      const rightFill = buildGradientFill([
+        { pos: 0,      hex: C.purpleDarker },
+        { pos: 100000, hex: C.purple },
+      ], 135);
+      xml2 += buildRoundedRect(idC++, rightX, CONTENT_Y, COL_W, CARD_H, 8000, rightFill);
+      if (dir.rotulo) {
+        const run = buildRun(String(dir.rotulo).toUpperCase(),
+          { color: C.purpleTint, sz: 1600, bold: true, typeface: "Manrope" });
+        xml2 += buildTextShape(idC++, rightX + PAD, CONTENT_Y + PAD, COL_W - 2 * PAD, 350000, [{ runs: run }]);
+      }
+      (Array.isArray(dir.items) ? dir.items : []).forEach((item, i) => {
+        const isLast = i === dir.items.length - 1;
+        const itemY  = CONTENT_Y + PAD + 400000 + i * 650000;
+        const numRun = buildRun(`${String(i + 1).padStart(2, "0")}. `,
+          { color: C.purpleTint, sz: 1800, bold: true, typeface: "Manrope" });
+        const txtRun = buildRun(item,
+          { color: isLast ? "A4DF64" : C.white, sz: 2000, bold: isLast, typeface: "Manrope" });
+        xml2 += buildTextShape(idC++, rightX + PAD, itemY, COL_W - 2 * PAD, 550000,
+          [{ runs: numRun + txtRun, lnSpc: "110000" }]);
+      });
+
+      const footer  = buildFooterShapes(deckName, pageNum, false);
+      const xml     = buildScratchSlide(bg, chrome + xml2 + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
+  // ── DECLARAÇÃO-PAINEL (scratch — card lavanda esq. + painel gradiente dir.) ───
+  "declaracao-painel": {
+    build(s, { deckName, pageNum }) {
+      const bg     = buildBackground("light");
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
+
+      const USABLE  = W - 2 * MARGIN;
+      const GAP     = 254000;   // 40px
+      const LEFT_W  = Math.round(USABLE * 860 / 1660);
+      const RIGHT_W = USABLE - LEFT_W - GAP;
+      const CARD_H  = Math.min(2622550, FOOTER_Y - CONTENT_Y - 300000);
+      const CARD_Y  = CONTENT_Y + Math.floor((FOOTER_Y - CONTENT_Y - 250000 - CARD_H) / 2);
+      const PAD     = 300000;
+      const rightX  = MARGIN + LEFT_W + GAP;
+      let   idC     = 30;
+      let   bodyXml = "";
+
+      // Card lavanda
+      bodyXml += buildRoundedRect(idC++, MARGIN, CARD_Y, LEFT_W, CARD_H, 8000,
+        buildSolidFill("EBE4FF"), "A28CDC");
+      if (s.declaracao) {
+        let runs;
+        if (typeof s.declaracao === "string") {
+          runs = buildRun(s.declaracao, { color: C.navy, sz: 2800, bold: true, typeface: "Manrope" });
+        } else {
+          runs = s.declaracao.map(t => buildRun(t.text, {
+            color: t.emphasis ? C.purpleMed : C.navy, sz: 2800, bold: true, typeface: "Manrope",
+          })).join("");
+        }
+        bodyXml += buildTextShape(idC++, MARGIN + PAD, CARD_Y + PAD, LEFT_W - 2 * PAD,
+          CARD_H - 2 * PAD, [{ runs, lnSpc: "130000" }]);
+      }
+
+      // Painel gradiente
+      const rightFill = buildGradientFill([
+        { pos: 0,      hex: C.purpleDarker },
+        { pos: 100000, hex: C.purple },
+      ], 135);
+      bodyXml += buildRoundedRect(idC++, rightX, CARD_Y, RIGHT_W, CARD_H, 8000, rightFill);
+      if (s.painelTitulo) {
+        const run = buildRun(s.painelTitulo, { color: C.white, sz: 2800, bold: true, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, rightX + PAD, CARD_Y + PAD, RIGHT_W - 2 * PAD, 700000,
+          [{ runs: run, lnSpc: "110000" }]);
+      }
+      if (s.painelDescricao) {
+        const run = buildRun(s.painelDescricao, { color: C.purpleTint, sz: 2000, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, rightX + PAD, CARD_Y + PAD + 750000, RIGHT_W - 2 * PAD,
+          CARD_H - PAD - 750000 - PAD, [{ runs: run, lnSpc: "130000" }]);
+      }
+
+      const footer  = buildFooterShapes(deckName, pageNum, false);
+      const xml     = buildScratchSlide(bg, chrome + bodyXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
+  // ── PRINCÍPIOS-LISTA (scratch — linhas com fio horizontal) ───────────────────
+  "principios-lista": {
+    build(s, { deckName, pageNum }) {
+      const bg     = buildBackground("light");
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
+
+      const principios = Array.isArray(s.principios) ? s.principios.slice(0, 5) : [];
+      const ROW_H  = 717550;   // 113px
+      const FIO_H  = 6350;
+      const W_COL  = W - 2 * MARGIN;
+      const THIRD  = Math.floor(W_COL / 3);
+      let   idC    = 30;
+      let   listXml = "";
+
+      principios.forEach((p, i) => {
+        const rowY = CONTENT_Y + i * ROW_H;
+
+        if (i > 0) {
+          listXml += buildPlainRect(idC++, MARGIN, rowY, W_COL, FIO_H, buildSolidFill("C9C4D8"));
+        }
+
+        const TEXT_Y = rowY + 50000;
+        const TEXT_H = ROW_H - 100000;
+
+        if (p.termo) {
+          const run = buildRun(p.termo, { color: C.navy, sz: 2800, bold: true, typeface: "Manrope" });
+          listXml += buildTextShape(idC++, MARGIN, TEXT_Y, THIRD - 100000, TEXT_H,
+            [{ runs: run }], 'anchor="ctr"');
+        }
+
+        const conRun = buildRun(p.conector || "acima de",
+          { color: C.purpleMed, sz: 2300, typeface: "Manrope" });
+        listXml += buildTextShape(idC++, MARGIN + THIRD, TEXT_Y, THIRD, TEXT_H,
+          [{ runs: conRun, algn: "ctr" }], 'anchor="ctr"');
+
+        if (p.neutro) {
+          const run = buildRun(p.neutro, { color: C.footerLight, sz: 2300, typeface: "Manrope" });
+          listXml += buildTextShape(idC++, MARGIN + 2 * THIRD + 100000, TEXT_Y, THIRD - 100000, TEXT_H,
+            [{ runs: run }], 'anchor="ctr"');
+        }
+      });
+
+      const footer  = buildFooterShapes(deckName, pageNum, false);
+      const xml     = buildScratchSlide(bg, chrome + listXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
+  // ── FLUXO-RAIAS (scratch — sidebar gradiente + 2 raias com cards) ────────────
+  "fluxo-raias": {
+    build(s, { deckName, pageNum }) {
+      const bg     = buildBackground("light");
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
+
+      const raias   = Array.isArray(s.raias) ? s.raias.slice(0, 2) : [];
+      const SIDE_W  = 952500;   // 150px
+      const AREA_H  = FOOTER_Y - CONTENT_Y - 200000;
+      const sideFill = buildGradientFill([
+        { pos: 0,      hex: C.purpleDarker },
+        { pos: 100000, hex: C.purple },
+      ], 180);
+      let bodyXml = buildRoundedRect(30, MARGIN, CONTENT_Y, SIDE_W, AREA_H, 8000, sideFill);
+
+      if (s.sidebarLabel) {
+        const run = buildRun(s.sidebarLabel, { color: C.white, sz: 1800, bold: true, typeface: "Manrope" });
+        bodyXml += buildTextShape(31, MARGIN, CONTENT_Y, SIDE_W, AREA_H,
+          [{ runs: run, algn: "ctr" }], 'anchor="ctr"');
+      }
+
+      const RAIL_X  = MARGIN + SIDE_W + 200000;
+      const RAIL_W  = W - RAIL_X - MARGIN;
+      const N       = Math.max(raias.length, 1);
+      const RAIA_H  = Math.floor(AREA_H / N);
+      const PAD     = 150000;
+      let   idC     = 32;
+
+      raias.forEach((raia, ri) => {
+        const raiaY = CONTENT_Y + ri * RAIA_H;
+        const steps = Array.isArray(raia.steps) ? raia.steps.slice(0, 4) : [];
+        const ns    = Math.max(steps.length, 1);
+
+        if (ri > 0) {
+          bodyXml += buildPlainRect(idC++, RAIL_X, raiaY, RAIL_W, 6350, buildSolidFill("C9C4D8"));
+        }
+        if (raia.label) {
+          const run = buildRun(raia.label, { color: C.purpleMed, sz: 1600, bold: true, typeface: "Manrope" });
+          bodyXml += buildTextShape(idC++, RAIL_X, raiaY + PAD, 700000, RAIA_H - 2 * PAD, [{ runs: run }]);
+        }
+
+        const CARDS_X = RAIL_X + 750000;
+        const CARD_W  = Math.floor((RAIL_W - 750000 - (ns - 1) * 150000) / ns);
+        const CARD_H  = RAIA_H - 2 * PAD - 50000;
+
+        steps.forEach((step, si) => {
+          const cx = CARDS_X + si * (CARD_W + 150000);
+          const cy = raiaY + PAD;
+          bodyXml += buildRoundedRect(idC++, cx, cy, CARD_W, CARD_H, 8000,
+            buildSolidFill("FFFFFF"), "DDD6EE");
+          if (step.label) {
+            const run = buildRun(step.label, { color: C.navy, sz: 1800, bold: true, typeface: "Manrope" });
+            bodyXml += buildTextShape(idC++, cx + PAD, cy + PAD, CARD_W - 2 * PAD, 300000, [{ runs: run }]);
+          }
+          if (step.descricao) {
+            const run = buildRun(step.descricao, { color: C.textMuted, sz: 1600, typeface: "Manrope" });
+            bodyXml += buildTextShape(idC++, cx + PAD, cy + PAD + 350000, CARD_W - 2 * PAD,
+              CARD_H - 2 * PAD - 350000, [{ runs: run, lnSpc: "120000" }]);
+          }
+        });
+      });
+
+      const footer  = buildFooterShapes(deckName, pageNum, false);
+      const xml     = buildScratchSlide(bg, chrome + bodyXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
+    },
+  },
+
+  // ── SISTEMA-HUB (scratch — círculo central + 4 cards + frase à direita) ──────
+  "sistema-hub": {
+    build(s, { deckName, pageNum }) {
+      const bg     = buildBackground("light");
+      const chrome = buildSlideChrome(s.eyebrow, s.titulo, false);
+
+      const cards   = Array.isArray(s.cards) ? s.cards.slice(0, 4) : [];
+      const CARD_W  = 1568450;   // 247px
+      const CARD_H  = 1244600;   // 196px
+      const CARD_GAP = 150000;
+      const GRID_W  = 2 * CARD_W + CARD_GAP;
+      const GRID_H  = 2 * CARD_H + CARD_GAP;
+      const GRID_X  = MARGIN;
+      const GRID_Y  = CONTENT_Y + Math.floor((FOOTER_Y - CONTENT_Y - 250000 - GRID_H) / 2);
+      const PAD     = 150000;
+      let   idC     = 30;
+      let   bodyXml = "";
+
+      cards.forEach((card, i) => {
+        const col = i % 2;
+        const row = Math.floor(i / 2);
+        const cx  = GRID_X + col * (CARD_W + CARD_GAP);
+        const cy  = GRID_Y + row * (CARD_H + CARD_GAP);
+        bodyXml += buildRoundedRect(idC++, cx, cy, CARD_W, CARD_H, 8000,
+          buildSolidFill("FFFFFF"), "DDD6EE");
+        if (card.titulo) {
+          const run = buildRun(card.titulo, { color: C.navy, sz: 2000, bold: true, typeface: "Manrope" });
+          bodyXml += buildTextShape(idC++, cx + PAD, cy + PAD, CARD_W - 2 * PAD, 400000,
+            [{ runs: run, lnSpc: "110000" }]);
+        }
+        if (card.descricao) {
+          const run = buildRun(card.descricao, { color: C.textMuted, sz: 1800, typeface: "Manrope" });
+          bodyXml += buildTextShape(idC++, cx + PAD, cy + PAD + 450000, CARD_W - 2 * PAD,
+            CARD_H - 2 * PAD - 450000, [{ runs: run, lnSpc: "120000" }]);
+        }
+      });
+
+      // Círculo central
+      const RADIUS  = 500000;
+      const CIRC_X  = GRID_X + GRID_W + 250000;
+      const CIRC_Y  = GRID_Y + Math.floor(GRID_H / 2) - RADIUS;
+      const circFill = buildGradientFill([
+        { pos: 0,      hex: C.purpleDarker },
+        { pos: 100000, hex: C.purple },
+      ], 135);
+      bodyXml += `<p:sp>
+        <p:nvSpPr><p:cNvPr id="${idC}" name="Hub"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr/></p:nvSpPr>
+        <p:spPr><a:xfrm><a:off x="${CIRC_X}" y="${CIRC_Y}"/><a:ext cx="${RADIUS * 2}" cy="${RADIUS * 2}"/></a:xfrm>
+          <a:prstGeom prst="ellipse"><a:avLst/></a:prstGeom>${circFill}<a:ln><a:noFill/></a:ln></p:spPr>
+        <p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody>
+      </p:sp>`;
+      idC++;
+      if (s.hubLabel) {
+        const run = buildRun(s.hubLabel, { color: C.white, sz: 1600, bold: true, typeface: "Manrope" });
+        bodyXml += buildTextShape(idC++, CIRC_X, CIRC_Y, RADIUS * 2, RADIUS * 2,
+          [{ runs: run, algn: "ctr" }], 'anchor="ctr"');
+      }
+
+      // Frase à direita
+      const FRASE_X = CIRC_X + RADIUS * 2 + 300000;
+      const FRASE_W = W - FRASE_X - MARGIN;
+      if (s.frase && FRASE_W > 500000) {
+        let runs;
+        if (typeof s.frase === "string") {
+          runs = buildRun(s.frase, { color: C.navy, sz: 2800, bold: true, typeface: "Manrope" });
+        } else {
+          runs = s.frase.map(t => buildRun(t.text, {
+            color: t.emphasis ? C.purpleMed : C.navy, sz: 2800, bold: true, typeface: "Manrope",
+          })).join("");
+        }
+        bodyXml += buildTextShape(idC++, FRASE_X, GRID_Y, FRASE_W, GRID_H,
+          [{ runs, lnSpc: "120000" }], 'anchor="ctr"');
+      }
+
+      const footer  = buildFooterShapes(deckName, pageNum, false);
+      const xml     = buildScratchSlide(bg, chrome + bodyXml + footer);
+      const relsXml = buildScratchRels([{ rId: "rId1", target: `../media/${LOGO_MEDIA_NAME}` }]);
+      return { xml, relsXml };
     },
   },
 };
