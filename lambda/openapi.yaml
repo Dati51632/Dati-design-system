@@ -1,0 +1,173 @@
+openapi: 3.0.3
+info:
+  title: Dati PPTX Generator
+  description: |
+    Gera apresentações PPTX no padrão visual da Dati a partir de um JSON estruturado de slides.
+    Retorna uma presigned URL do S3 válida por 1 hora para download imediato.
+  version: 1.0.0
+
+servers:
+  - url: https://YOUR_API_ID.execute-api.YOUR_REGION.amazonaws.com/prod
+    description: Substituir pelo endpoint gerado pelo SAM deploy
+
+paths:
+  /generate:
+    post:
+      operationId: generatePresentation
+      summary: Gera uma apresentação PPTX no padrão Dati
+      description: |
+        Aceita um JSON com deckName e array de slides (cada um com tipo + campos específicos).
+        Retorna downloadUrl para o PPTX gerado (válido por 1 hora).
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PresentationInput'
+            example:
+              deckName: "Dati | Exemplo"
+              slides:
+                - tipo: capa
+                  titulo: TÍTULO
+                  titulo2: "2026"
+                  subtitulo: Descrição do deck
+                - tipo: tres-colunas
+                  eyebrow: Pilares
+                  titulo:
+                    - text: "Três fundamentos "
+                    - text: essenciais
+                      emphasis: true
+                  colunas:
+                    - icone: cloud
+                      rotulo: CLOUD
+                      titulo: Eficiência na nuvem
+                      descricao: ""
+                    - icone: database
+                      rotulo: DADOS
+                      titulo: Decisões melhores
+                      descricao: ""
+                    - icone: gear
+                      rotulo: IA
+                      titulo: Aplicações reais
+                      descricao: ""
+                - tipo: encerramento
+                  titulo: "Obrigado!"
+      responses:
+        '200':
+          description: PPTX gerado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  downloadUrl:
+                    type: string
+                    format: uri
+                    description: Presigned S3 URL para download do PPTX (válido por 1 hora)
+                  slides:
+                    type: integer
+                    description: Número de slides no JSON de entrada (não inclui o bloco institucional fixo)
+                  deckName:
+                    type: string
+                  expiresIn:
+                    type: string
+                    example: "60 minutos"
+        '400':
+          description: JSON inválido ou campos obrigatórios ausentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro interno na geração do PPTX
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+    RichText:
+      type: array
+      description: Título com ênfase parcial (cláusula neutra + cláusula em roxo)
+      items:
+        type: object
+        required: [text]
+        properties:
+          text:
+            type: string
+          emphasis:
+            type: boolean
+            description: Se true, renderiza em Bold roxo (#6838E8)
+
+    PresentationInput:
+      type: object
+      required: [deckName, slides]
+      properties:
+        deckName:
+          type: string
+          description: Nome do deck — aparece no rodapé de todos os slides
+          example: "Dati | Proposta Comercial"
+        slides:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Slide'
+
+    Slide:
+      type: object
+      required: [tipo]
+      discriminator:
+        propertyName: tipo
+      properties:
+        tipo:
+          type: string
+          enum:
+            - capa
+            - secao
+            - encerramento
+            - conteudo
+            - bigword
+            - impacto
+            - cta
+            - cards
+            - lista-icone
+            - grid-icone
+            - pipeline
+            - timeline
+            - kpi
+            - tres-pilares
+            - comparacao
+            - comparacao-v2
+            - tres-colunas
+            - fluxo-horizontal
+            - painel-regra
+            - declaracao-painel
+            - principios-lista
+            - fluxo-raias
+            - sistema-hub
+            - diagrama-fluxo
+        eyebrow:
+          type: string
+          description: Rótulo acima do título (all caps, roxo)
+        titulo:
+          oneOf:
+            - type: string
+            - $ref: '#/components/schemas/RichText'
+        notes:
+          type: string
+          description: Texto para as notas do apresentador (não aparece no slide)

@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Dati PPTX Generator — Lambda + API Gateway + S3
+
+Globals:
+  Function:
+    Runtime:     nodejs20.x
+    Timeout:     60
+    MemorySize:  512
+    Architectures: [x86_64]
+
+Resources:
+
+  # ── S3 bucket para os PPTX gerados ──────────────────────────────────────────
+  OutputBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "dati-pptx-output-${AWS::AccountId}"
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteAfter24h
+            Status: Enabled
+            ExpirationInDays: 1
+
+  # ── Lambda ───────────────────────────────────────────────────────────────────
+  GenerateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: dati-pptx-generator
+      Handler: index.handler
+      CodeUri: ./
+      Description: Gera apresentações PPTX no padrão visual Dati a partir de JSON
+      Environment:
+        Variables:
+          OUTPUT_BUCKET:        !Ref OutputBucket
+          PRESIGN_TTL_SECONDS:  "3600"
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref OutputBucket
+      Events:
+        Generate:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DatiApi
+            Path: /generate
+            Method: POST
+            Auth:
+              ApiKeyRequired: true
+
+  # ── API Gateway ──────────────────────────────────────────────────────────────
+  DatiApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: dati-pptx-api
+      StageName: prod
+      Auth:
+        ApiKeyRequired: true
+        UsagePlan:
+          CreateUsagePlan: PER_API
+          UsagePlanName: dati-pptx-usage-plan
+
+Outputs:
+  ApiUrl:
+    Description: URL base da API (use em POST /generate)
+    Value: !Sub "https://${DatiApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
+
+  FunctionArn:
+    Description: ARN da Lambda
+    Value: !GetAtt GenerateFunction.Arn
+
+  OutputBucketName:
+    Description: Nome do bucket S3 de saída
+    Value: !Ref OutputBucket

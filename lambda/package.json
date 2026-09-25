@@ -1,0 +1,12 @@
+{
+  "name": "dati-pptx-lambda",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Lambda handler — Dati PPTX Generator",
+  "main": "index.mjs",
+  "dependencies": {
+    "adm-zip": "^0.6.1",
+    "@aws-sdk/client-s3": "^3.0.0",
+    "@aws-sdk/s3-request-presigner": "^3.0.0"
+  }
+}
