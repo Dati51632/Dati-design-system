@@ -9,12 +9,13 @@ Este skill ensina como aplicar a identidade visual e o posicionamento da Dati (c
 
 ## Como usar este skill
 
-1. **Identifique o tipo de material** que está sendo pedido: apresentação, post de rede social, one-pager/proposta, ou documento interno.
+1. **Identifique o tipo de material** que está sendo pedido: apresentação, post de rede social, one-pager/proposta, documento interno, ou **frontend/HTML**.
 2. **Leia o guia de material correspondente** antes de gerar qualquer conteúdo:
    - Apresentações → `docs/materiais/apresentacoes.md`
    - Posts para redes sociais → `docs/materiais/posts-redes-sociais.md`
    - One-pagers e propostas comerciais → `docs/materiais/one-pagers-e-propostas.md`
    - Documentos internos/relatórios → `docs/materiais/documentos-internos.md`
+   - **Frontend/HTML (landing pages, apps, quiz, dashboards)** → `docs/materiais/frontend-html.md`
 3. **Aplique as regras de fundação** em paralelo — elas valem para qualquer material:
    - `docs/01-marca-e-posicionamento.md` — tese central, tom de voz, estrutura argumentativa (provocação → diagnóstico → solução → CTA).
    - `docs/02-cores.md` + `tokens/colors.json` / `tokens/colors.css` — paleta e regras de uso por cor.
@@ -277,7 +278,7 @@ A causa mais comum de slide poluído. Regras duras:
 
 ## Quando o pedido não se encaixa perfeitamente
 
-Se o material pedido não é nenhum dos quatro tipos cobertos (ex.: um e-mail, um vídeo, um site), aplique as regras de fundação (`docs/01` a `docs/05`) diretamente — elas são o "sistema", os guias de `docs/materiais/` são aplicações específicas já testadas.
+Se o material pedido não é nenhum dos cinco tipos cobertos (ex.: um e-mail, um vídeo), aplique as regras de fundação (`docs/01` a `docs/05`) diretamente — elas são o "sistema", os guias de `docs/materiais/` são aplicações específicas já testadas.
 
 Se faltar uma referência real para um tipo de material novo (como aconteceu com documentos internos — ver a nota em `docs/materiais/documentos-internos.md`), avise que a orientação é uma extrapolação cautelosa das regras confirmadas, e peça um exemplo real ao time para refinar o guia.
 

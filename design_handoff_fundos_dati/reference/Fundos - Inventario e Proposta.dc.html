@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/oficial-dati-design-system-27ae8250-a9a6-4ba7-a9f0-b5887c0ae1d8/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/oficial-dati-design-system-27ae8250-a9a6-4ba7-a9f0-b5887c0ae1d8/tokens/colors.css">
+<link rel="stylesheet" href="_ds/oficial-dati-design-system-27ae8250-a9a6-4ba7-a9f0-b5887c0ae1d8/tokens/typography.css">
+<link rel="stylesheet" href="_ds/oficial-dati-design-system-27ae8250-a9a6-4ba7-a9f0-b5887c0ae1d8/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/oficial-dati-design-system-27ae8250-a9a6-4ba7-a9f0-b5887c0ae1d8/tokens/effects.css">
+<link rel="stylesheet" href="_ds/oficial-dati-design-system-27ae8250-a9a6-4ba7-a9f0-b5887c0ae1d8/tokens/base.css">
+<link rel="stylesheet" href="_ds/oficial-dati-design-system-27ae8250-a9a6-4ba7-a9f0-b5887c0ae1d8/styles.css">
+<script src="_ds/oficial-dati-design-system-27ae8250-a9a6-4ba7-a9f0-b5887c0ae1d8/_ds_bundle.js"></script>
+<style>body{margin:0;background:#EDF0F2;font-family:Manrope,sans-serif;color:#1D1043}a{color:#6838E8}a:hover{color:#3503BB}code{font-size:.92em}</style>
+</helmet>
+<main style="max-width:1180px;margin:0 auto;padding:64px 32px 96px;display:flex;flex-direction:column;gap:72px">
+
+<header style="display:flex;flex-direction:column;gap:16px">
+<div style="font-weight:700;font-size:13px;letter-spacing:.1em;color:#6838E8">ETAPAS 1 E 2 — PARA APROVAÇÃO</div>
+<h1 style="margin:0;font-size:44px;line-height:1.06;letter-spacing:-.03em;font-weight:500;color:#1A0F3D;text-wrap:pretty">Repositório de fundos HTML: <b style="color:#6838E8;font-weight:800">inventário e coleção inicial</b></h1>
+<p style="margin:0;max-width:720px;font-size:17px;line-height:1.5;color:#5B5570">Tudo abaixo sai de <code>tokens/colors.css</code>, <code>tokens/effects.css</code>, <code>assets/</code> e do guia do Design System. O que não tem definição oficial está marcado como lacuna (G1–G8) e precisa da sua decisão antes da produção final.</p>
+</header>
+
+<section style="display:flex;flex-direction:column;gap:28px">
+<h2 style="margin:0;font-size:28px;letter-spacing:-.02em;color:#1A0F3D">1. Inventário utilizável em fundos</h2>
+
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-weight:700;font-size:12px;letter-spacing:.1em;color:#77718A">SUPERFÍCIES BASE</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px">
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:64px;background:#060115"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>--dati-ink</b><br>#060115 · página escura</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:64px;background:#1A0F3D"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>--dati-navy</b><br>#1A0F3D · estrutura</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:64px;background:#EDF0F2"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>--dati-bg-light</b><br>#EDF0F2 · miolo claro</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:64px;background:#FFFFFF;border-bottom:1px solid #DDD6EE"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>--dati-white</b><br>#FFFFFF</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:64px;background:#E3E3E3"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>--dati-surface-grey</b><br>#E3E3E3</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:64px;background:#3F18A9"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>--dati-violet-600</b><br>#3F18A9 · glow</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:64px;background:#E8E1FF"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>--dati-purple-pale</b><br>#E8E1FF · lavanda</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:64px;background:#5BBEED"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>--dati-cyan</b><br>#5BBEED · azul claro</div></div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-weight:700;font-size:12px;letter-spacing:.1em;color:#77718A">GRADIENTES OFICIAIS</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px">
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:96px;background:linear-gradient(135deg,#0D0824 0%,#1A0F3D 55%,#2B1B5C 100%)"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>--dati-gradient-hero-dark</b><br>Capas, viradas, fechamento.</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:96px;background:radial-gradient(ellipse at 50% 50%,#FFFFFF 0%,#E3E3E3 100%)"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>--dati-gradient-page-light</b><br>Miolo claro. Definido em px fixos (G1).</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:96px;background:radial-gradient(circle at 18% 80%,rgba(63,24,169,.78),rgba(63,24,169,0) 55%),radial-gradient(circle at 88% 12%,rgba(63,24,169,.66),rgba(63,24,169,0) 50%),#060115"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>Ink + 2 glows #3F18A9</b><br>Páginas escuras do e-book (.66 / .78).</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:96px;background:url(assets/source/deck-bg-dark.png) center/cover,#130B30"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>deck-bg-dark.png</b> · bitmap 2048×1152<br>Slide escuro oficial, só 16:9 (G8).</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:96px;background:linear-gradient(135deg,#3B2A8C 0%,#6838E8 100%)"></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>--dati-gradient-cta</b><br>Para CTA. Fora do repositório de fundos (G4).</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:hidden"><div style="height:96px;display:grid;grid-template-columns:repeat(4,1fr)"><div style="background:radial-gradient(circle at 50% 7%,#6838E8,#3503BB)"></div><div style="background:radial-gradient(circle at 50% 7%,#5EBAE8,#5EA0E0)"></div><div style="background:radial-gradient(circle at 50% 7%,#FAC030,#F3A02A)"></div><div style="background:radial-gradient(circle at 50% 7%,#A1DF6C,#A4DF64)"></div></div><div style="padding:12px;font-size:13px;line-height:1.4"><b>Gradientes de selo ×4</b><br>Roxo, ciano, âmbar, verde. Escala de ícone.</div></div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-weight:700;font-size:12px;letter-spacing:.1em;color:#77718A">FORMAS, PADRÕES E REGRAS</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;font-size:14px;line-height:1.5">
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px"><b>Símbolo isolado sangrando</b> — <code>dati-symbol-purple.png</code>, altura 68%, borda esquerda a 61,5%, opacidade cheia. Contrato de capa; serve ao hero institucional.</div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px"><b>Glow circular desfocado</b> — #3F18A9 em .66/.78. Única forma de "luz" documentada; só sobre escuro.</div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px"><b>Tracejado vertical com pontos</b> e <b>grade de retângulos arredondados</b> — tempero de baixíssimo contraste, sem valores definidos (G5).</div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px"><b>Texto por fundo</b> — claro: #1A0F3D título, #1D1043 corpo, #5B5570/#77718A apoio. Escuro: #FFFFFF, #CFC9E6 subtítulo, #9891AB rodapé. Ênfase: #6838E8 no claro, #8C7DFF no escuro.</div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px"><b>Proibições que valem para fundo</b> — cor fora da paleta, foto full-bleed, textura, grão, mais de dois fundos por peça, símbolo com opacidade reduzida ou rotacionado.</div>
+</div>
+</div>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:20px">
+<h2 style="margin:0;font-size:28px;letter-spacing:-.02em;color:#1A0F3D">Lacunas a decidir antes da produção</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;font-size:14px;line-height:1.5">
+<div style="background:#EBE4FF;border:1px solid #A28CDC;border-radius:12px;padding:16px"><b style="color:#6838E8">G1</b> · <code>--dati-gradient-page-light</code> usa 701×1246px fixos. Proposta: converter para elipse em % (<code>ellipse 65% 65% at 50% 50%</code>) para escalar em qualquer viewport.</div>
+<div style="background:#EBE4FF;border:1px solid #A28CDC;border-radius:12px;padding:16px"><b style="color:#6838E8">G2 · conflito de regra</b> · O guia diz "escuro só na capa, viradas e fechamento; miolo sempre claro". A skill exigirá páginas inteiras em modo escuro. Proposta: o modo escuro usa os fundos escuros oficiais também no miolo, com cards translúcidos <code>rgba(255,255,255,.06)</code> já previstos no DS. Precisa do seu aval.</div>
+<div style="background:#EBE4FF;border:1px solid #A28CDC;border-radius:12px;padding:16px"><b style="color:#6838E8">G3</b> · Não há UI de produto no DS (dashboard, quiz). Os fundos dessas telas são derivações dos fundos de material, com intensidade reduzida.</div>
+<div style="background:#EBE4FF;border:1px solid #A28CDC;border-radius:12px;padding:16px"><b style="color:#6838E8">G4</b> · <code>--dati-gradient-cta</code> é de botão. Proponho não usá-lo como fundo de página.</div>
+<div style="background:#EBE4FF;border:1px solid #A28CDC;border-radius:12px;padding:16px"><b style="color:#6838E8">G5</b> · Tracejado e grade não têm espessura, espaçamento nem opacidade definidos. Ficam fora da coleção inicial até haver referência.</div>
+<div style="background:#EBE4FF;border:1px solid #A28CDC;border-radius:12px;padding:16px"><b style="color:#6838E8">G6 · gradiente azul claro</b> · Não existe gradiente de fundo ciano no DS. Proposta: compor com <code>--dati-cyan</code> #5BBEED e os stops do selo ciano (#5EBAE8, #5EA0E0) como glow, pelo mesmo mecanismo do glow roxo. Nenhuma cor nova.</div>
+<div style="background:#EBE4FF;border:1px solid #A28CDC;border-radius:12px;padding:16px"><b style="color:#6838E8">G7</b> · Não há mapeamento de cor para níveis de certificação. Duas opções na seção Labs abaixo.</div>
+<div style="background:#EBE4FF;border:1px solid #A28CDC;border-radius:12px;padding:16px"><b style="color:#6838E8">G8</b> · <code>deck-bg-dark.png</code> só existe em 16:9. Para retrato/mobile, uso a recriação CSS (ink + glow) em vez de cortar o bitmap.</div>
+</div>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:8px">
+<h2 style="margin:0;font-size:28px;letter-spacing:-.02em;color:#1A0F3D">2. Coleção inicial — 5 fundos de contexto</h2>
+<p style="margin:0;max-width:760px;font-size:15px;line-height:1.5;color:#5B5570">Cada fundo existe em claro e escuro. O par é a unidade: a skill nunca escolhe o modo, só lê o par.</p>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(520px,1fr));gap:20px">
+
+<article style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><h3 style="margin:0;font-size:20px;letter-spacing:-.02em;color:#1A0F3D">F1 · Institucional</h3><code style="color:#77718A">bg-institucional</code></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="aspect-ratio:16/10;border-radius:12px;border:1px solid #DDD6EE;background:radial-gradient(ellipse 65% 65% at 50% 50%,#FFFFFF 0%,#E3E3E3 100%);position:relative;overflow:hidden;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center"><div style="font-size:15px;font-weight:500;color:#1A0F3D;line-height:1.1;max-width:55%">Somos o time <b style="color:#6838E8">que assume o desafio</b></div><img src="assets/source/dati-symbol-purple.png" alt="" style="position:absolute;height:68%;left:61.5%;top:16%"></div>
+<div style="aspect-ratio:16/10;border-radius:12px;background:linear-gradient(135deg,#0D0824 0%,#1A0F3D 55%,#2B1B5C 100%);position:relative;overflow:hidden;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center"><div style="font-size:15px;font-weight:500;color:#FFFFFF;line-height:1.1;max-width:55%">Somos o time <b style="color:#8C7DFF">que assume o desafio</b></div><img src="assets/source/dati-symbol-purple.png" alt="" style="position:absolute;height:68%;left:61.5%;top:16%"></div>
+</div>
+<div style="font-size:14px;line-height:1.5;display:grid;gap:6px"><div><b>Usar:</b> home institucional, página "sobre", hero de apresentação web, fechamento.</div><div><b>Evitar:</b> páginas com muito conteúdo ou formulário — o símbolo ocupa 38% da largura. Telas abaixo de 768px perdem o símbolo.</div><div style="color:#77718A">Claro: page-light (G1) · Escuro: hero-dark · Símbolo: contrato de capa.</div></div>
+</article>
+
+<article style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><h3 style="margin:0;font-size:20px;letter-spacing:-.02em;color:#1A0F3D">F2 · Landing page</h3><code style="color:#77718A">bg-landing</code></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="aspect-ratio:16/10;border-radius:12px;border:1px solid #DDD6EE;background:radial-gradient(ellipse 55% 60% at 12% 85%,#E8E1FF 0%,rgba(232,225,255,0) 70%),radial-gradient(ellipse 65% 65% at 50% 50%,#FFFFFF 0%,#E3E3E3 100%);padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center"><div style="font-size:15px;font-weight:500;color:#1A0F3D;line-height:1.1;max-width:70%">IA aplicada <b style="color:#6838E8">não precisa começar do zero</b></div></div>
+<div style="aspect-ratio:16/10;border-radius:12px;background:radial-gradient(circle at 18% 80%,rgba(63,24,169,.78),rgba(63,24,169,0) 55%),radial-gradient(circle at 88% 12%,rgba(63,24,169,.66),rgba(63,24,169,0) 50%),#060115;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center"><div style="font-size:15px;font-weight:500;color:#FFFFFF;line-height:1.1;max-width:70%">IA aplicada <b style="color:#8C7DFF">não precisa começar do zero</b></div></div>
+</div>
+<div style="font-size:14px;line-height:1.5;display:grid;gap:6px"><div><b>Usar:</b> campanha, página de oferta, evento, captura de lead. Aceita hero + seções.</div><div><b>Evitar:</b> leitura longa e telas de trabalho — os glows chamam atenção para os cantos.</div><div style="color:#77718A">Claro: page-light + glow lavanda #E8E1FF · Escuro: ink + 2 glows #3F18A9 (e-book).</div></div>
+</article>
+
+<article style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><h3 style="margin:0;font-size:20px;letter-spacing:-.02em;color:#1A0F3D">F3 · Dashboard</h3><code style="color:#77718A">bg-dashboard</code></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="aspect-ratio:16/10;border-radius:12px;border:1px solid #DDD6EE;background:linear-gradient(180deg,#FFFFFF 0%,#EDF0F2 28%,#EDF0F2 100%);padding:14px;box-sizing:border-box;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto 1fr;gap:8px"><div style="grid-column:1/-1;font-size:11px;font-weight:700;letter-spacing:.1em;color:#77718A">VISÃO GERAL</div><div style="background:#fff;border:1px solid #DDD6EE;border-radius:8px"></div><div style="background:#fff;border:1px solid #DDD6EE;border-radius:8px"></div><div style="background:#fff;border:1px solid #DDD6EE;border-radius:8px"></div></div>
+<div style="aspect-ratio:16/10;border-radius:12px;background:radial-gradient(ellipse 60% 50% at 100% 0%,rgba(63,24,169,.45),rgba(63,24,169,0) 70%),#060115;padding:14px;box-sizing:border-box;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto 1fr;gap:8px"><div style="grid-column:1/-1;font-size:11px;font-weight:700;letter-spacing:.1em;color:#9891AB">VISÃO GERAL</div><div style="background:rgba(255,255,255,.06);border:1px solid #4521A8;border-radius:8px"></div><div style="background:rgba(255,255,255,.06);border:1px solid #4521A8;border-radius:8px"></div><div style="background:rgba(255,255,255,.06);border:1px solid #4521A8;border-radius:8px"></div></div>
+</div>
+<div style="font-size:14px;line-height:1.5;display:grid;gap:6px"><div><b>Usar:</b> painéis, tabelas, área logada, qualquer tela de uso prolongado.</div><div><b>Evitar:</b> peças de marketing — é propositalmente neutro. Não adicionar símbolo nem segundo glow.</div><div style="color:#77718A">Claro: #FFFFFF → #EDF0F2 no topo · Escuro: ink + 1 glow #3F18A9 a ~.45 (G3).</div></div>
+</article>
+
+<article style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><h3 style="margin:0;font-size:20px;letter-spacing:-.02em;color:#1A0F3D">F4 · Quiz / foco</h3><code style="color:#77718A">bg-quiz</code></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="aspect-ratio:16/10;border-radius:12px;border:1px solid #DDD6EE;background:radial-gradient(ellipse 50% 55% at 50% 45%,#FFFFFF 0%,#FFFFFF 35%,#E8E1FF 100%);padding:16px;box-sizing:border-box;display:flex;align-items:center;justify-content:center"><div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:12px 14px;font-size:12px;font-weight:600;color:#1A0F3D;width:60%">Qual serviço armazena objetos?</div></div>
+<div style="aspect-ratio:16/10;border-radius:12px;background:radial-gradient(ellipse 50% 55% at 50% 45%,rgba(63,24,169,.55) 0%,rgba(63,24,169,0) 75%),#060115;padding:16px;box-sizing:border-box;display:flex;align-items:center;justify-content:center"><div style="background:rgba(255,255,255,.06);border:1px solid #4521A8;border-radius:12px;padding:12px 14px;font-size:12px;font-weight:600;color:#FFFFFF;width:60%">Qual serviço armazena objetos?</div></div>
+</div>
+<div style="font-size:14px;line-height:1.5;display:grid;gap:6px"><div><b>Usar:</b> pergunta única por tela, flashcard, resultado de simulado. Luz central puxa o olhar para o card.</div><div><b>Evitar:</b> layouts com conteúdo nas bordas ou várias colunas.</div><div style="color:#77718A">Claro: branco → lavanda #E8E1FF nas bordas · Escuro: ink + glow central #3F18A9.</div></div>
+</article>
+
+<article style="background:#fff;border:2px solid #5BBEED;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><h3 style="margin:0;font-size:20px;letter-spacing:-.02em;color:#1A0F3D">F5 · Azul claro <span style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#5EA0E0">NOVO · G6</span></h3><code style="color:#77718A">bg-azul</code></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="aspect-ratio:16/10;border-radius:12px;border:1px solid #DDD6EE;background:radial-gradient(ellipse 70% 75% at 100% 0%,rgba(91,190,237,.55) 0%,rgba(91,190,237,0) 70%),radial-gradient(ellipse 50% 55% at 0% 100%,rgba(94,160,224,.25) 0%,rgba(94,160,224,0) 70%),#FFFFFF;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center"><div style="font-size:15px;font-weight:500;color:#1A0F3D;line-height:1.1;max-width:70%">Tecnologia vem <b style="color:#6838E8">depois do problema claro</b></div></div>
+<div style="aspect-ratio:16/10;border-radius:12px;background:radial-gradient(ellipse 70% 75% at 100% 0%,rgba(91,190,237,.42) 0%,rgba(91,190,237,0) 65%),radial-gradient(circle at 15% 85%,rgba(63,24,169,.6),rgba(63,24,169,0) 55%),#060115;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center"><div style="font-size:15px;font-weight:500;color:#FFFFFF;line-height:1.1;max-width:70%">Tecnologia vem <b style="color:#8C7DFF">depois do problema claro</b></div></div>
+</div>
+<div style="font-size:14px;line-height:1.5;display:grid;gap:6px"><div><b>Usar:</b> conteúdo de cloud/infraestrutura, onboarding, páginas educacionais, alternativa mais leve ao roxo.</div><div><b>Evitar:</b> texto ou CTA sobre a área ciano — #5BBEED tem contraste baixo com branco (2,1:1). Não usar ciano como cor de texto.</div><div style="color:#77718A">Claro: branco + glow #5BBEED e #5EA0E0 · Escuro: ink + glow #5BBEED + glow #3F18A9 (mantém a bicolor do símbolo).</div></div>
+</article>
+
+</div>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:36px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-weight:700;font-size:12px;letter-spacing:.1em;color:#6838E8">CASO DE VALIDAÇÃO — LABS · CERTIFICAÇÕES AWS · REVISÃO 7</div>
+<h2 style="margin:0;font-size:28px;letter-spacing:-.02em;color:#1A0F3D">Capas por nível: <b style="color:#6838E8">o símbolo da Dati se constrói com a trilha</b></h2>
+<p style="margin:0;max-width:820px;font-size:15px;line-height:1.5;color:#5B5570">O símbolo cresce e se completa a cada nível: 40% → 50% → 59% → 68% da altura, até chegar exatamente ao contrato de capa no Specialty. Ele é desenhado como planta técnica: contornos finos de 1px e guias verticais alinhadas às bordas de cada peça — as guias param antes do símbolo e nunca o atravessam, na posição exata do contrato de capa (altura 68%, borda esquerda a 61,5%). A cada nível, peças passam de contorno a sólido. Peças sólidas são recortes de <code>dati-symbol-color.png</code>; os contornos foram traçados automaticamente a partir do mesmo arquivo, sem redesenho. No claro, a base é o page-light oficial e a profundidade vem de um único ponto: o canto inferior esquerdo recebe um gradiente na cor do nível e um recorte da grade de retângulos arredondados do DS, que se dissolve em direção ao centro. A grade fica mais fina e o gradiente mais intenso a cada nível. O mesmo recorte aparece no escuro. No escuro, um único glow atrás do símbolo cresce com o nível.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center"><div style="width:36px;height:36px;border-radius:10.412px;background:#1A0F3D;flex:none"></div><div style="font-size:13px;line-height:1.4"><b>Foundational → navy</b><br>#1A0F3D · #B7B0CB · #4521A8</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center"><div style="width:36px;height:36px;border-radius:10.412px;background:radial-gradient(circle at 50% 7%,#5EBAE8,#5EA0E0);flex:none"></div><div style="font-size:13px;line-height:1.4"><b>Associate → ciano</b><br>#5BBEED · #5EBAE8 · #5EA0E0</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center"><div style="width:36px;height:36px;border-radius:10.412px;background:linear-gradient(135deg,#5BBEED,#A1DF6C);flex:none"></div><div style="font-size:13px;line-height:1.4"><b>Professional → ciano + verde</b><br>Verde só em glow e guias · contorno do símbolo azul / #CFC9E6</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center"><div style="width:36px;height:36px;border-radius:10.412px;background:radial-gradient(circle at 50% 7%,#6838E8,#3503BB);flex:none"></div><div style="font-size:13px;line-height:1.4"><b>Specialty → roxo</b><br>#6838E8 · #3503BB · #8C7DFF</div></div>
+</div>
+<div style="background:#EBE4FF;border:1px solid #A28CDC;border-radius:12px;padding:16px;font-size:14px;line-height:1.5;display:grid;gap:8px">
+<div><b style="color:#6838E8">G10 · símbolo em construção.</b> O guia proíbe reposicionar, distorcer ou reduzir a opacidade do símbolo. Aqui nenhuma peça sai do lugar nem muda de cor; o que muda é quantas aparecem. O DS já usa "fragmentos da seta" nos renders 3D, o que serve de precedente, mas o uso parcial do símbolo precisa de aval da marca.</div>
+<div><b style="color:#6838E8">Contornos.</b> O guia proíbe "adicionar contorno" ao símbolo. Aqui o contorno nunca fica sobre a peça sólida: ele só desenha as peças que ainda não existem. No Specialty o símbolo aparece completo, sem contorno nem guia por cima. Precisa do aval da marca junto com a G10.</div>
+<div><b style="color:#6838E8">G9 resolvida.</b> Verde permitido no Professional, nunca aplicado ao símbolo: entra no glow, nas guias e no indicador de nível. O contorno das peças pendentes é azul #5EA0E0 no claro e claro #CFC9E6 no escuro.</div>
+</div>
+<sc-for list="{{ labs }}" as="lv" hint-placeholder-count="4">
+<article style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><h3 style="margin:0;font-size:22px;letter-spacing:-.02em;color:#1A0F3D">{{ lv.n }} · {{ lv.name }}</h3><span style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#6838E8">{{ lv.tag }}</span><code style="color:#77718A;margin-left:auto">{{ lv.id }}</code></div>
+<div style="display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start">
+<sc-for list="{{ lv.covers }}" as="cv" hint-placeholder-count="2"><div style="position:relative;aspect-ratio:{{ cv.aspect }};border-radius:12px;overflow:hidden;container-type:inline-size;flex:{{ cv.flex }};border:{{ cv.border }};background:{{ cv.bg }}">
+<div style="position:absolute;inset:0;background-image:{{ cv.gridUrl }};background-position:right bottom;opacity:{{ cv.gridOp }};-webkit-mask-image:{{ cv.fade }};mask-image:{{ cv.fade }}"></div>
+<sc-for list="{{ cv.rings }}" as="g" hint-placeholder-count="0"><div style="position:absolute;width:{{ g.w }}%;aspect-ratio:1;right:{{ g.right }}%;top:50%;transform:translateY(-50%);border-radius:50%;border:1px solid {{ g.c }}"></div></sc-for>
+<sc-for list="{{ cv.lines }}" as="ln" hint-placeholder-count="0"><div style="position:absolute;left:{{ ln.left }}%;top:{{ ln.at }}%;height:{{ ln.ah }}%;border-left:1px {{ ln.st }} {{ ln.c }}"></div><div style="position:absolute;left:{{ ln.left }}%;top:{{ ln.bt }}%;height:{{ ln.bh }}%;border-left:1px {{ ln.st }} {{ ln.c }}"></div></sc-for>
+<sc-for list="{{ cv.ghosts }}" as="p" hint-placeholder-count="0"><div style="position:absolute;height:{{ p.h }}%;aspect-ratio:1;left:{{ p.l }}%;top:{{ p.t }}%;background-image:{{ p.bg }};background-size:100% 100%"></div></sc-for>
+<sc-for list="{{ cv.pieces }}" as="p" hint-placeholder-count="0"><div style="position:absolute;height:{{ p.h }}%;aspect-ratio:1;left:{{ p.l }}%;top:{{ p.t }}%;background-image:{{ p.bg }};background-size:100% 100%"></div></sc-for>
+<sc-if value="{{ cv.isCover }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:{{ cv.txL }};right:{{ cv.txR }};top:{{ cv.txT }};bottom:{{ cv.txB }};max-width:{{ cv.txW }};display:flex;flex-direction:column;justify-content:{{ cv.txJ }};gap:10px">
+<div style="display:flex;align-items:center;gap:10px"><div style="display:flex;gap:4px"><sc-for list="{{ cv.levelDots }}" as="ld" hint-placeholder-count="4"><div style="width:7px;height:7px;border-radius:2px;background:{{ ld.bg }};border:1px solid {{ ld.bd }}"></div></sc-for></div><div style="font-size:{{ cv.ebz }};font-weight:700;letter-spacing:.1em;color:{{ cv.accent }}">{{ cv.eyebrow }}</div></div>
+<div style="font-size:{{ cv.tsz }};line-height:1.02;letter-spacing:-.04em;font-weight:600;color:{{ cv.ink }}">{{ cv.titleA }} <b style="font-weight:800;color:{{ cv.accent }}">{{ cv.titleB }}</b></div>
+<div style="font-size:{{ cv.sbz }};line-height:1.45;color:{{ cv.sub }}">{{ cv.subText }}</div>
+</div></sc-if>
+<sc-if value="{{ cv.isQuiz }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:6%">
+<div style="width:100%;max-width:{{ cv.cardW }};display:flex;flex-direction:column;gap:2.2cqw;padding:4cqw;border-radius:12px;background:{{ cv.card }};border:1px solid {{ cv.cardBd }}">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-size:{{ cv.q1 }};font-weight:700;letter-spacing:.1em;color:{{ cv.accent }}">{{ cv.eyebrow }}</span><span style="font-size:{{ cv.q1 }};font-weight:600;color:{{ cv.muted }}">7 / 20</span></div>
+<div style="height:3px;border-radius:2px;background:{{ cv.track }}"><div style="height:3px;width:35%;border-radius:2px;background:{{ cv.bar }}"></div></div>
+<div style="font-size:{{ cv.q2 }};font-weight:700;line-height:1.3;letter-spacing:-.01em;color:{{ cv.ink }}">Qual serviço oferece armazenamento de objetos com durabilidade de 11 noves?</div>
+<div style="font-size:{{ cv.q3 }};padding:1.8cqw 2.6cqw;border-radius:8px;border:1px solid {{ cv.cardBd }};color:{{ cv.ink }}">Amazon EBS</div>
+<div style="font-size:{{ cv.q3 }};padding:1.8cqw 2.6cqw;border-radius:8px;border:1px solid {{ cv.selBd }};background:{{ cv.selBg }};color:{{ cv.ink }};font-weight:600">Amazon S3</div>
+<div style="font-size:{{ cv.q3 }};padding:1.8cqw 2.6cqw;border-radius:8px;border:1px solid {{ cv.cardBd }};color:{{ cv.ink }}">Amazon EFS</div>
+</div></div></sc-if>
+<div style="position:absolute;left:12px;bottom:10px;font-size:10px;font-weight:700;letter-spacing:.1em;color:{{ cv.muted }}">{{ cv.modeLabel }}</div>
+</div></sc-for>
+</div>
+<p style="margin:0;font-size:14px;line-height:1.5;color:#5B5570;max-width:820px">{{ lv.desc }}</p>
+</article>
+</sc-for>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-weight:700;font-size:12px;letter-spacing:.1em;color:#6838E8">LABS · TELA DE QUIZ POR NÍVEL</div>
+<h2 style="margin:0;font-size:28px;letter-spacing:-.02em;color:#1A0F3D">O quiz herda a cor e a densidade <b style="color:#6838E8">do nível da capa</b></h2>
+<p style="margin:0;max-width:820px;font-size:15px;line-height:1.5;color:#5B5570">Mesma receita, layout "quiz": a luz vai para o centro, atrás do card, e a grade some numa elipse central — só aparece nas bordas. Sem símbolo, para não competir com a pergunta. A cor da família entra também na barra de progresso e no contorno da opção selecionada; texto continua nas cores fixas do modo.</p>
+</div>
+<sc-for list="{{ quiz }}" as="lv" hint-placeholder-count="4">
+<article style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><h3 style="margin:0;font-size:18px;letter-spacing:-.02em;color:#1A0F3D">{{ lv.n }} · {{ lv.name }}</h3><code style="color:#77718A;margin-left:auto">{{ lv.id }}</code></div>
+<div style="display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start">
+<sc-for list="{{ lv.covers }}" as="cv" hint-placeholder-count="2"><div style="position:relative;aspect-ratio:{{ cv.aspect }};border-radius:12px;overflow:hidden;container-type:inline-size;flex:{{ cv.flex }};border:{{ cv.border }};background:{{ cv.bg }}">
+<div style="position:absolute;inset:0;background-image:{{ cv.gridUrl }};background-position:right bottom;opacity:{{ cv.gridOp }};-webkit-mask-image:{{ cv.fade }};mask-image:{{ cv.fade }}"></div>
+<sc-for list="{{ cv.rings }}" as="g" hint-placeholder-count="0"><div style="position:absolute;width:{{ g.w }}%;aspect-ratio:1;right:{{ g.right }}%;top:50%;transform:translateY(-50%);border-radius:50%;border:1px solid {{ g.c }}"></div></sc-for>
+<sc-for list="{{ cv.lines }}" as="ln" hint-placeholder-count="0"><div style="position:absolute;left:{{ ln.left }}%;top:{{ ln.at }}%;height:{{ ln.ah }}%;border-left:1px {{ ln.st }} {{ ln.c }}"></div><div style="position:absolute;left:{{ ln.left }}%;top:{{ ln.bt }}%;height:{{ ln.bh }}%;border-left:1px {{ ln.st }} {{ ln.c }}"></div></sc-for>
+<sc-for list="{{ cv.ghosts }}" as="p" hint-placeholder-count="0"><div style="position:absolute;height:{{ p.h }}%;aspect-ratio:1;left:{{ p.l }}%;top:{{ p.t }}%;background-image:{{ p.bg }};background-size:100% 100%"></div></sc-for>
+<sc-for list="{{ cv.pieces }}" as="p" hint-placeholder-count="0"><div style="position:absolute;height:{{ p.h }}%;aspect-ratio:1;left:{{ p.l }}%;top:{{ p.t }}%;background-image:{{ p.bg }};background-size:100% 100%"></div></sc-for>
+<sc-if value="{{ cv.isCover }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:{{ cv.txL }};right:{{ cv.txR }};top:{{ cv.txT }};bottom:{{ cv.txB }};max-width:{{ cv.txW }};display:flex;flex-direction:column;justify-content:{{ cv.txJ }};gap:10px">
+<div style="display:flex;align-items:center;gap:10px"><div style="display:flex;gap:4px"><sc-for list="{{ cv.levelDots }}" as="ld" hint-placeholder-count="4"><div style="width:7px;height:7px;border-radius:2px;background:{{ ld.bg }};border:1px solid {{ ld.bd }}"></div></sc-for></div><div style="font-size:{{ cv.ebz }};font-weight:700;letter-spacing:.1em;color:{{ cv.accent }}">{{ cv.eyebrow }}</div></div>
+<div style="font-size:{{ cv.tsz }};line-height:1.02;letter-spacing:-.04em;font-weight:600;color:{{ cv.ink }}">{{ cv.titleA }} <b style="font-weight:800;color:{{ cv.accent }}">{{ cv.titleB }}</b></div>
+<div style="font-size:{{ cv.sbz }};line-height:1.45;color:{{ cv.sub }}">{{ cv.subText }}</div>
+</div></sc-if>
+<sc-if value="{{ cv.isQuiz }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:6%">
+<div style="width:100%;max-width:{{ cv.cardW }};display:flex;flex-direction:column;gap:2.2cqw;padding:4cqw;border-radius:12px;background:{{ cv.card }};border:1px solid {{ cv.cardBd }}">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-size:{{ cv.q1 }};font-weight:700;letter-spacing:.1em;color:{{ cv.accent }}">{{ cv.eyebrow }}</span><span style="font-size:{{ cv.q1 }};font-weight:600;color:{{ cv.muted }}">7 / 20</span></div>
+<div style="height:3px;border-radius:2px;background:{{ cv.track }}"><div style="height:3px;width:35%;border-radius:2px;background:{{ cv.bar }}"></div></div>
+<div style="font-size:{{ cv.q2 }};font-weight:700;line-height:1.3;letter-spacing:-.01em;color:{{ cv.ink }}">Qual serviço oferece armazenamento de objetos com durabilidade de 11 noves?</div>
+<div style="font-size:{{ cv.q3 }};padding:1.8cqw 2.6cqw;border-radius:8px;border:1px solid {{ cv.cardBd }};color:{{ cv.ink }}">Amazon EBS</div>
+<div style="font-size:{{ cv.q3 }};padding:1.8cqw 2.6cqw;border-radius:8px;border:1px solid {{ cv.selBd }};background:{{ cv.selBg }};color:{{ cv.ink }};font-weight:600">Amazon S3</div>
+<div style="font-size:{{ cv.q3 }};padding:1.8cqw 2.6cqw;border-radius:8px;border:1px solid {{ cv.cardBd }};color:{{ cv.ink }}">Amazon EFS</div>
+</div></div></sc-if>
+<div style="position:absolute;left:12px;bottom:10px;font-size:10px;font-weight:700;letter-spacing:.1em;color:{{ cv.muted }}">{{ cv.modeLabel }}</div>
+</div></sc-for>
+</div>
+</article>
+</sc-for>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-weight:700;font-size:12px;letter-spacing:.1em;color:#6838E8">PARA A SKILL — CRIAR FUNDOS NOVOS</div>
+<h2 style="margin:0;font-size:28px;letter-spacing:-.02em;color:#1A0F3D">Os fundos são uma receita, <b style="color:#6838E8">não uma lista fechada</b></h2>
+<p style="margin:0;max-width:820px;font-size:15px;line-height:1.5;color:#5B5570">Todas as telas acima saem da mesma função com cinco parâmetros. A skill cria um fundo novo combinando-os, sem sair dos tokens. O modo nunca tem valor padrão: vem da resposta obrigatória do usuário.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:20px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:16px;background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:20px">
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#77718A">MODO · obrigatório, vem do usuário</div><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ modeOpts }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="font-family:Manrope,sans-serif;font-size:13px;font-weight:600;padding:8px 14px;border-radius:12px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#77718A">TESTAR EM · a composição troca sozinha</div><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ formatOpts }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="font-family:Manrope,sans-serif;font-size:13px;font-weight:600;padding:8px 14px;border-radius:12px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#77718A">LAYOUT</div><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ layoutOpts }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="font-family:Manrope,sans-serif;font-size:13px;font-weight:600;padding:8px 14px;border-radius:12px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#77718A">FAMÍLIA DE COR</div><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ famOpts }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="font-family:Manrope,sans-serif;font-size:13px;font-weight:600;padding:8px 14px;border-radius:12px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#77718A">ESTRUTURA · 1 aberto → 4 denso</div><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ lvlOpts }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="font-family:Manrope,sans-serif;font-size:13px;font-weight:600;padding:8px 14px;border-radius:12px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#77718A">SÍMBOLO · peças reveladas (só capa)</div><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ symOpts }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="font-family:Manrope,sans-serif;font-size:13px;font-weight:600;padding:8px 14px;border-radius:12px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<div style="font-size:13px;font-weight:600;color:#6838E8">{{ vpInfo }}</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px"><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;letter-spacing:.1em;color:#77718A">EYEBROW<input value="{{ eyebrowVal }}" onChange="{{ onEyebrow }}" placeholder="NOVO FUNDO" style="font-family:Manrope,sans-serif;font-size:14px;font-weight:500;letter-spacing:0;color:#1A0F3D;padding:10px 12px;border:1px solid #DDD6EE;border-radius:12px;background:#fff;outline-color:#6838E8"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;letter-spacing:.1em;color:#77718A">SUBTÍTULO<input value="{{ subVal }}" onChange="{{ onSub }}" placeholder="Opcional" style="font-family:Manrope,sans-serif;font-size:14px;font-weight:500;letter-spacing:0;color:#1A0F3D;padding:10px 12px;border:1px solid #DDD6EE;border-radius:12px;background:#fff;outline-color:#6838E8"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;letter-spacing:.1em;color:#77718A">TÍTULO · PARTE NEUTRA<input value="{{ titleAVal }}" onChange="{{ onTitleA }}" placeholder="Gerado pela" style="font-family:Manrope,sans-serif;font-size:14px;font-weight:500;letter-spacing:0;color:#1A0F3D;padding:10px 12px;border:1px solid #DDD6EE;border-radius:12px;background:#fff;outline-color:#6838E8"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;letter-spacing:.1em;color:#77718A">TÍTULO · DESTAQUE ROXO<input value="{{ titleBVal }}" onChange="{{ onTitleB }}" placeholder="receita" style="font-family:Manrope,sans-serif;font-size:14px;font-weight:500;letter-spacing:0;color:#1A0F3D;padding:10px 12px;border:1px solid #DDD6EE;border-radius:12px;background:#fff;outline-color:#6838E8"></label></div>
+<pre style="margin:0;background:#1A0F3D;color:#CFC9E6;border-radius:12px;padding:16px;font-size:12.5px;line-height:1.55;overflow:auto;white-space:pre-wrap">{{ recipeJson }}</pre>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px"><div style="position:relative;width:{{ composed.cw }};margin:0 auto;aspect-ratio:{{ composed.aspect }};border-radius:12px;overflow:hidden;container-type:inline-size;flex:{{ composed.flex }};border:{{ composed.border }};background:{{ composed.bg }}">
+<div style="position:absolute;inset:0;background-image:{{ composed.gridUrl }};background-position:right bottom;opacity:{{ composed.gridOp }};-webkit-mask-image:{{ composed.fade }};mask-image:{{ composed.fade }}"></div>
+<sc-for list="{{ composed.rings }}" as="g" hint-placeholder-count="0"><div style="position:absolute;width:{{ g.w }}%;aspect-ratio:1;right:{{ g.right }}%;top:50%;transform:translateY(-50%);border-radius:50%;border:1px solid {{ g.c }}"></div></sc-for>
+<sc-for list="{{ composed.lines }}" as="ln" hint-placeholder-count="0"><div style="position:absolute;left:{{ ln.left }}%;top:{{ ln.at }}%;height:{{ ln.ah }}%;border-left:1px {{ ln.st }} {{ ln.c }}"></div><div style="position:absolute;left:{{ ln.left }}%;top:{{ ln.bt }}%;height:{{ ln.bh }}%;border-left:1px {{ ln.st }} {{ ln.c }}"></div></sc-for>
+<sc-for list="{{ composed.ghosts }}" as="p" hint-placeholder-count="0"><div style="position:absolute;height:{{ p.h }}%;aspect-ratio:1;left:{{ p.l }}%;top:{{ p.t }}%;background-image:{{ p.bg }};background-size:100% 100%"></div></sc-for>
+<sc-for list="{{ composed.pieces }}" as="p" hint-placeholder-count="0"><div style="position:absolute;height:{{ p.h }}%;aspect-ratio:1;left:{{ p.l }}%;top:{{ p.t }}%;background-image:{{ p.bg }};background-size:100% 100%"></div></sc-for>
+<sc-if value="{{ composed.isCover }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:{{ composed.txL }};right:{{ composed.txR }};top:{{ composed.txT }};bottom:{{ composed.txB }};max-width:{{ composed.txW }};display:flex;flex-direction:column;justify-content:{{ composed.txJ }};gap:10px">
+<div style="display:flex;align-items:center;gap:10px"><div style="display:flex;gap:4px"><sc-for list="{{ composed.levelDots }}" as="ld" hint-placeholder-count="4"><div style="width:7px;height:7px;border-radius:2px;background:{{ ld.bg }};border:1px solid {{ ld.bd }}"></div></sc-for></div><div style="font-size:{{ composed.ebz }};font-weight:700;letter-spacing:.1em;color:{{ composed.accent }}">{{ composed.eyebrow }}</div></div>
+<div style="font-size:{{ composed.tsz }};line-height:1.02;letter-spacing:-.04em;font-weight:600;color:{{ composed.ink }}">{{ composed.titleA }} <b style="font-weight:800;color:{{ composed.accent }}">{{ composed.titleB }}</b></div>
+<div style="font-size:{{ composed.sbz }};line-height:1.45;color:{{ composed.sub }}">{{ composed.subText }}</div>
+</div></sc-if>
+<sc-if value="{{ composed.isQuiz }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:6%">
+<div style="width:100%;max-width:{{ composed.cardW }};display:flex;flex-direction:column;gap:2.2cqw;padding:4cqw;border-radius:12px;background:{{ composed.card }};border:1px solid {{ composed.cardBd }}">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-size:{{ composed.q1 }};font-weight:700;letter-spacing:.1em;color:{{ composed.accent }}">{{ composed.eyebrow }}</span><span style="font-size:{{ composed.q1 }};font-weight:600;color:{{ composed.muted }}">7 / 20</span></div>
+<div style="height:3px;border-radius:2px;background:{{ composed.track }}"><div style="height:3px;width:35%;border-radius:2px;background:{{ composed.bar }}"></div></div>
+<div style="font-size:{{ composed.q2 }};font-weight:700;line-height:1.3;letter-spacing:-.01em;color:{{ composed.ink }}">Qual serviço oferece armazenamento de objetos com durabilidade de 11 noves?</div>
+<div style="font-size:{{ composed.q3 }};padding:1.8cqw 2.6cqw;border-radius:8px;border:1px solid {{ composed.cardBd }};color:{{ composed.ink }}">Amazon EBS</div>
+<div style="font-size:{{ composed.q3 }};padding:1.8cqw 2.6cqw;border-radius:8px;border:1px solid {{ composed.selBd }};background:{{ composed.selBg }};color:{{ composed.ink }};font-weight:600">Amazon S3</div>
+<div style="font-size:{{ composed.q3 }};padding:1.8cqw 2.6cqw;border-radius:8px;border:1px solid {{ composed.cardBd }};color:{{ composed.ink }}">Amazon EFS</div>
+</div></div></sc-if>
+<div style="position:absolute;left:12px;bottom:10px;font-size:10px;font-weight:700;letter-spacing:.1em;color:{{ composed.muted }}">{{ composed.modeLabel }}</div>
+</div>
+<div style="font-size:13px;line-height:1.5;color:#5B5570">Combinações fora dos níveis do Labs — roxo com estrutura 1 e símbolo completo para uma landing, ou navy com estrutura 3 sem símbolo para um dashboard — saem da mesma receita.</div></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;font-size:14px;line-height:1.5">
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px"><b>Travas da receita</b><br>Só tokens de <code>colors.css</code>. Uma família por fundo. Glow sempre em alpha da própria cor, nunca cor nova.</div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px"><b>Área segura</b><br>Capa: 46% esquerdos limpos. Quiz: elipse central limpa. A máscara de fade zera grade e tracejado nessas áreas.</div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px"><b>Símbolo</b><br>Sempre na geometria do contrato e nas cores oficiais, independente da família. Nunca recolorido, nunca em quiz ou dashboard.</div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px"><b>Padrões neutros</b><br>Grade e tracejado são SVGs monocromáticos usados como máscara; a cor vem da família. Cinco arquivos servem a todas as combinações.</div>
+</div>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-weight:700;font-size:12px;letter-spacing:.1em;color:#6838E8">AUTONOMIA DA SKILL — ALÉM DO LABS</div>
+<h2 style="margin:0;font-size:28px;letter-spacing:-.02em;color:#1A0F3D">Do pedido livre ao fundo certo, <b style="color:#6838E8">sem sair da marca</b></h2>
+<p style="margin:0;max-width:820px;font-size:15px;line-height:1.5;color:#5B5570">O Labs é só o primeiro caso. A skill recebe qualquer pedido de HTML, traduz em parâmetros da receita e gera o fundo. Quem pede escolhe o que quiser; a skill só recusa o que quebra a marca.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:24px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:18px;background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:22px">
+<div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#77718A">FLUXO DE DECISÃO</div>
+<div style="display:grid;grid-template-columns:36px 1fr;gap:14px;align-items:start"><div style="width:36px;height:36px;border-radius:10.412px;background:radial-gradient(circle at 50% 7%,#6838E8,#3503BB);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center">1</div><div style="display:flex;flex-direction:column;gap:4px"><b style="color:#1A0F3D;font-size:15px">Pergunta obrigatória</b><div style="font-size:14px;line-height:1.5;color:#5B5570">"Você quer a versão em modo claro ou modo escuro? ou os dois" — nada é gerado antes da resposta. "Os dois" gera o par claro/escuro com os mesmos parâmetros.</div></div></div>
+<div style="display:grid;grid-template-columns:36px 1fr;gap:14px;align-items:start"><div style="width:36px;height:36px;border-radius:10.412px;background:radial-gradient(circle at 50% 7%,#6838E8,#3503BB);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center">2</div><div style="display:flex;flex-direction:column;gap:4px"><b style="color:#1A0F3D;font-size:15px">Identifica o contexto</b><div style="font-size:14px;line-height:1.5;color:#5B5570">Lê o pedido e mapeia para um preset: capa, institucional, landing, dashboard, quiz, onboarding, certificado, slide ou post. Se não der para inferir, pergunta.</div></div></div>
+<div style="display:grid;grid-template-columns:36px 1fr;gap:14px;align-items:start"><div style="width:36px;height:36px;border-radius:10.412px;background:radial-gradient(circle at 50% 7%,#6838E8,#3503BB);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center">3</div><div style="display:flex;flex-direction:column;gap:4px"><b style="color:#1A0F3D;font-size:15px">Define família e estrutura</b><div style="font-size:14px;line-height:1.5;color:#5B5570">Roxo é o padrão. Outras famílias só quando o pedido tem categorias ou níveis a diferenciar. Estrutura alta em aberturas e fechamentos, baixa em telas de trabalho.</div></div></div>
+<div style="display:grid;grid-template-columns:36px 1fr;gap:14px;align-items:start"><div style="width:36px;height:36px;border-radius:10.412px;background:radial-gradient(circle at 50% 7%,#6838E8,#3503BB);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center">4</div><div style="display:flex;flex-direction:column;gap:4px"><b style="color:#1A0F3D;font-size:15px">Define o símbolo</b><div style="font-size:14px;line-height:1.5;color:#5B5570">Completo em capa e fechamento. Em construção só quando há progressão real (níveis, etapas, trilha). Ausente em dashboard, quiz e formulário.</div></div></div>
+<div style="display:grid;grid-template-columns:36px 1fr;gap:14px;align-items:start"><div style="width:36px;height:36px;border-radius:10.412px;background:radial-gradient(circle at 50% 7%,#6838E8,#3503BB);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center">5</div><div style="display:flex;flex-direction:column;gap:4px"><b style="color:#1A0F3D;font-size:15px">Ajusta formato e área segura</b><div style="font-size:14px;line-height:1.5;color:#5B5570">Aplica a geometria do formato pedido (16:9, 4:5, 1:1, 9:16 ou web fluida) e reserva a área de texto.</div></div></div>
+<div style="display:grid;grid-template-columns:36px 1fr;gap:14px;align-items:start"><div style="width:36px;height:36px;border-radius:10.412px;background:radial-gradient(circle at 50% 7%,#6838E8,#3503BB);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center">6</div><div style="display:flex;flex-direction:column;gap:4px"><b style="color:#1A0F3D;font-size:15px">Valida as travas</b><div style="font-size:14px;line-height:1.5;color:#5B5570">Só tokens oficiais, uma família por fundo, texto nas cores fixas do modo, símbolo sem recolorir. Se o pedido exigir algo fora disso, explica e oferece a alternativa mais próxima.</div></div></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#77718A">PEDIDO LIVRE → PARÂMETROS</div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">"Landing para o nosso evento de dados em março"</b><div style="color:#5B5570">layout capa · roxo · estrutura 3 · símbolo completo · 16:9 no hero, web fluida no resto</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">"Dashboard interno de FinOps"</b><div style="color:#5B5570">layout dashboard · navy · estrutura 1 · sem símbolo · web fluida</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">"Onboarding de cliente em 3 etapas"</b><div style="color:#5B5570">layout capa por etapa · roxo · símbolo em construção 2 → 3 → 4 · uma tela por etapa</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">"Certificado de conclusão do Labs Associate"</b><div style="color:#5B5570">layout capa · ciano · estrutura 2 · símbolo 2 peças · A4 paisagem</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">"Post de carrossel sobre segurança"</b><div style="color:#5B5570">layout capa · roxo · estrutura 2 · símbolo completo · 4:5 (1080×1350)</div></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:0;background:#fff;border:1px solid #DDD6EE;border-radius:12px;overflow:auto">
+<div style="display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1.2fr;gap:12px;padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.1em;color:#77718A;"><div style="">CONTEXTO</div><div>LAYOUT</div><div>SÍMBOLO</div><div>ESTRUTURA</div><div>ÁREA SEGURA</div></div>
+<div style="display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1.2fr;gap:12px;padding:10px 14px;font-size:13.5px;line-height:1.45;color:#1D1043;border-top:1px solid #DDD6EE;"><div style="font-weight:700">Capa / fechamento</div><div>capa</div><div>completo</div><div>3–4</div><div>esquerda 46%</div></div>
+<div style="display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1.2fr;gap:12px;padding:10px 14px;font-size:13.5px;line-height:1.45;color:#1D1043;border-top:1px solid #DDD6EE;"><div style="font-weight:700">Institucional</div><div>capa</div><div>completo</div><div>2–3</div><div>esquerda 46%</div></div>
+<div style="display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1.2fr;gap:12px;padding:10px 14px;font-size:13.5px;line-height:1.45;color:#1D1043;border-top:1px solid #DDD6EE;"><div style="font-weight:700">Landing page</div><div>capa no hero, miolo plano</div><div>completo no hero</div><div>2–3 hero / 1 miolo</div><div>esquerda 46% no hero</div></div>
+<div style="display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1.2fr;gap:12px;padding:10px 14px;font-size:13.5px;line-height:1.45;color:#1D1043;border-top:1px solid #DDD6EE;"><div style="font-weight:700">Dashboard</div><div>plano</div><div>nenhum</div><div>1</div><div>tela inteira</div></div>
+<div style="display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1.2fr;gap:12px;padding:10px 14px;font-size:13.5px;line-height:1.45;color:#1D1043;border-top:1px solid #DDD6EE;"><div style="font-weight:700">Quiz / foco</div><div>quiz</div><div>nenhum</div><div>herda do nível</div><div>elipse central</div></div>
+<div style="display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1.2fr;gap:12px;padding:10px 14px;font-size:13.5px;line-height:1.45;color:#1D1043;border-top:1px solid #DDD6EE;"><div style="font-weight:700">Onboarding / trilha</div><div>capa por etapa</div><div>em construção</div><div>acompanha a etapa</div><div>esquerda 46%</div></div>
+<div style="display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1.2fr;gap:12px;padding:10px 14px;font-size:13.5px;line-height:1.45;color:#1D1043;border-top:1px solid #DDD6EE;"><div style="font-weight:700">Certificado</div><div>capa</div><div>conforme nível</div><div>2–4</div><div>esquerda 46%</div></div>
+<div style="display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1.2fr;gap:12px;padding:10px 14px;font-size:13.5px;line-height:1.45;color:#1D1043;border-top:1px solid #DDD6EE;"><div style="font-weight:700">Slide de miolo</div><div>plano</div><div>nenhum</div><div>1</div><div>tela inteira</div></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">A skill pode</b><div style="color:#5B5570">Combinar livremente modo × layout × família × estrutura × símbolo × formato; criar fundos novos para contextos não listados usando o preset mais próximo; gerar pares claro/escuro.</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">A skill não pode</b><div style="color:#5B5570">Criar cor nova, tingir texto com a cor da família, recolorir ou reposicionar o símbolo, usar o lockup grande, usar logos ou ícones AWS sem arquivo aprovado, usar foto de fundo.</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">Quando perguntar</b><div style="color:#5B5570">Modo: sempre. Contexto: quando o pedido não deixa claro. Família: quando houver categorias e o usuário não disser qual cor usar para cada uma.</div></div>
+</div>
+<div style="background:#EBE4FF;border:1px solid #A28CDC;border-radius:12px;padding:16px;font-size:14px;line-height:1.5"><b style="color:#6838E8">G11 · só o 16:9 tem geometria oficial do símbolo.</b> Para 4:5, 1:1, 9:16 e A4 vou propor regras na etapa 3 (por exemplo, símbolo ancorado embaixo à direita com altura de 45% da largura no retrato). Até a aprovação, a skill usa 16:9 como referência e avisa quando estiver extrapolando.</div>
+</section>
+<section style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-weight:700;font-size:12px;letter-spacing:.1em;color:#6838E8">FRONT-END DA SKILL — WEB E MOBILE</div>
+<h2 style="margin:0;font-size:28px;letter-spacing:-.02em;color:#1A0F3D">Todo HTML sai pronto para os dois, <b style="color:#6838E8">sem versão quebrada</b></h2>
+<p style="margin:0;max-width:820px;font-size:15px;line-height:1.5;color:#5B5570">O braço de front-end não escolhe entre web e mobile: cada página é uma só, responsiva, e o fundo troca de composição no breakpoint. As regras abaixo valem para qualquer pedido, não só para o Labs.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">Um HTML, duas composições</b><div style="color:#5B5570">Breakpoint em 768px. Acima: composição web (texto à esquerda, símbolo centrado na metade direita). Abaixo de 768px ou em tela de retrato: composição mobile (texto no topo, símbolo centrado na metade inferior). Nada de duas páginas separadas.</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">Fundo em camadas relativas</b><div style="color:#5B5570">Toda camada do fundo é posicionada em % do contêiner, nunca em px. Gradientes e glows recalculam o centro a partir da posição do símbolo; a textura fica sempre ancorada no canto inferior direito.</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">Símbolo</b><div style="color:#5B5570">Sempre <code>background-size:100%</code> em caixa quadrada (<code>aspect-ratio:1</code>). Web: altura em % da tela. Mobile: largura em % da tela. Nunca esticado, nunca cortado pelo texto.</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">Área segura de texto</b><div style="color:#5B5570">Web: 46% à esquerda, centrado na vertical. Mobile: topo, 9% de margem lateral, até 40% da altura. A skill verifica que nenhum texto cruza a caixa do símbolo.</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">Tipografia fluida</b><div style="color:#5B5570">Títulos com <code>clamp()</code> entre o tamanho mobile e o web (ex.: 24px → 48px). Corpo nunca abaixo de 16px no mobile. Tracking e line-height do DS mantidos.</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">Toque e leitura</b><div style="color:#5B5570">Alvos de toque de no mínimo 44px no mobile. Linhas de texto com no máximo ~70 caracteres na web. Cards em 1 coluna abaixo de 768px.</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">Desempenho</b><div style="color:#5B5570">Fundos usam gradiente CSS e SVG estático como <code>background-image</code>. Sem máscaras CSS empilhadas: elas travam a renderização em páginas com muitas telas.</div></div>
+<div style="background:#fff;border:1px solid #DDD6EE;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5"><b style="color:#1A0F3D">Checklist antes de entregar</b><div style="color:#5B5570">Renderizar em 390×844, 768×1024, 1280×800 e 1440×900, nos modos pedidos. Conferir: texto legível, símbolo inteiro, nada sobreposto, sem rolagem horizontal.</div></div>
+</div>
+</section>
+<section style="display:flex;flex-direction:column;gap:12px;background:#1A0F3D;border-radius:12px;padding:28px">
+<div style="font-weight:700;font-size:12px;letter-spacing:.1em;color:#8C7DFF">PRECISO DA SUA APROVAÇÃO EM</div>
+<ol style="margin:0;padding-left:20px;color:#FFFFFF;font-size:15px;line-height:1.7">
+<li>Coleção F1–F5 (manter, cortar ou trocar algum contexto).</li>
+<li>G2 — modo escuro também no miolo das páginas.</li>
+<li>G6 — composição do gradiente azul claro a partir de #5BBEED / #5EA0E0.</li>
+<li>Capas do Labs (revisão 4): símbolo em construção (G10) e cores por família (G9).</li><li>Quiz por nível herdando cor e densidade da capa.</li><li>Receita paramétrica + fluxo de autonomia da skill (presets por contexto, travas, G11).</li>
+</ol>
+<p style="margin:0;color:#CFC9E6;font-size:14px;line-height:1.5">Depois disso sigo com as etapas 3 a 6: especificação por asset, estrutura de pastas, arquivos finais (CSS + SVG + PNG de preview), catálogo lado a lado e o exemplo de seleção pela skill.</p>
+</section>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const FAM={
+  navy:{label:'Navy',light:{g1:['26,15,61',.14],g2:['183,176,203',.5],line:'26,15,61',a:'26,15,61',b:'69,33,168'},dark:{g1:['183,176,203',.22],g2:['69,33,168',.5],line:'183,176,203',a:'183,176,203',b:'69,33,168'}},
+  ciano:{label:'Ciano',light:{g1:['91,190,237',.45],g2:['94,160,224',.25],line:'94,160,224',a:'91,190,237',b:'94,160,224'},dark:{g1:['91,190,237',.34],g2:['94,160,224',.32],line:'91,190,237',a:'91,190,237',b:'94,160,224'}},
+  cianoVerde:{label:'Ciano + verde',light:{g1:['161,223,108',.42],g2:['91,190,237',.38],line:'94,160,224',a:'161,223,108',b:'91,190,237'},dark:{g1:['161,223,108',.30],g2:['91,190,237',.32],line:'207,201,230',a:'161,223,108',b:'91,190,237'}},
+  roxo:{label:'Roxo',light:{g1:['104,56,232',.30],g2:['53,3,187',.20],line:'104,56,232',a:'104,56,232',b:'140,125,255'},dark:{g1:['104,56,232',.62],g2:['53,3,187',.8],line:'140,125,255',a:'104,56,232',b:'140,125,255'}}
+};
+const LVL={
+  1:{pos:'82% 45%',k:.55,grid:null,lines:[]},
+  2:{pos:'82% 48%',k:.75,grid:null,lines:[[57,30]]},
+  3:{pos:'80% 50%',k:.9,grid:null,lines:[[57,30],[53,62]]},
+  4:{pos:'80% 50%',k:1.1,grid:null,lines:[[57,30],[53,62],[49,44]]}
+};
+const rgba=(rgb,a)=>`rgba(${rgb},${a})`;
+const PATH='backgrounds/patterns/';
+const PIECES=['piece-1-quadrado-a','piece-2-quadrado-b','piece-3-seta-roxo','piece-4-seta-ciano'].map(n=>`backgrounds/symbol-build/${n}.png`);
+const OUTL=['outline-1-quadrado-a','outline-2-quadrado-b','outline-3-seta-roxo','outline-4-seta-ciano'].map(n=>`url(backgrounds/symbol-build/${n}.svg)`);
+const OUTL_FULL='url(backgrounds/symbol-build/outline-simbolo-completo.svg)';
+const GX=[.047,.339,.561,.958];
+const GLOWK={1:.5,2:.75,3:1,4:1.25};
+const SCALE={1:40,2:50,3:59,4:68};
+function recipe(mode,fam,lvl,text,layout='cover',sym=null,format='web',vp=null){
+  const mob=format==='mobile';
+  const r=vp?vp.w/vp.h:(mob?9/16:16/9);
+  const d=mode==='dark',f=FAM[fam][mode],quiz=layout==='quiz';
+  const nSym=quiz?0:(sym??[0,0,2,3,4][lvl]);
+  const k=GLOWK[lvl];
+  const sw=[0,52,64,76,88][lvl];
+  const swE=mob?Math.min(sw,50/r):sw;
+  const h=mob?swE*r:SCALE[lvl],w=mob?swE:h/r,l=+(mob?50-w/2:75-w/2).toFixed(2),t=+(mob?94-h:50-h/2).toFixed(2);
+  const cx=+(l+w/2).toFixed(2),cy=+(t+h/2).toFixed(2);
+  const vig=`radial-gradient(ellipse 85% 95% at 45% 45%,rgba(26,15,61,0) 55%,rgba(26,15,61,${(.05+.02*lvl).toFixed(3)}) 100%)`;
+  const sky='linear-gradient(165deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 50%)';
+  const lightLayers=quiz
+    ?[`radial-gradient(ellipse 42% 30% at 50% 86%,rgba(36,8,114,${(.06+.02*lvl).toFixed(3)}) 0%,rgba(36,8,114,0) 70%)`,`radial-gradient(ellipse 50% 60% at 50% 46%,rgba(255,255,255,1) 0%,rgba(255,255,255,0) 72%)`,sky,vig]
+    :[
+      `radial-gradient(ellipse ${(w*.62).toFixed(1)}% ${(3+lvl*.8).toFixed(1)}% at 80.6% ${(t+h+3).toFixed(1)}%,rgba(36,8,114,${(.08+.035*lvl).toFixed(3)}) 0%,rgba(36,8,114,0) 72%)`,
+      ...(lvl>=3?[`radial-gradient(ellipse ${(w*.7).toFixed(1)}% ${(h*.62).toFixed(1)}% at 80.6% 50%,rgba(232,225,255,${lvl===4?.95:.6}) 0%,rgba(232,225,255,0) 70%)`]:[]),
+      `radial-gradient(ellipse ${(w*1.05).toFixed(1)}% ${(h*.95).toFixed(1)}% at 80.6% 47%,rgba(255,255,255,1) 0%,rgba(255,255,255,0) 70%)`,
+      sky,vig];
+  const spot='100% 100%';
+  const glows=!d
+    ?[`radial-gradient(ellipse 34% 52% at ${spot},${rgba(f.g1[0],Math.min(.5,.22+.06*lvl))} 0%,${rgba(f.g1[0],0)} 70%)`]
+    :quiz
+    ?[`radial-gradient(ellipse 48% 58% at 50% 45%,${rgba(f.g1[0],Math.min(.9,f.g1[1]*k))} 0%,${rgba(f.g1[0],0)} 72%)`]
+    :[`radial-gradient(ellipse ${mob?(w*.75).toFixed(1):18+lvl*6}% ${mob?(h*.8).toFixed(1):36+lvl*9}% at ${cx}% ${cy}%,${rgba(f.g1[0],Math.min(.9,f.g1[1]*k))} 0%,${rgba(f.g1[0],0)} 70%)`];
+  const base=d
+    ?(lvl===4?'linear-gradient(135deg,#0D0824 0%,#1A0F3D 55%,#2B1B5C 100%)':lvl===3?'linear-gradient(135deg,#060115 0%,#0D0824 50%,#1A0F3D 100%)':'#060115')
+    :'radial-gradient(ellipse 70% 90% at 55% 45%,#FFFFFF 0%,#E3E3E3 100%)';
+  const oc=rgba(f.line,d?.6:.8);
+  const geo={h,l,t};
+  const hex=f.line.split(',').map(v=>(+v).toString(16).padStart(2,'0')).join('');
+  const ghosts=quiz?[]:[0,1,2,3].slice(nSym).map(i=>({bg:`url(backgrounds/symbol-build/color/outline-${i+1}-${hex}-${d?'d':'l'}.svg)`,...geo}));
+  const top=t-2,bot=t+h+2;
+  const mask=mob
+    ?`linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 36%,#000 40%,#000 ${top-2}%,rgba(0,0,0,0) ${top}%,rgba(0,0,0,0) ${bot}%,#000 ${bot+2}%,#000 100%)`
+    :`linear-gradient(180deg,#000 0%,#000 ${top-2}%,rgba(0,0,0,0) ${top}%,rgba(0,0,0,0) ${bot}%,#000 ${bot+2}%,#000 100%)`;
+  return {
+    bg:[...glows,base].join(','),border:d?'1px solid transparent':'1px solid #DDD6EE',
+    fade:quiz?'none':`radial-gradient(ellipse ${mob?'55% 30%':'30% 50%'} at ${spot},#000 0%,rgba(0,0,0,0) 100%)`,gridUrl:quiz?'none':`url(${PATH}grid-${[0,52,52,36,36][lvl]}-${mode}.svg)`,gridOp:d?.5:.35,dashUrl:'none',dashColor:'transparent',rings:[],
+    pieces:PIECES.slice(0,nSym).map(src=>({bg:`url(${src})`,...geo})),
+    ghosts,
+    lines:quiz?[]:GX.map((x,i)=>{const built=i<nSym;const at=mob?40:0,ah=Math.max(0,top-2-at),bt=bot+2,bh=Math.max(0,100-bt);return {left:+(l+w*x).toFixed(2),at,ah,bt,bh,st:built?'solid':'dashed',c:rgba(built?f.a:f.line,built?(d?.55:.6):(d?.16:.22))}}),
+    levelDots:[1,2,3,4].map(n=>({bg:n<=lvl?rgba(f.a,1):'transparent',bd:n<=lvl?rgba(f.a,1):rgba(f.line,d?.4:.35)})),
+    isCover:!quiz,isQuiz:quiz,
+    card:d?'rgba(255,255,255,.06)':'#FFFFFF',cardBd:d?'#4521A8':'#DDD6EE',
+    track:rgba(f.line,d?.25:.15),bar:rgba(f.a,1),selBd:rgba(f.a,1),selBg:rgba(f.a,d?.16:.08),
+    accent:d?'#8C7DFF':'#6838E8',ink:d?'#FFFFFF':'#1A0F3D',sub:d?'#CFC9E6':'#5B5570',muted:d?'#9891AB':'#77718A',
+    aspect:vp?`${vp.w}/${vp.h}`:(mob?'9/16':'16/9'),cw:vp?`min(100%,${Math.round(500*vp.w/vp.h)}px)`:(mob?'min(100%,300px)':'100%'),
+    txL:mob?'9%':'7%',txR:mob?'9%':'auto',txT:mob?'7%':'0',txB:mob?'auto':'0',txW:mob?'none':'46%',txJ:mob?'flex-start':'center',tsz:mob?'9cqw':'7.4cqw',ebz:mob?'4.4cqw':'2.7cqw',sbz:mob?'4.8cqw':'3cqw',flex:mob?'0 0 220px':'1 1 340px',cardW:mob?'100%':'62%',q1:mob?'4cqw':'2.3cqw',q2:mob?'6cqw':'3.4cqw',q3:mob?'5cqw':'2.9cqw',
+    modeLabel:`${mob?'MOBILE':'WEB'} · ${d?'ESCURO':'CLARO'}`,...text
+  };
+}
+const LABS=[
+  {n:1,name:'Foundational',fam:'navy',tag:'ANTES DA TRILHA',desc:'Símbolo pequeno (40% da altura), só em contorno. Ink plano no escuro. No claro, page-light com um toque de navy e grade larga no canto. Muito ar.'},
+  {n:2,name:'Associate',fam:'ciano',tag:'INÍCIO DA CONSTRUÇÃO',desc:'Símbolo cresce para 50%. Os dois quadrados entram sólidos e suas guias acendem em ciano. No claro, o canto ganha gradiente ciano.'},
+  {n:3,name:'Professional',fam:'cianoVerde',tag:'CONSTRUÇÃO AVANÇADA',desc:'Símbolo em 59%. A metade roxa da seta se junta; três guias em verde; contorno do símbolo em azul ou claro. No claro, o canto mistura verde e grade mais fina; no escuro, gradiente diagonal e glow maior.'},
+  {n:4,name:'Specialty',fam:'roxo',tag:'SÍMBOLO COMPLETO',desc:'Símbolo completo no tamanho exato do contrato de capa (68%). Hero-dark no escuro, no claro, canto roxo com a grade mais fina da série. A trilha termina no padrão oficial da marca.'}
+];
+class Component extends DCLogic {
+  state={mode:'dark',fam:'roxo',lvl:3,layout:'cover',sym:3,vp:'1280x800',eyebrow:'NOVO FUNDO',titleA:'Gerado pela',titleB:'receita',sub:''};
+  renderVals(){
+    const {mode,fam,lvl,layout,sym,vp,eyebrow,titleA,titleB,sub}=this.state;
+    const [vw,vh]=vp.split('x').map(Number);const format=(vw<768||vw<vh)?'mobile':'web';
+    if(!this._cache){this._cache={};}
+    const labs=this._cache.labs||(this._cache.labs=LABS.map(l=>({...l,id:`bg-labs-${l.name.toLowerCase()}`,covers:[['web','light'],['web','dark'],['mobile','light'],['mobile','dark']].map(([fm,m])=>recipe(m,l.fam,l.n,{eyebrow:`NÍVEL ${l.n} DE 4`,titleA:'Trilha',titleB:l.name,subText:'Simulados e revisão por domínio'},'cover',null,fm))})));
+    const quiz=this._cache.quiz||(this._cache.quiz=LABS.map(l=>({...l,id:`bg-labs-quiz-${l.name.toLowerCase()}`,covers:[['web','light'],['web','dark'],['mobile','light'],['mobile','dark']].map(([fm,m])=>recipe(m,l.fam,l.n,{eyebrow:l.name.toUpperCase()},'quiz',null,fm))})));
+    const opt=(key,val,label)=>{const on=this.state[key]===val;return {label,pick:()=>this.setState({[key]:val}),bg:on?'#6838E8':'#FFFFFF',fg:on?'#FFFFFF':'#1A0F3D',bd:on?'#6838E8':'#DDD6EE'}};
+    return {
+      labs,quiz,
+      modeOpts:[opt('mode','light','Claro'),opt('mode','dark','Escuro')],
+      formatOpts:[['390x844','Celular 390'],['768x1024','Tablet 768'],['1280x800','Notebook 1280'],['1440x900','Desktop 1440']].map(([v,lb])=>opt('vp',v,lb)),
+      vpInfo:`${vw}×${vh} → composição ${format==='mobile'?'mobile':'web'}`,
+      eyebrowVal:eyebrow,titleAVal:titleA,titleBVal:titleB,subVal:sub,
+      onEyebrow:e=>this.setState({eyebrow:e.target.value.toUpperCase()}),onTitleA:e=>this.setState({titleA:e.target.value}),onTitleB:e=>this.setState({titleB:e.target.value}),onSub:e=>this.setState({sub:e.target.value}),
+      layoutOpts:[opt('layout','cover','Capa'),opt('layout','quiz','Quiz')],
+      famOpts:Object.keys(FAM).map(k=>opt('fam',k,FAM[k].label)),
+      lvlOpts:[1,2,3,4].map(n=>opt('lvl',n,String(n))),
+      symOpts:[0,1,2,3,4].map(n=>opt('sym',n,n===0?'Nenhum':n===4?'Completo':String(n))),
+      composed:(r=>({...r,fade:'none',gridUrl:'none',flex:'none'}))(recipe(mode,fam,lvl,layout==='quiz'?{eyebrow:eyebrow||FAM[fam].label.toUpperCase()}:{eyebrow,titleA,titleB,subText:sub||`${FAM[fam].label} · estrutura ${lvl}`},layout,sym,format,{w:vw,h:vh})),
+      recipeJson:JSON.stringify({mode,viewport:vp,format,layout,family:fam,structure:lvl,symbolPieces:layout==='quiz'?0:sym,safeArea:layout==='quiz'?{shape:'ellipse',center:'50% 48%'}:{side:'left',width:'46%'},patterns:LVL[lvl].grid?[`grid-${LVL[lvl].grid}.svg`].concat(LVL[lvl].dash?[`dash-${LVL[lvl].dash}.svg`]:[]):[]},null,2)
+    };
+  }
+}
+</script>
+</body>
+</html>
