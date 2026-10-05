@@ -1,6 +1,6 @@
 ---
 name: dati-design-system
-description: Aplica o design system e o posicionamento da Dati (cores, tipografia, logo, elementos gráficos e padrões de composição reais) ao criar apresentações, posts para redes sociais, one-pagers, propostas comerciais ou documentos internos. Use sempre que o pedido envolver criar ou revisar material visual/de marca da Dati.
+description: Aplica o design system e o posicionamento da Dati (cores, tipografia, logo, elementos gráficos e padrões de composição reais) ao criar apresentações, posts para redes sociais, one-pagers, propostas comerciais, documentos internos ou interfaces HTML (landing pages, quiz, dashboards, apps). Use sempre que o pedido envolver criar ou revisar material visual/de marca da Dati, ou gerar HTML/CSS alinhado à identidade Dati.
 ---
 
 # Design System Dati
