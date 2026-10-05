@@ -172,6 +172,15 @@ Mesma receita com `layout: 'quiz'`: sem símbolo, sem guias, sem textura.
 
 ## Landing pages
 
+> **Landing page não é um dos tipos de material que o guia da Dati cobre com exemplos reais aprovados.** Ao receber um pedido de LP, declarar isso em voz alta e em seguida confirmar as regras que serão aplicadas:
+>
+> - **Narrativa:** provocação → diagnóstico → solução com base sólida (AWS, 50+ especialistas, Rising Star Partner 2025, 250+ clientes) → CTA direto.
+> - **Visual:** hero em gradiente navy com o símbolo roxo sangrando pela direita; seções de conteúdo em `#EDF0F2`; roxo como única cor de ênfase.
+> - **Tipografia:** só Manrope, títulos no padrão cláusula neutra + cláusula em bold roxo.
+> - **Decisões sem referência real** (estrutura de seções, comportamento mobile) são extrapolação cuidadosa dessas regras — informar ao solicitante e pedir exemplo aprovado para refinar o guia depois.
+>
+> Depois de confirmar as regras, **perguntar pelo conteúdo** antes de gerar qualquer HTML: assunto da página, textos disponíveis, números, prazos, CTA desejado.
+
 Para LPs, o hero usa `layout: 'cover'` com nível e família adequados ao contexto. O miolo é plano (sem símbolo, sem guias, sem textura) com fundo `#EDF0F2` (claro) ou `#060115` / `#0D0824` (escuro).
 
 Estrutura recomendada de LP:
