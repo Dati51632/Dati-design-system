@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design System Dati — Guia de Instalação e Uso</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:          #1A0F3D;
+      --purple:        #6838E8;
+      --purple-medium: #8F65FE;
+      --purple-tint:   #8C7DFF;
+      --purple-pale:   #EBE4FF;
+      --text-muted:    #5B5570;
+      --neutral-light: #EDF0F2;
+      --green:         #A4DF64;
+      --white:         #FFFFFF;
+      --gradient-hero: linear-gradient(135deg, #0D0824 0%, #1A0F3D 55%, #2B1B5C 100%);
+      --gradient-accent: linear-gradient(90deg, #3503BB 0%, #6838E8 100%);
+      --gradient-cta:  linear-gradient(135deg, #3B2A8C 0%, #6838E8 100%);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--neutral-light);
+      color: var(--navy);
+      line-height: 1.6;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--gradient-hero);
+      padding: 72px 110px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 55% 80% at 92% 50%, rgba(104,56,232,.16) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(104,56,232,.2);
+      border: 1px solid rgba(140,125,255,.4);
+      border-radius: 999px; padding: 5px 14px; margin-bottom: 28px;
+    }
+    .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+    .badge span { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--purple-tint); }
+    header h1 {
+      font-size: clamp(32px, 4vw, 48px); font-weight: 700;
+      line-height: 1.12; letter-spacing: -.03em;
+      color: var(--white); max-width: 660px; margin-bottom: 16px;
+    }
+    header h1 em { font-style: normal; color: var(--purple-tint); }
+    header p {
+      font-size: 17px; color: #C0C0C0;
+      max-width: 520px; margin-bottom: 36px; line-height: 1.6;
+    }
+    .nav { display: flex; flex-wrap: wrap; gap: 10px; }
+    .nav a {
+      font-size: 14px; font-weight: 600; color: var(--white);
+      text-decoration: none; padding: 9px 20px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.2);
+      transition: background .2s, border-color .2s;
+    }
+    .nav a:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.35); }
+    .nav a.primary { background: var(--gradient-cta); border-color: transparent; }
+    .nav a.primary:hover { opacity: .88; }
+
+    /* SECTIONS */
+    section { padding: 64px 110px; }
+    section.light { background: var(--neutral-light); }
+    section.white { background: var(--white); }
+
+    .eyebrow {
+      font-size: 12px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--purple-medium);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 10px;
+    }
+    .eyebrow::before {
+      content: ''; display: inline-block;
+      width: 24px; height: 3px; border-radius: 999px;
+      background: var(--gradient-accent);
+    }
+    h2 {
+      font-size: clamp(26px, 3vw, 34px); font-weight: 700;
+      line-height: 1.15; letter-spacing: -.025em; margin-bottom: 14px;
+    }
+    h2 em { font-style: normal; color: var(--purple); }
+    .lead {
+      font-size: 16px; color: var(--text-muted);
+      max-width: 600px; margin-bottom: 44px; line-height: 1.6;
+    }
+
+    /* STEPS */
+    .steps { display: flex; flex-direction: column; position: relative; }
+    .steps::before {
+      content: ''; position: absolute;
+      left: 23px; top: 46px; bottom: 46px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--purple) 0%, transparent 100%);
+    }
+    .step { display: flex; gap: 24px; padding: 24px 0; }
+    .snum {
+      flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%;
+      background: var(--gradient-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; color: var(--white);
+      position: relative; z-index: 1;
+      box-shadow: 0 4px 14px rgba(104,56,232,.32);
+    }
+    .sbody { padding-top: 11px; }
+    .sbody h3 { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+    .sbody p { font-size: 15px; color: var(--text-muted); line-height: 1.55; }
+    .sbody code {
+      display: block; margin-top: 12px;
+      background: var(--navy); color: var(--purple-tint);
+      padding: 12px 16px; border-radius: 8px;
+      font-family: 'Courier New', monospace; font-size: 13px;
+      line-height: 1.7; overflow-x: auto;
+      border-left: 3px solid var(--purple);
+    }
+    .tip {
+      margin-top: 10px; padding: 11px 15px;
+      background: var(--purple-pale);
+      border-left: 3px solid var(--purple);
+      border-radius: 0 8px 8px 0;
+      font-size: 13px; color: var(--navy); line-height: 1.55;
+    }
+    .tip strong { color: var(--purple); }
+
+    /* MATERIAL PANELS */
+    .panels { display: flex; flex-direction: column; gap: 10px; }
+    .panel {
+      background: var(--white); border: 1px solid #DDD6EE;
+      border-radius: 14px; overflow: hidden;
+    }
+    .panel.open { border-color: #A28CDC; }
+    .ptrigger {
+      width: 100%; background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; gap: 16px;
+      padding: 20px 24px; text-align: left;
+      font-family: 'Manrope', sans-serif;
+    }
+    .ptrigger:hover { background: rgba(104,56,232,.03); }
+    .pico {
+      width: 42px; height: 42px; border-radius: 10px;
+      background: var(--gradient-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(104,56,232,.2);
+    }
+    .ptxt { flex: 1; }
+    .ptxt strong { display: block; font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .ptxt span { font-size: 13px; color: var(--text-muted); }
+    .pchev { font-size: 16px; color: var(--purple-medium); transition: transform .22s; flex-shrink: 0; }
+    .panel.open .pchev { transform: rotate(180deg); }
+    .pbody { display: none; padding: 0 24px 24px; }
+    .panel.open .pbody { display: block; }
+    .pdiv { height: 1px; background: #EBE4FF; margin-bottom: 20px; }
+
+    .pspecs {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px; margin-bottom: 20px;
+    }
+    .pspec { background: var(--neutral-light); border-radius: 8px; padding: 12px 14px; }
+    .pspec .sl { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--purple-medium); margin-bottom: 4px; }
+    .pspec .sv { font-size: 13px; font-weight: 600; color: var(--navy); line-height: 1.4; }
+
+    .psteps { display: flex; flex-direction: column; gap: 12px; }
+    .pstep { display: flex; align-items: flex-start; gap: 12px; }
+    .psn {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--gradient-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; color: var(--white); flex-shrink: 0; margin-top: 1px;
+    }
+    .pst strong { display: block; font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .pst p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    .pnote {
+      margin-top: 14px; padding: 11px 14px;
+      background: var(--purple-pale);
+      border-left: 3px solid var(--purple);
+      border-radius: 0 8px 8px 0;
+      font-size: 13px; color: var(--navy); line-height: 1.55;
+    }
+
+    /* RULE CALLOUT */
+    .callout {
+      background: var(--navy); border-radius: 14px;
+      padding: 28px 32px; display: flex; gap: 20px; align-items: flex-start;
+      margin-top: 40px;
+    }
+    .callout .ci { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+    .callout h3 {
+      font-size: 13px; font-weight: 700; color: var(--purple-tint);
+      letter-spacing: .08em; text-transform: uppercase; margin-bottom: 7px;
+    }
+    .callout p { font-size: 15px; color: #CFC9E6; line-height: 1.6; }
+    .callout p strong { color: var(--white); }
+    .callout p em { font-style: normal; color: var(--purple-tint); font-weight: 600; }
+
+    /* FOOTER */
+    footer {
+      background: #0D0824; padding: 28px 110px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    footer .fl { font-size: 13px; color: #9891AB; }
+    footer .fl strong { color: var(--white); }
+    footer .fr { font-size: 11px; color: #9891AB; letter-spacing: .06em; }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      header, section, footer { padding-left: 24px; padding-right: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="badge"><span class="dot"></span><span>Design System — Dati</span></div>
+  <h1>Instale uma vez.<br><em>A marca nunca sai do lugar.</em></h1>
+  <p>
+    O Design System entrega ao Claude toda a identidade Dati — paleta de cores, tipografia,
+    padrão de ênfase, tom de voz — antes de qualquer criação.
+  </p>
+  <nav class="nav">
+    <a href="#instalacao" class="primary">Instalar →</a>
+    <a href="#uso">Como usar</a>
+    <a href="#boas-praticas">Boas práticas</a>
+  </nav>
+</header>
+
+<!-- INSTALAÇÃO -->
+<section class="light" id="instalacao">
+  <div class="eyebrow">Instalação</div>
+  <h2>Pronto em <em>menos de 5 minutos</em></h2>
+  <p class="lead">
+    A skill é uma pasta de arquivos — sem build, sem dependências extras além do Node.js
+    para geração de PPTX. Instale uma vez; todo membro do time que atualizar o repositório
+    já tem a versão mais recente.
+  </p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="snum">1</div>
+      <div class="sbody">
+        <h3>Clone o repositório</h3>
+        <p>O repositório é a fonte única da verdade. Nunca edite cópias locais avulsas.</p>
+        <code>git clone https://github.com/Dati51632/Dati-design-system.git</code>
+        <div class="tip"><strong>Sem acesso?</strong> Peça ao responsável pelo design system para te adicionar como colaborador.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="snum">2</div>
+      <div class="sbody">
+        <h3>Posicione a pasta no diretório de skills</h3>
+        <p>O Claude Code carrega skills a partir de <code style="background:none;border:none;padding:0;color:var(--purple);font-size:inherit;">.claude/skills/</code> dentro da pasta do usuário.</p>
+        <code>C:\Users\&lt;seu-usuário&gt;\.claude\skills\dati-design-system\</code>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="snum">3</div>
+      <div class="sbody">
+        <h3>Instale as dependências para geração de apresentações</h3>
+        <p>Necessário apenas para geração de apresentações. Pré-requisito: Node.js 18+.</p>
+        <code>cd "C:\Users\&lt;seu-usuário&gt;\.claude\skills\dati-design-system\templates"
+npm install</code>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="snum">4</div>
+      <div class="sbody">
+        <h3>Verifique a instalação</h3>
+        <p>Peça qualquer material Dati ao Claude. Se ele confirmar os tipos de slide e o registro visual antes de criar, o design system está ativo.</p>
+        <div class="tip"><strong>Sinal de sucesso em apresentações:</strong> o Claude descreve os tipos de slide e o registro (escuro ou claro) de cada slide antes de gerar o arquivo — esse passo não pode ser pulado.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO USAR -->
+<section class="white" id="uso">
+  <div class="eyebrow">Como usar</div>
+  <h2>Diga o que precisa.<br><em>A skill cuida do restante.</em></h2>
+  <p class="lead">
+    A skill é acionada automaticamente em qualquer pedido de material Dati.
+    Expanda o tipo de material para ver o fluxo e as especificações principais.
+  </p>
+
+  <div class="panels">
+
+    <!-- APRESENTAÇÕES -->
+    <div class="panel open" id="p-apres">
+      <button class="ptrigger" onclick="toggle('p-apres')">
+        <div class="pico">▤</div>
+        <div class="ptxt">
+          <strong>Apresentações PPTX</strong>
+          <span>Apresentações com tipos de slide definidos, gradientes reais e bloco institucional fixo</span>
+        </div>
+        <div class="pchev">▾</div>
+      </button>
+      <div class="pbody">
+        <div class="pdiv"></div>
+        <div class="pspecs">
+          <div class="pspec"><div class="sl">Saída</div><div class="sv">.pptx — 1920 × 1080 px</div></div>
+          <div class="pspec"><div class="sl">Fonte</div><div class="sv">Manrope — único typeface</div></div>
+          <div class="pspec"><div class="sl">Fundo escuro</div><div class="sv">Capa, divisor, impacto, encerramento</div></div>
+          <div class="pspec"><div class="sl">Fundo claro</div><div class="sv">#EDF0F2 — todos os demais</div></div>
+          <div class="pspec"><div class="sl">Slides fixos</div><div class="sv">6 slides institucionais — não alterar</div></div>
+        </div>
+        <div class="psteps">
+          <div class="pstep"><div class="psn">1</div><div class="pst"><strong>Forneça o conteúdo</strong><p>Tema, nome do deck e texto de cada slide. O Claude não inventa conteúdo.</p></div></div>
+          <div class="pstep"><div class="psn" style="background:linear-gradient(135deg,#3B2A8C,#6838E8)">2</div><div class="pst"><strong>Composição visual — obrigatória</strong><p>O Claude descreve os tipos de slide, o registro (escuro ou claro) e os ícones antes de gerar o arquivo. Se não aparecer, o passo foi pulado.</p></div></div>
+          <div class="pstep"><div class="psn">3</div><div class="pst"><strong>Geração do arquivo</strong><p>O gerador de apresentações processa o conteúdo e salva o .pptx em Downloads.</p></div></div>
+          <div class="pstep"><div class="psn">4</div><div class="pst"><strong>Confirmação</strong><p>Caminho do arquivo e contagem de slides.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POSTS -->
+    <div class="panel" id="p-posts">
+      <button class="ptrigger" onclick="toggle('p-posts')">
+        <div class="pico">★</div>
+        <div class="ptxt">
+          <strong>Posts de redes sociais</strong>
+          <span>Instagram e LinkedIn — provocação → diagnóstico → solução → CTA</span>
+        </div>
+        <div class="pchev">▾</div>
+      </button>
+      <div class="pbody">
+        <div class="pdiv"></div>
+        <div class="pspecs">
+          <div class="pspec"><div class="sl">Estrutura</div><div class="sv">Provocação → Diagnóstico → Solução → CTA</div></div>
+          <div class="pspec"><div class="sl">Tom</div><div class="sv">Direto, contraintuitivo, sem jargão de hype</div></div>
+          <div class="pspec"><div class="sl">Ênfase</div><div class="sv">Bold roxo só na palavra-chave — nunca na frase inteira</div></div>
+          <div class="pspec"><div class="sl">CTA</div><div class="sv">Ação concreta e verificável — nunca vago</div></div>
+        </div>
+        <div class="psteps">
+          <div class="pstep"><div class="psn">1</div><div class="pst"><strong>Informe o tema e o objetivo</strong><p>Qual problema expor? Qual ação o leitor deve tomar ao final?</p></div></div>
+          <div class="pstep"><div class="psn">2</div><div class="pst"><strong>O Claude aplica a estrutura de 4 partes</strong><p>Provocação, diagnóstico, solução com base sólida, CTA de baixo atrito.</p></div></div>
+          <div class="pstep"><div class="psn">3</div><div class="pst"><strong>Revise o padrão de ênfase no título</strong><p>Primeira cláusula neutra + segunda cláusula bold roxo. Negrito em palavra, não em frase.</p></div></div>
+        </div>
+        <div class="pnote"><strong>Provas concretas têm prioridade sobre adjetivos.</strong> Números, prazos e resultados reais substituem qualquer superlativo.</div>
+      </div>
+    </div>
+
+    <!-- ONE-PAGERS -->
+    <div class="panel" id="p-one">
+      <button class="ptrigger" onclick="toggle('p-one')">
+        <div class="pico">◉</div>
+        <div class="ptxt">
+          <strong>One-pagers e propostas comerciais</strong>
+          <span>Hierarquia completa, badge de preço em verde, CTA concreto</span>
+        </div>
+        <div class="pchev">▾</div>
+      </button>
+      <div class="pbody">
+        <div class="pdiv"></div>
+        <div class="pspecs">
+          <div class="pspec"><div class="sl">Hierarquia</div><div class="sv">Eyebrow → H1 navy + ênfase roxo → subtítulo → corpo</div></div>
+          <div class="pspec"><div class="sl">Cards</div><div class="sv">2–4 por linha, ícone + título + descrição</div></div>
+          <div class="pspec"><div class="sl">Preço</div><div class="sv">Badge verde #A4DF64 — só em contexto positivo</div></div>
+          <div class="pspec"><div class="sl">CTA</div><div class="sv">Pill roxo, verbo no imperativo, ação verificável</div></div>
+        </div>
+        <div class="psteps">
+          <div class="pstep"><div class="psn">1</div><div class="pst"><strong>Forneça o conteúdo</strong><p>Título, problema, solução, entregáveis, valor e próximo passo.</p></div></div>
+          <div class="pstep"><div class="psn">2</div><div class="pst"><strong>Defina o tipo de peça</strong><p>"One-pager de programa" ou "proposta comercial" — cada um tem densidade diferente.</p></div></div>
+          <div class="pstep"><div class="psn">3</div><div class="pst"><strong>Revise o CTA</strong><p>"Agendar conversa" ou "Falar com especialista" — nunca "Saiba mais" sem destino.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTOS INTERNOS -->
+    <div class="panel" id="p-docs">
+      <button class="ptrigger" onclick="toggle('p-docs')">
+        <div class="pico">⊙</div>
+        <div class="ptxt">
+          <strong>Documentos internos e relatórios</strong>
+          <span>Hierarquia Manrope, paleta restrita, sem elementos decorativos pesados</span>
+        </div>
+        <div class="pchev">▾</div>
+      </button>
+      <div class="pbody">
+        <div class="pdiv"></div>
+        <div class="pspecs">
+          <div class="pspec"><div class="sl">Fonte</div><div class="sv">Manrope — único typeface</div></div>
+          <div class="pspec"><div class="sl">Hierarquia</div><div class="sv">H1 navy bold → H2 navy semibold → corpo muted</div></div>
+          <div class="pspec"><div class="sl">Ênfase</div><div class="sv">Bold roxo #6838E8 — palavra ou expressão, nunca frase</div></div>
+          <div class="pspec"><div class="sl">Decoração</div><div class="sv">Mínima — sem gradientes decorativos ou formas 3D</div></div>
+        </div>
+        <div class="psteps">
+          <div class="pstep"><div class="psn">1</div><div class="pst"><strong>Forneça o conteúdo e o formato de saída</strong><p>Markdown, HTML ou texto. O Claude aplica a hierarquia tipográfica automaticamente.</p></div></div>
+          <div class="pstep"><div class="psn">2</div><div class="pst"><strong>Feche com ação concreta</strong><p>Todo documento termina com um próximo passo verificável.</p></div></div>
+        </div>
+        <div class="pnote">Se tiver um exemplo real do time, forneça — melhora o resultado.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="callout">
+    <div class="ci">◆</div>
+    <div>
+      <h3>Regra de ouro</h3>
+      <p>
+        Todo título segue o padrão: <em>cláusula neutra</em> + <em>cláusula de impacto Bold roxo #6838E8</em>.
+        Toda peça termina com um CTA concreto.
+        <strong>Toda cor usada vem da paleta oficial — nunca introduza uma cor nova.</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- BOAS PRÁTICAS -->
+<section class="light" id="boas-praticas">
+  <div class="eyebrow">Boas práticas</div>
+  <h2>O que funciona,<br><em>o que nunca fazer.</em></h2>
+  <p class="lead">Regras que valem para qualquer tipo de material.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+    <div style="background:rgba(164,223,100,.1);border:1px solid rgba(164,223,100,.35);border-radius:12px;padding:26px;">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#A4DF64;margin-bottom:16px;">✓ Faça sempre</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+        <li style="font-size:14px;color:var(--text-muted);display:flex;align-items:baseline;gap:8px;"><span style="color:#A4DF64;font-weight:700;flex-shrink:0;">✓</span>Padrão de ênfase no título: cláusula neutra + bold roxo</li>
+        <li style="font-size:14px;color:var(--text-muted);display:flex;align-items:baseline;gap:8px;"><span style="color:#A4DF64;font-weight:700;flex-shrink:0;">✓</span>Feche toda peça com CTA concreto e verificável</li>
+        <li style="font-size:14px;color:var(--text-muted);display:flex;align-items:baseline;gap:8px;"><span style="color:#A4DF64;font-weight:700;flex-shrink:0;">✓</span>Use apenas cores da paleta oficial</li>
+        <li style="font-size:14px;color:var(--text-muted);display:flex;align-items:baseline;gap:8px;"><span style="color:#A4DF64;font-weight:700;flex-shrink:0;">✓</span>Em apresentações: confirme os tipos de slide e o registro visual antes de gerar</li>
+        <li style="font-size:14px;color:var(--text-muted);display:flex;align-items:baseline;gap:8px;"><span style="color:#A4DF64;font-weight:700;flex-shrink:0;">✓</span>Texto excedente vai para notas do apresentador, não é cortado</li>
+      </ul>
+    </div>
+
+    <div style="background:rgba(255,80,80,.06);border:1px solid rgba(255,80,80,.2);border-radius:12px;padding:26px;">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#FF6B6B;margin-bottom:16px;">× Nunca faça</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+        <li style="font-size:14px;color:var(--text-muted);display:flex;align-items:baseline;gap:8px;"><span style="color:#FF6B6B;font-weight:700;flex-shrink:0;">×</span>Introduzir cores fora da paleta</li>
+        <li style="font-size:14px;color:var(--text-muted);display:flex;align-items:baseline;gap:8px;"><span style="color:#FF6B6B;font-weight:700;flex-shrink:0;">×</span>Negrito em frases inteiras — só na palavra de ênfase</li>
+        <li style="font-size:14px;color:var(--text-muted);display:flex;align-items:baseline;gap:8px;"><span style="color:#FF6B6B;font-weight:700;flex-shrink:0;">×</span>Usar verde em contexto decorativo — só positivo/numérico</li>
+        <li style="font-size:14px;color:var(--text-muted);display:flex;align-items:baseline;gap:8px;"><span style="color:#FF6B6B;font-weight:700;flex-shrink:0;">×</span>Pular a composição visual em apresentações</li>
+        <li style="font-size:14px;color:var(--text-muted);display:flex;align-items:baseline;gap:8px;"><span style="color:#FF6B6B;font-weight:700;flex-shrink:0;">×</span>Alterar os 6 slides institucionais fixos</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fl"><strong>Dati</strong> — Design System | Guia de Instalação e Uso</div>
+  <div class="fr">DATI | DESIGN SYSTEM — SET/2026</div>
+</footer>
+
+<script>
+  function toggle(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+</script>
+</body>
+</html>

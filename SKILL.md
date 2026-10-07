@@ -1,6 +1,6 @@
 ---
 name: dati-design-system
-description: Aplica o design system e o posicionamento da Dati (cores, tipografia, logo, elementos gráficos e padrões de composição reais) ao criar apresentações, posts para redes sociais, one-pagers, propostas comerciais ou documentos internos. Use sempre que o pedido envolver criar ou revisar material visual/de marca da Dati.
+description: Aplica o design system e o posicionamento da Dati (cores, tipografia, logo, elementos gráficos e padrões de composição reais) ao criar apresentações, posts para redes sociais, one-pagers, propostas comerciais, documentos internos ou interfaces HTML (landing pages, quiz, dashboards, apps). Use sempre que o pedido envolver criar ou revisar material visual/de marca da Dati, ou gerar HTML/CSS alinhado à identidade Dati.
 ---
 
 # Design System Dati
@@ -9,12 +9,13 @@ Este skill ensina como aplicar a identidade visual e o posicionamento da Dati (c
 
 ## Como usar este skill
 
-1. **Identifique o tipo de material** que está sendo pedido: apresentação, post de rede social, one-pager/proposta, ou documento interno.
+1. **Identifique o tipo de material** que está sendo pedido: apresentação, post de rede social, one-pager/proposta, documento interno, ou **frontend/HTML**.
 2. **Leia o guia de material correspondente** antes de gerar qualquer conteúdo:
    - Apresentações → `docs/materiais/apresentacoes.md`
    - Posts para redes sociais → `docs/materiais/posts-redes-sociais.md`
    - One-pagers e propostas comerciais → `docs/materiais/one-pagers-e-propostas.md`
    - Documentos internos/relatórios → `docs/materiais/documentos-internos.md`
+   - **Frontend/HTML (landing pages, apps, quiz, dashboards)** → `docs/materiais/frontend-html.md`
 3. **Aplique as regras de fundação** em paralelo — elas valem para qualquer material:
    - `docs/01-marca-e-posicionamento.md` — tese central, tom de voz, estrutura argumentativa (provocação → diagnóstico → solução → CTA).
    - `docs/02-cores.md` + `tokens/colors.json` / `tokens/colors.css` — paleta e regras de uso por cor.
@@ -28,6 +29,17 @@ Este skill ensina como aplicar a identidade visual e o posicionamento da Dati (c
 ## Regra de ouro
 
 Todo título de peça de marca segue o padrão: **cláusula neutra + cláusula de impacto em Bold + Roxo (`#6838E8`)**. Toda peça termina com um CTA de ação concreta, nunca vago. Toda cor usada vem de `tokens/colors.json` — nunca introduza uma cor nova.
+
+## Ordem de trabalho
+
+Um deck é construído em quatro passos, nesta ordem. Não pule o passo 2.
+
+1. **Ler o material** por inteiro antes de escrever qualquer slide. Contar quantos slides o conteúdo pede.
+2. **Declarar o sistema em voz alta**, em uma frase por classe de elemento: qual arquétipo para a capa, para a virada de seção, para os slides de lista, para os de diagrama, para o fechamento. Nomear as duas cores de fundo do deck. Este passo é escrito na resposta, não só pensado.
+3. **Escrever todos os slides** obedecendo ao sistema declarado. Um slide que não couber em nenhum arquétipo é sinal de que o conteúdo precisa ser cortado, não de que o arquétipo precisa ser inventado.
+4. **Revisar** contra o checklist da seção "Checklist de auto-verificação" antes de entregar.
+
+Sem o passo 2, cada slide vira um projeto independente e o deck perde unidade.
 
 ## Apresentações PPTX — Fluxo obrigatório
 
@@ -44,6 +56,15 @@ Se o usuário não forneceu o conteúdo completo, solicitar:
 - Conteúdo de cada slide com os textos que devem aparecer
 
 Não gere conteúdo por conta própria — apenas organize e mapeie o que foi fornecido.
+
+#### Quando o usuário anexar uma apresentação de referência para converter
+
+O objetivo é **trocar o acabamento visual, não o conteúdo**. Regras obrigatórias:
+
+1. **Preservar o texto original verbatim.** Títulos, bullets, dados, citações, nomes e números devem aparecer exatamente como estão na fonte — sem parafrasear, sem resumir por iniciativa própria, sem reescrever para "soar melhor".
+2. **Corte só em último caso de overflow.** Se um arquétipo não comporta todo o texto do slide original (ex.: `impacto` não tem espaço para bullet list), mover o excesso para o campo `notes` do JSON — ele vai para as notas do apresentador, não some. Só remover texto se, mesmo nas notas, o slide ficar ilegível por volume.
+3. **Quando corte for inevitável**, fazer o menor corte possível que preserve o sentido: retirar redundâncias ou exemplos secundários, nunca a ideia central. Indicar no `notes` o trecho omitido para que o apresentador possa falar sobre ele.
+4. **Não reescrever a mensagem.** Uma frase de impacto do apresentador — "Você cuida do estoque como cuida do caixa?" — deve ir exatamente assim. Não transformar em "A gestão de estoque exige atenção similar à do fluxo de caixa."
 
 ---
 
@@ -69,11 +90,19 @@ Somente após verificar os 7 pontos: gerar o JSON completo.
 | Processo com fases ou marcos temporais | `timeline` |
 | Arquitetura com camadas e conexões | `diagrama-fluxo` |
 | 2 caminhos opostos / permitido × proibido | `comparacao` |
+| 2 caminhos com itens numerados, último em verde | `comparacao-v2` |
 | Exatamente 3 pilares, princípios ou dimensões | `tres-pilares` |
+| 3 colunas independentes com ícone, rótulo e texto | `tres-colunas` |
 | 2–4 métricas com número grande | `kpi` |
 | Exatamente 4 itens com título + descrição | `grid-icone` |
 | 2–4 benefícios, problemas ou pilares | `cards` |
 | 3–5 itens em lista homogênea | `lista-icone` |
+| Fluxo de etapas em linha horizontal com ícones | `fluxo-horizontal` |
+| Swimlane com 2 papéis e cards de passo | `fluxo-raias` |
+| Hub central + 4 cards periféricos + frase | `sistema-hub` |
+| Faixa temática + 2 colunas de conteúdo | `painel-regra` |
+| Declaração em destaque + painel explicativo | `declaracao-painel` |
+| Lista de princípios com "X acima de Y" | `principios-lista` |
 | Conceito-chave ou estatística de impacto | `bigword` |
 | Declaração forte / dado de mercado | `impacto` |
 | Divisor de capítulo | `secao` |
@@ -158,16 +187,145 @@ Se o usuário pedir para abrir: `start "" "C:\Users\Dati - 148\Downloads\dati-ap
 {"tipo":"kpi","eyebrow":"Resultado","titulo":"Título","dark":true,"metricas":[{"valor":"40%","label":"Descrição"},{"valor":"3×","label":"Descrição"}]}
 {"tipo":"tres-pilares","eyebrow":"Metodologia","titulo":"Título","pilares":[{"titulo":"Pilar 1","descricao":"Desc."},{"titulo":"Pilar 2","descricao":"Desc."},{"titulo":"Pilar 3","descricao":"Desc."}]}
 {"tipo":"comparacao","eyebrow":"Estratégia","titulo":[{"text":"Velocidade "},{"text":"com controle","emphasis":true}],"esquerda":{"rotulo":"CAMINHO A","titulo":"Com estrutura","descricao":"Desc."},"direita":{"rotulo":"CAMINHO B","titulo":"Sem estrutura","descricao":"Desc."}}
+{"tipo":"comparacao-v2","eyebrow":"Estratégia","titulo":[{"text":"Lift & Shift "},{"text":"vs modernização","emphasis":true}],"esquerda":{"rotulo":"OPÇÃO A","items":["Item 1","Item 2","Vencedor"]},"direita":{"rotulo":"OPÇÃO B","items":["Item 1","Item 2","Vencedor"]}}
+{"tipo":"tres-colunas","eyebrow":"Pilares","titulo":"Título","colunas":[{"icone":"shield","rotulo":"CATEGORIA","titulo":"Título coluna","descricao":"Desc."},{"icone":"chart","rotulo":"CATEGORIA","titulo":"Título coluna","descricao":"Desc."},{"icone":"gear","rotulo":"CATEGORIA","titulo":"Título coluna","descricao":"Desc."}]}
+{"tipo":"fluxo-horizontal","eyebrow":"Processo","titulo":"Título","steps":[{"icone":"audit","label":"PASSO 1","descricao":"desc"},{"icone":"arrow","label":"PASSO 2","descricao":"desc"},{"icone":"check","label":"PASSO 3","descricao":"desc"}]}
+{"tipo":"painel-regra","eyebrow":"Metodologia","titulo":"Título","painelRotulo":"REGRA","esquerda":{"titulo":"Coluna esq.","descricao":"Descrição detalhada."},"direita":{"titulo":"Coluna dir.","descricao":"Descrição detalhada."}}
+{"tipo":"declaracao-painel","eyebrow":"Visão","titulo":"Título","declaracao":[{"text":"Frase de "},{"text":"impacto","emphasis":true}],"painelTitulo":"Painel título","painelDescricao":"Desc. do painel."}
+{"tipo":"principios-lista","eyebrow":"Valores","titulo":"Título","principios":[{"termo":"Velocidade","conector":"acima de","neutro":"Perfeição prematura"},{"termo":"Evidência","conector":"acima de","neutro":"Opinião"}]}
+{"tipo":"fluxo-raias","eyebrow":"Papéis","titulo":"Título","sidebarLabel":"PAPÉIS","raias":[{"label":"ATOR 1","steps":[{"label":"Passo 1","descricao":"desc"},{"label":"Passo 2","descricao":"desc"}]},{"label":"ATOR 2","steps":[{"label":"Passo A","descricao":"desc"},{"label":"Passo B","descricao":"desc"}]}]}
+{"tipo":"sistema-hub","eyebrow":"Plataforma","titulo":"Título","hubLabel":"HUB","cards":[{"titulo":"Card 1","descricao":"Desc."},{"titulo":"Card 2","descricao":"Desc."},{"titulo":"Card 3","descricao":"Desc."},{"titulo":"Card 4","descricao":"Desc."}],"frase":[{"text":"Frase "},{"text":"central","emphasis":true}]}
 {"tipo":"diagrama-fluxo","eyebrow":"Arquitetura","titulo":[{"text":"Uma "},{"text":"fronteira humana","emphasis":true}],"camadas":[{"nos":[{"label":"NÓ A","sublabel":"sub","cor":"cyan"},{"label":"NÓ B","sublabel":"sub","cor":"green"}]},{"nos":[{"label":"CONVERGÊNCIA","sublabel":"sub","cor":"purple","destaque":true}]}]}
 {"tipo":"encerramento","titulo":"Obrigado!"}
 ```
 
+## Grade fixa do slide 1920×1080
+
+Estas constantes valem para todos os slides de conteúdo. São literais, não sugestões.
+
+| Elemento | Valor |
+|---|---|
+| Margem lateral | `110px` dos dois lados |
+| Barra de acento (acima do eyebrow) | `88×7px`, raio `999px`, `linear-gradient(90deg,#3503BB 0%,#6838E8 100%)` |
+| Eyebrow | topo em `y=150`, Bold `24px`, `letter-spacing:0.1em`, caixa alta, `#8F65FE` (claro) / `#8C7DFF` (escuro) |
+| Título | Bold `56–63px`, `line-height:1.1`, `letter-spacing:-0.03em`, largura máxima `1300px` |
+| Subtítulo | Regular `30–32px`, `line-height:1.4`, `#5B5570` |
+| Corpo dentro de card | Regular `24–28px`, `line-height:1.35–1.45` |
+| Rodapé | `bottom:54px`, entre as margens, nome do evento à esquerda e número do slide à direita, ambos `24px`, `#77718A` (claro) / `#9891AB` (escuro) |
+| Logo no miolo claro | `dati-logo-deck-light.png`, `left:1713 top:70`, altura `40px` |
+
+Capa e fechamento seguem o contrato de capa do guia (símbolo a 68% da altura, borda esquerda a 61,5%), não esta grade.
+
+## Tamanhos de fonte por arquétipo — obrigatório
+
+Extraídos dos decks de referência primária **MAP** e **SeniorTec 2026**. Os valores em **px** são para o motor de templates (canvas 1920×1080). Os valores em **pt** são os equivalentes no PowerPoint (para edição manual ou verificação). Nunca use tamanhos fora desta tabela.
+
+| Elemento | px (motor) | pt (PPTX) | Peso | Cor típica |
+|---|---|---|---|---|
+| Capa — título (linha 1 e 2) | 69px | 36pt | Bold | `#FFFFFF` |
+| Capa — subtítulo | 37px | 19pt | Regular | `#C0C0C0` |
+| Capa — badge/tag | 29px | 15pt | Regular | `#FFFFFF` |
+| Divisor de seção — título | 90px | 47pt | Regular | `#FFFFFF` |
+| Conteúdo — título H1 | 60px | 31pt | Bold | `#1A0F3D` |
+| Bigword — número/palavra de impacto | 102px | 53pt | ExtraBold | `#FFFFFF` |
+| Encerramento — título | 127px | 66pt | Regular | `#FFFFFF` |
+| Eyebrow (todos os arquétipos) | 23px | 12pt | Regular/Bold | `#8F65FE` (claro) / `#8C7DFF` (escuro) |
+| Corpo / descrição de card | 23–27px | 12–14pt | Regular | `#5B5570` |
+| Rodapé (deck name + número) | 23px | 12pt | Regular | `#9891AB` |
+
+**Regras de verificação:**
+- O motor `pptx-template-engine.mjs` copia os slides 1–6 do MAP.pptx verbatim — os tamanhos de capa e institucional são preservados automaticamente.
+- Para slides gerados via JSON (slides 7 em diante), o motor aplica os tamanhos da tabela acima. Se um slide abrir no PowerPoint com fonte diferente das colunas pt, o motor usou um template incorreto.
+- Nunca ajustar tamanhos para "caber mais texto" — se o texto não couber, mova o excesso para `notes` ou divida em dois slides.
+- O checklist de auto-verificação já inclui `24px` como mínimo absoluto — isso reflete o valor do corpo/rodapé: nenhum texto pode ser menor que o rodapé.
+
+## Valores literais, nunca `var()`
+
+Ao montar um slide, leia `tokens/colors.css` e `tokens/effects.css` e **cole o valor literal inline**. Variáveis CSS exigem que o modelo lembre o nome certo; literais estão na frente dele.
+
+Os que mais aparecem:
+
+```
+Roxo de ênfase        #6838E8      Roxo claro (sobre escuro)  #8C7DFF
+Roxo de eyebrow       #8F65FE      Navy de texto              #1A0F3D
+Texto secundário      #5B5570      Texto de rodapé claro      #77718A
+Card lavanda          #EBE4FF      Contorno do card lavanda   #A28CDC
+Card branco           #FFFFFF      Contorno do card branco    #DDD6EE
+Verde (só positivo)   #A4DF64      Ciano de selo              #5EBAE8 → #5EA0E0
+Fundo claro           radial-gradient(701.142px 1245.695px at 50% 50%,#FFFFFF 0%,#E3E3E3 100%)
+Fundo escuro          linear-gradient(135deg,#0D0824 0%,#1A0F3D 55%,#2B1B5C 100%)
+
+Selo de ícone         64–74px, raio 10.412px,
+                      background: radial-gradient(75.485px 75.485px at 50% 7.35%,#6838E8 0%,#3503BB 100%)
+                      box-shadow: inset 0 0 0 1px #8F65FE,
+                        0 69px 19px rgba(36,8,114,0), 0 45px 17px rgba(36,8,114,.02),
+                        0 24px 16px rgba(36,8,114,.07), 0 10px 10px rgba(36,8,114,.12),
+                        0 3px 7px rgba(36,8,114,.14)
+```
+
+Cor de selo cicla apenas na grade de quatro conceitos: roxo → ciano `#5EBAE8` → âmbar `#FAC030` → verde `#A1DF6C`. Nos demais slides, todos os selos são roxos.
+
+## Diagramas
+
+A causa mais comum de slide poluído. Regras duras:
+
+- **Caixas em grade, setas ortogonais.** Organize em faixas horizontais (topo / meio / base) e ligue as faixas com setas verticais. SVG com coordenadas livres produz sobreposição que ninguém enxerga no código.
+- **Máximo cinco rótulos de aresta no slide inteiro.** Se a legenda dentro da caixa já diz o que a seta transporta, o rótulo sai.
+- **Um serviço aparece uma vez.** Ou como caixa própria, ou como chip dentro da caixa que o consome — nunca os dois.
+- **Reserve altura.** Todo elemento posicionado com `position:absolute` recebe `width` e `height` explícitos, para que a colisão apareça no código e não só na tela.
+- **Texto do diagrama obedece ao mínimo de 24px** como qualquer outro texto do slide. Se não couber a 24px, o diagrama tem peças demais.
+- Ao reproduzir um diagrama que o usuário já tem, **mantenha a geometria original** e troque apenas o acabamento (raio 12px, contornos da marca, tipografia Manrope, paleta). Redesenhar a topologia destrói a compreensão que o usuário já validou.
+
 ## Quando o pedido não se encaixa perfeitamente
 
-Se o material pedido não é nenhum dos quatro tipos cobertos (ex.: um e-mail, um vídeo, um site), aplique as regras de fundação (`docs/01` a `docs/05`) diretamente — elas são o "sistema", os guias de `docs/materiais/` são aplicações específicas já testadas.
+Se o material pedido não é nenhum dos cinco tipos cobertos (ex.: um e-mail, um vídeo), aplique as regras de fundação (`docs/01` a `docs/05`) diretamente — elas são o "sistema", os guias de `docs/materiais/` são aplicações específicas já testadas.
 
 Se faltar uma referência real para um tipo de material novo (como aconteceu com documentos internos — ver a nota em `docs/materiais/documentos-internos.md`), avise que a orientação é uma extrapolação cautelosa das regras confirmadas, e peça um exemplo real ao time para refinar o guia.
 
 ## Manter atualizado
 
 Este skill vive em [github.com/Dati51632/Dati-design-system](https://github.com/Dati51632/Dati-design-system). Quando a marca evoluir (nova cor, novo padrão de material, novos exemplos reais), atualize os arquivos correspondentes e suba uma nova versão — ver `README.md` para o fluxo de atualização e `CHANGELOG.md` para o histórico.
+
+### Fluxo de curadoria — toda alteração passa pelo time de MKT
+
+**Nenhuma mudança de conteúdo, regra ou padrão visual deve ser aplicada à skill sem revisão do time de Marketing.** O fluxo é:
+
+1. **Proposta** — qualquer membro do time (ou o próprio Claude, ao identificar inconsistência) registra a mudança sugerida: o que muda, por que muda e qual material real motivou a proposta.
+2. **Curadoria MKT** — o time de Marketing revisa se a proposta está alinhada com o posicionamento da marca e os exemplos reais. Aprovação é obrigatória antes de qualquer commit.
+3. **Aplicação** — somente após aprovação: editar o arquivo correspondente, commitar com mensagem descritiva e registrar em `CHANGELOG.md`.
+4. **Distribuição** — avisar o time via Slack. O Claude usa a versão mais recente a partir do próximo `git pull`.
+
+Propostas de alteração podem ser coletadas pelo formulário de feedback do guia de instalação (`docs/guia-instalacao-e-uso.html`) — o campo "Proposta de mudança na skill" foi criado exatamente para isso.
+
+## Checklist de auto-verificação
+
+Releia o deck contra esta lista antes de entregar. Cada item reprovado é correção obrigatória, não opcional.
+
+**Legibilidade**
+- [ ] Nenhum texto abaixo de `24px`.
+- [ ] Nenhum texto em branco com alpha ou cinza fora da paleta; tinta sempre em opacidade cheia.
+- [ ] Contraste mínimo 4.5:1 (3:1 apenas em título de tamanho display).
+
+**Colisão e transbordo**
+- [ ] Nenhum elemento absoluto sem `width` e `height` reservados.
+- [ ] Nenhum bloco ultrapassa `bottom:54px` (a faixa do rodapé).
+- [ ] Nenhum bloco ultrapassa a margem de `110px` dos dois lados.
+- [ ] Nenhum glow ou forma decorativa por cima de texto (use `z-index` explícito: decoração `0`, conteúdo `1`).
+
+**Sistema**
+- [ ] No máximo duas cores de fundo no deck inteiro; escuro só em capa, viradas e fechamento.
+- [ ] Todo slide de conteúdo tem barra de acento, eyebrow, rodapé com número — na grade da seção "Grade fixa do slide 1920×1080".
+- [ ] Todo slide corresponde a um arquétipo declarado no passo 2; nenhum arquétipo inventado no meio do caminho.
+- [ ] Nenhuma cor fora da paleta. Verde apenas em contexto positivo. Laranja no máximo um ponto por peça.
+
+**Conteúdo**
+- [ ] Nenhum slide com seção de preenchimento; espaço vazio é resolvido no layout, não com conteúdo.
+- [ ] Nenhum emoji. Sinais gráficos permitidos: `→` `↓` `✓` `—`.
+- [ ] Texto fornecido pelo usuário está verbatim, sem reescrita.
+- [ ] Negrito roxo em no máximo 1–2 palavras por parágrafo.
+
+## Sobre o loop de verificação
+
+O checklist acima substitui parcialmente o que, no Claude Design, é um verificador que abre o deck, tira screenshot de cada slide e mede colisão e transbordo no DOM. Uma skill de texto não tem esse recurso, então o checklist é a compensação: transforma medições em perguntas que o modelo consegue responder relendo o próprio código.
+
+Se a skill rodar em um ambiente com execução (Claude Code, por exemplo), vale adicionar um passo final que abra o HTML e rode uma checagem de `getBoundingClientRect()` por slide, procurando retângulos de texto que se intersectam e `scrollHeight > clientHeight`. É a checagem que pegou, neste projeto, o rótulo colidindo com o logo, a lista transbordando o rodapé e o glow por cima do texto.
